@@ -1044,7 +1044,7 @@ def trace(intent, write_out=False):
 class Warns(object):
     KINDS = [("heading", "Mục bắt buộc"), ("tag", "Thẻ nguồn"), ("ref", "Thẻ trỏ sai"),
              ("handoff", "Artifact bàn giao"), ("card", "Thẻ US"), ("split", "Cỡ story"), ("words", "Giới hạn từ"),
-             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký")]
+             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký"), ("diagram", "Sơ đồ")]
 
     def __init__(self):
         self.items, self.info, self.seen = [], [], set()
@@ -1199,6 +1199,130 @@ class CheckCtx(object):
 def template_lines(path):
     return (read(path) or "").splitlines()
 
+# ================================================================ sơ đồ, theo engine/standards/diagrams.md
+NODE_DEF = re.compile(r'\b([A-Za-z][A-Za-z0-9_]*)\s*(\(\(|\(\[|\[\[|\[\(|\(|\[|\{)\s*"?([^"()\[\]{}]*?)"?\s*(\)\)|\]\)|\]\]|\)\]|\)|\]|\})')
+EDGE_RE = re.compile(r'([A-Za-z][A-Za-z0-9_]*)\s*(?:--\s*([^-|>][^|>]*?)\s*-->|-->|==>|-\.->)\s*(?:\|([^|]*)\|\s*)?([A-Za-z][A-Za-z0-9_]*)')
+
+
+def mermaid_blocks(lines, start=0, end=None):
+    """[(dòng mở khối, [dòng trong khối])] của mọi khối ```mermaid."""
+    end = len(lines) if end is None else end
+    out, i = [], start
+    while i < end:
+        if re.match(r"^\s*```\s*mermaid\b", lines[i]):
+            j = i + 1
+            while j < end and not lines[j].strip().startswith("```"):
+                j += 1
+            out.append((i, lines[i + 1:j]))
+            i = j + 1
+        else:
+            i += 1
+    return out
+
+
+def norm_state(t):
+    t = clean(re.sub(r"<[^<>]*>", " ", t or "")).strip().strip("*_`\"'")
+    return re.sub(r"\s+", " ", t).lower()
+
+
+def parse_flow(block):
+    """(nhãn nút {mã: (nhãn, tròn?)}, mũi tên [(mã đầu, nhãn mũi tên, mã cuối)]) của một sơ đồ flowchart."""
+    nodes, edges = {}, []
+    for ln in block:
+        if re.match(r"^\s*(%%|style|classDef|class|linkStyle|click|flowchart|graph|subgraph|end\b|direction)", ln.strip()):
+            continue
+        for m in NODE_DEF.finditer(ln):
+            nodes.setdefault(m.group(1), (m.group(3).strip(), m.group(2) in ("((",)))
+        bare = NODE_DEF.sub(lambda m: m.group(1), ln)
+        pos = 0
+        while True:
+            m = EDGE_RE.search(bare, pos)
+            if not m:
+                break
+            lab = (m.group(2) or m.group(3) or "").strip()
+            edges.append((m.group(1), lab, m.group(4)))
+            pos = m.start(4)
+    for a, _, b in edges:
+        for x in (a, b):
+            nodes.setdefault(x, (x, False))
+    return nodes, edges
+
+
+def check_lifecycle(W, f, lines, b0):
+    """Vòng đời trạng thái: bảng là nguồn, sơ đồ khớp từng chuyển trạng thái; mọi trạng thái tới được và không cụt."""
+    rng = section_lines(lines, lambda t: "vòng đời trạng thái" in t.lower(), b0)
+    if not rng:
+        return
+    lo, hi = rng
+    table, tline = set(), {}
+    for t in parse_tables(lines, lo, hi):
+        h = [clean(x).lower() for x in t["header"]]
+        if not any("sự kiện" in x for x in h) or not any(x.endswith("sau") for x in h):
+            continue
+        fi = next((k for k, x in enumerate(h) if "hiện tại" in x), 0)
+        ei = next(k for k, x in enumerate(h) if "sự kiện" in x)
+        ti = next(k for k, x in enumerate(h) if x.endswith("sau"))
+        for cells, k in t["rows"]:
+            a, e, b = (norm_state(cell(cells, x)) for x in (fi, ei, ti))
+            if not a or not b or "<" in cell(cells, fi) or clean(cell(cells, fi)).startswith("*"):
+                continue
+            table.add((a, e, b))
+            tline.setdefault((a, e, b), k + 1)
+    blocks = mermaid_blocks(lines, lo, hi)
+    if table and not blocks:
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái có bảng nhưng chưa có sơ đồ: vẽ flowchart từ bảng, theo engine/standards/diagrams.md mục 3")
+        return
+    if not blocks:
+        return
+    diag, starts, ends, states, dline = set(), set(), set(), set(), {}
+    for bl, block in blocks:
+        nodes, edges = parse_flow(block)
+        for a, lab, b in edges:
+            la, ca = nodes[a]
+            lb, cb = nodes[b]
+            if ca and not cb:
+                starts.add(norm_state(lb))
+            elif cb and not ca:
+                ends.add(norm_state(la))
+            elif not ca and not cb:
+                key = (norm_state(la), norm_state(lab), norm_state(lb))
+                diag.add(key)
+                dline.setdefault(key, bl + 1)
+        states |= {norm_state(l) for l, c in nodes.values() if not c and "<" not in l}
+    if not table:
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái có sơ đồ nhưng chưa có bảng chuyển trạng thái; bảng là nguồn chính")
+        return
+    for k in sorted(table - diag):
+        W.add("diagram", f, tline[k], "Vòng đời trạng thái: chuyển '%s' sang '%s' bằng '%s' có trong bảng, không có trong sơ đồ" % (k[0], k[2], k[1]))
+    for k in sorted(diag - table):
+        W.add("diagram", f, dline[k], "Vòng đời trạng thái: chuyển '%s' sang '%s' bằng '%s' có trong sơ đồ, không có trong bảng" % (k[0], k[2], k[1]))
+    states |= {x for a, _, b in table for x in (a, b)}
+    if not starts:
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: sơ đồ chưa có nút Bắt đầu nối tới trạng thái đầu")
+    else:
+        seen, todo = set(starts), list(starts)
+        while todo:
+            x = todo.pop()
+            for a, _, b in diag | table:
+                if a == x and b not in seen:
+                    seen.add(b)
+                    todo.append(b)
+        for x in sorted(states - seen):
+            W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không đi tới được từ nút Bắt đầu" % x)
+    outs = {a for a, _, _ in diag | table}
+    for x in sorted(states - outs - ends):
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không có đường ra; nếu là trạng thái cuối thì nối tới nút Kết thúc" % x)
+
+
+def check_mermaid(W, f, lines, b0):
+    """Hai lỗi Lark đã biết, theo engine/standards/diagrams.md mục 5."""
+    for bl, block in mermaid_blocks(lines, b0):
+        if block and re.match(r"\s*stateDiagram", block[0]):
+            W.add("diagram", f, bl + 1, "Sơ đồ dùng stateDiagram: Lark dựng mất nhãn mũi tên, vẽ bằng flowchart theo engine/standards/diagrams.md mục 3")
+        for k, ln in enumerate(block):
+            if re.search(r"\|[^|]*<br\s*/?>[^|]*\|", ln):
+                W.add("diagram", f, bl + 2 + k, "Nhãn mũi tên có <br/>: Lark tách thành nút rác, viết nhãn một dòng")
+
 
 def check_artifact(ctx, W, st, path):
     intent = ctx.intent
@@ -1230,6 +1354,10 @@ def check_artifact(ctx, W, st, path):
                 W.add("heading", f, None, "Thiếu mục bắt buộc của template %s: '## %s'" % (rel(eng[0], REPO), clean(re.sub(r"<!--.*?-->", "", t))))
     elif tpls:
         W.info.append("%s: template là của công ty (%s), không kiểm heading" % (f, ", ".join(show(t) for t in tpls)))
+
+    # sơ đồ: lỗi Mermaid trên Lark, vòng đời trạng thái khớp bảng
+    check_mermaid(W, f, lines, b0)
+    check_lifecycle(W, f, lines, b0)
 
     # 2. artifact nội bộ: Assumptions & Open Questions và thẻ nguồn
     if stem in INTERNAL:

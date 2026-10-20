@@ -31,6 +31,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 | U1 | | | | Must | | <mã KB hoặc "không"> | |
 
 Thứ tự gợi ý: <U1, U2... theo rủi ro, giá trị, hay phụ thuộc, kèm lý do> [Q4]
+<Tuỳ chọn, từ hai Unit: sơ đồ luồng giá trị, các bước từ nhu cầu của người dùng tới kết quả, ghi Unit phục vụ từng bước; AWS gọi là value stream map. Theo `engine/standards/diagrams.md`.>
 Mốc cứng: <...> [Q5]
 
 ## Assumptions & Open Questions

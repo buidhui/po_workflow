@@ -39,7 +39,7 @@ intent-statement; vùng KB chưa phủ theo `domain.md` mục 3; `decisions.md`.
 
 ## Generate
 `scope-document.md` theo template: In, Out, Potential mỗi dòng một câu kèm lý do và nguồn; constraints; intent backlog là bảng Unit `U1`... với tên, mục đích, portal, MoSCoW, phụ thuộc, trùng tính năng có sẵn hay không; thứ tự gợi ý kèm lý do; mốc cứng; Assumptions & Open Questions.
-Chia Unit theo bốn quy tắc: theo cơ chế, không theo màn hình; tìm hạng mục nền; tách hạng mục chạm mọi thứ như phân quyền, bật tắt, lịch sử; phụ thuộc một chiều. Định nghĩa hết, kể cả Won't, để Impact Analysis quét đúng.
+Từ hai Unit trở lên, tuỳ chọn vẽ sơ đồ luồng giá trị, tức value stream map của AWS: các bước từ nhu cầu tới kết quả và Unit phục vụ từng bước, theo `engine/standards/diagrams.md`. Chia Unit theo bốn quy tắc: theo cơ chế, không theo màn hình; tìm hạng mục nền; tách hạng mục chạm mọi thứ như phân quyền, bật tắt, lịch sử; phụ thuộc một chiều. Định nghĩa hết, kể cả Won't, để Impact Analysis quét đúng.
 
 ## Gate
 - Profile M: gate chung với 1.1. Thông điệp hoàn thành gộp intent-statement và scope-document. Request Changes nêu rõ sửa artifact nào.

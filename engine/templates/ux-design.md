@@ -19,7 +19,7 @@ inputs: <prd@1.0>
 <Mỗi US có bảng giao diện trong PRD phải có ít nhất một màn. Story List lấy mã màn từ bảng này.>
 
 ## 2. Luồng và tương tác
-<Theo từng US: điều hướng giữa các màn, hành vi khi thao tác, trạng thái rỗng, lỗi, đang tải, không có quyền.>
+<Theo từng US: điều hướng giữa các màn, hành vi khi thao tác, trạng thái rỗng, lỗi, đang tải, không có quyền. Khuyến nghị sơ đồ luồng màn: mỗi nút là một màn có mã `SCR`, nhãn mũi tên là thao tác người dùng. PRD có vòng đời trạng thái thì màn hiển thị trạng thái phải khớp các trạng thái trong sơ đồ của PRD. Theo `engine/standards/diagrams.md`.>
 
 ## 3. Thành phần giao diện <!-- tuỳ chọn -->
 <Component dùng lại từ design system, component mới, biến thể.>

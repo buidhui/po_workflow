@@ -15,6 +15,8 @@ inputs: <prd@1.0>
 | Service hoặc repo | Thay đổi | US |
 |---|---|---|
 
+<Tuỳ chọn: sơ đồ thành phần, mỗi service hoặc repo một nút, mũi tên theo phụ thuộc. Theo `engine/standards/diagrams.md`.>
+
 ## 2. Quyết định kỹ thuật
 <Mỗi quyết định: bối cảnh, phương án đã xét, chọn gì, hệ quả. Dạng ADR.>
 
@@ -22,7 +24,7 @@ inputs: <prd@1.0>
 <Entity mới hoặc đổi, quan hệ, migration dữ liệu cũ.>
 
 ## 4. API và hợp đồng giữa thành phần <!-- tuỳ chọn -->
-<Endpoint mới hoặc đổi, sự kiện, hợp đồng với hệ ngoài.>
+<Endpoint mới hoặc đổi, sự kiện, hợp đồng với hệ ngoài. Tích hợp nhiều bước thì thêm sơ đồ tuần tự.>
 
 ## 5. Đáp ứng business rule và NFR
 | Mã | Cách đáp ứng | Ghi chú |

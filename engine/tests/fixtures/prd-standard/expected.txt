@@ -1,12 +1,19 @@
 # PRD theo template chuẩn engine/templates/prd.md, 2 US. Kiểm: script đọc tên mục mới (Tiền điều kiện, Luồng chính,
 # Giao diện và validate, Trường hợp ngoại lệ, Câu hỏi mở); Unit đọc được khi ô đầu có tên Unit; câu hỏi mở ghi
-# "Không chặn" không thành câu chặn dù nội dung có chữ "chặn"; US thiếu mục Trường hợp ngoại lệ; PRD còn quá 3 chỗ ❓PO.
+# "Không chặn" không thành câu chặn dù nội dung có chữ "chặn"; US thiếu mục Trường hợp ngoại lệ; PRD còn quá 3 chỗ ❓PO;
+# vòng đời trạng thái lệch giữa bảng và sơ đồ, trạng thái cụt, nhãn mũi tên có <br/>.
 [check prd-generation]
 mã thoát: 0
 có: US2 chưa ghi Trường hợp ngoại lệ
 có: PRD còn 4 chỗ ❓PO, quá 3
 không có: US1 chưa ghi Trường hợp ngoại lệ
 không có: chưa có AC nào trỏ tới
+có: Vòng đời trạng thái: chuyển 'chờ đặt lại' sang 'đã huỷ' bằng 'hết hạn' có trong bảng, không có trong sơ đồ
+có: Vòng đời trạng thái: chuyển 'đã đặt lại' sang 'chờ đặt lại' bằng 'mở lại liên kết' có trong sơ đồ, không có trong bảng
+có: Nhãn mũi tên có <br/>
+có: trạng thái 'đã huỷ' không có đường ra
+không có: trạng thái 'đã đặt lại' không có đường ra
+không có: chưa có nút Bắt đầu
 
 [stories]
 mã thoát: 0

@@ -8,6 +8,7 @@
 - [ ] Không có story quá nhỏ: mỗi story có giá trị riêng và kiểm được độc lập
 - [ ] **[BLOCK]** Mọi FR có US, hoặc Deferred, N/A kèm lý do. Không GAP khi mở gate
 - [ ] Mọi US gắn một Unit. Unit đổi so với 1.4 có lý do
+- [ ] Từ ba Unit có sơ đồ phụ thuộc Unit, phụ thuộc một chiều, khớp cột Phụ thuộc của bảng
 - [ ] US chưa làm vẫn định nghĩa, ghi rõ
 - [ ] Đánh số `US1`, `US2` liên tục. Mã không đánh lại
 - [ ] **[BLOCK]** Mỗi US đủ thẻ chín mục, mục không có ghi "không có". Luồng chính ba đến bảy bước ở mức hành vi

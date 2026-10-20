@@ -13,6 +13,7 @@
 - [ ] **[BLOCK]** Đủ 5 bước đúng thứ tự
 - [ ] **[BLOCK]** Đủ 12 vùng. Vùng không ảnh hưởng có lý do
 - [ ] Hidden được xét
+- [ ] Từ ba vùng bị ảnh hưởng có sơ đồ phụ thuộc vẽ từ bảng Current Situation, vùng High được đánh dấu
 - [ ] Conflict 4 chiều, **[BLOCK]** được escalate, không tự resolve
 - [ ] Bidirectional có cả chiều Old sang New
 - [ ] Coverage đủ boundary, exception, shared entity, side effect. Shared entity dễ vỡ trong `domain.md` mục 4 phần 2.31 đã kiểm

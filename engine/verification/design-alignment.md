@@ -6,6 +6,7 @@
 
 ## Đối chiếu
 - [ ] **[BLOCK]** Mọi US có giao diện có màn trong ux-design; mọi AC có trong kế hoạch test; mọi US có trong tech-design. Điểm còn thiếu nằm ở Decision Brief mục 5
+- [ ] PRD có vòng đời trạng thái thì test-design phủ từng chuyển trạng thái và chuyển trạng thái không hợp lệ; màn trong ux-design hiển thị đúng các trạng thái của sơ đồ
 - [ ] Mâu thuẫn giữa thiết kế với business rule hoặc tiêu chí chấp nhận đã nêu ở mục 2 hoặc 3
 - [ ] Độ lớn theo Unit of work so với mốc cứng đã nêu ở mục 7
 - [ ] Mọi Đề xuất sửa PRD có ở mục 3. Mọi ý kiến Phản đối chép nguyên văn ở mục 9

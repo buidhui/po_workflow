@@ -26,6 +26,9 @@
 - [ ] **[BLOCK]** Trường hợp ngoại lệ: mọi coverage gap của Impact Matrix đã gắn vào US nó chạm, mỗi góc có luật, câu hỏi mở, hoặc ngoài phạm vi. Mục không trống
 - [ ] **[BLOCK]** Frontmatter `feature:` và hàng Mã tính năng có mã tính năng của intent
 - [ ] **[BLOCK]** Field hiện có ghi là hiện có. Không tự thêm field
+- [ ] **[BLOCK]** Tính năng có đối tượng đổi trạng thái thì mục 4 có Vòng đời trạng thái: bảng chuyển trạng thái và sơ đồ khớp nhau, mọi trạng thái tới được từ nút Bắt đầu, trạng thái cuối nối tới nút Kết thúc. `po-tools.py check` kiểm phần khớp
+- [ ] Mỗi chuyển trạng thái có ít nhất một tiêu chí chấp nhận; chuyển trạng thái bị cấm có tiêu chí cho nhánh lỗi
+- [ ] Sơ đồ theo `engine/standards/diagrams.md`: dùng `flowchart`, nhãn mũi tên một dòng; từ ba Unit có sơ đồ phụ thuộc; luồng có từ hai điểm rẽ có sơ đồ luồng
 - [ ] Hằng số ghi cứng hay cấu hình
 - [ ] Sự kiện, mail bị chạm đối chiếu file sự kiện trong KB
 - [ ] **[BLOCK]** M, L: điểm phụ thuộc thiết kế hay kỹ thuật mà artifact đã duyệt chưa nói có `[đề xuất]` và câu hỏi mở gắn tên PIC. PRD không quy định cách làm kỹ thuật
@@ -47,5 +50,4 @@
 ## Bàn giao
 - [ ] **[BLOCK]** Không còn chữ mẫu template. Mục tuỳ chọn không áp dụng đã xoá
 - [ ] **[BLOCK]** Không dấu vết quy trình. Không viết tắt. Dấu `·` giữa mã
-- [ ] Sơ đồ Mermaid đặt đúng vị trí, tránh hai lỗi trên Lark
 - [ ] Profile S: PRD rút gọn đúng danh mục mục

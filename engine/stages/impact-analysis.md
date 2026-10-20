@@ -32,7 +32,7 @@ KB mỏng ở vùng này thì hỏi PO seed danh sách hệ liên quan trước,
 
 ## Bước B, Impact Matrix
 Theo đúng thứ tự:
-1. Current Situation: đọc để tìm dependency, chưa cần hiểu hết feature. Module, entity và field, rule, process, permission, integration, mail event, Hidden.
+1. Current Situation: đọc để tìm dependency, chưa cần hiểu hết feature. Module, entity và field, rule, process, permission, integration, mail event, Hidden. Từ ba vùng bị ảnh hưởng trở lên thì vẽ sơ đồ phụ thuộc từ bảng, tô màu vùng High, theo `engine/standards/diagrams.md` mục 4. Entity có vòng đời trạng thái bị chạm thì dẫn sơ đồ trạng thái trong KB nếu có.
 2. Desired Situation: từ requirements.
 3. Impact Matrix 12 vùng: business process, module, screen và report, data, API, role, business rule, NFR, notification và email, reporting, test, release. Mỗi dòng có severity và nguồn. Vùng không ảnh hưởng vẫn ghi lý do. Vùng KB chưa phủ ghi `❓PO`.
    - 3a Conflict bốn chiều: rule, process, data, permission. Phát hiện thì escalate cho PO quyết, không tự resolve.

@@ -26,6 +26,8 @@ Nhận xét nếu có định hướng: alignment với objective; điểm mạn
 | A | | | | |
 | B | | | | |
 
+<Tuỳ chọn: các option khác nhau ở luồng xử lý thì mỗi option một sơ đồ luồng ngắn ngay dưới bảng, theo `engine/standards/diagrams.md` mục 4.>
+
 ## 3. So sánh
 | Tiêu chí | Option A | Option B | Option C |
 |---|---|---|---|

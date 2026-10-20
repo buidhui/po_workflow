@@ -18,7 +18,7 @@ inputs: <prd@1.0>
 | AC | Cách kiểm | Dữ liệu cần | Ưu tiên |
 |---|---|---|---|
 
-<Mỗi AC trong PRD một dòng. AC không kiểm thử được ghi ở mục 5.>
+<Mỗi AC trong PRD một dòng. AC không kiểm thử được ghi ở mục 5. PRD có vòng đời trạng thái thì thêm bảng phủ chuyển trạng thái: mỗi mũi tên trong sơ đồ của PRD ít nhất một ca, cộng ca cho chuyển trạng thái không hợp lệ, theo `engine/standards/diagrams.md` mục 3.>
 
 ## 3. Vùng hồi quy
 <Tính năng có sẵn bị chạm, lấy từ Impact Matrix của intent.>

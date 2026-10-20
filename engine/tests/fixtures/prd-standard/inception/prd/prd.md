@@ -37,6 +37,27 @@ Học viên quên mật khẩu phải nhờ vận hành đặt lại. ❓PO số
 
 ---
 
+# 4. Giải pháp tổng thể
+
+## Vòng đời trạng thái
+
+```mermaid
+flowchart LR
+    BD(("Bắt đầu")) --> MOI("Mới tạo")
+    MOI -->|Gửi email| CHO("Chờ đặt lại")
+    CHO -->|Đặt mật khẩu mới| XONG("Đã đặt lại")
+    XONG -->|Mở lại<br/>liên kết| CHO
+    HUY("Đã huỷ")
+```
+
+| Trạng thái hiện tại | Sự kiện | Ai kích hoạt | Điều kiện | Trạng thái sau | Hệ quả |
+| --- | --- | --- | --- | --- | --- |
+| Mới tạo | Gửi email | Hệ thống | Email đã xác minh | Chờ đặt lại | Gửi liên kết |
+| Chờ đặt lại | Đặt mật khẩu mới | Học viên | Liên kết còn hạn | Đã đặt lại | |
+| Chờ đặt lại | Hết hạn | Hệ thống | Quá thời hạn liên kết | Đã huỷ | |
+
+---
+
 # 5. Units
 
 | Unit | Gồm US | Phụ thuộc | Phát hành độc lập được? |

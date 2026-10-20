@@ -21,6 +21,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 | <portal theo domain.md> | | | KB `<file> §<mục>` · bảng `<tên>` · `<endpoint>` | `❓PO` nếu chưa chắc |
 
 Bao quát: module, màn hình, entity, API và job, role, rule hiện tại, NFR, mail event, tính năng Hidden.
+<Tuỳ chọn, khi bảng có từ sáu dòng: sơ đồ đặt tính năng mới ở giữa, nối tới từng dòng của bảng, nhãn mũi tên là New hoặc Existing. Theo `engine/standards/diagrams.md`.>
 
 ## Vùng KB chưa phủ bị chạm
 | Vùng | Vì sao nghi chạm | Ai xác nhận |

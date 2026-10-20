@@ -85,6 +85,8 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 ## Mô tả giải pháp <!-- tuỳ chọn -->
 
+*Giải pháp có nhiều bước hoặc nhiều vai nối tiếp thì thêm sơ đồ luồng nghiệp vụ, theo `engine/standards/diagrams.md` mục 4.*
+
 ## Ràng buộc nghiệp vụ cho cách làm <!-- tuỳ chọn -->
 
 *Điều phải đúng với mọi cách làm, mỗi dòng có mã `C1`, `C2`. Dev quyết làm thế nào.*
@@ -94,10 +96,18 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 ## Vòng đời trạng thái <!-- tuỳ chọn -->
 
-*Chỉ viết khi tính năng có đối tượng đổi trạng thái mà người dùng thấy. Mức nghiệp vụ.*
+*Bắt buộc khi tính năng có đối tượng đổi trạng thái mà người dùng thấy, như đơn, lớp, chứng chỉ, yêu cầu duyệt; mỗi đối tượng một sơ đồ và một bảng. Mức nghiệp vụ. Bảng là nguồn chính, sơ đồ vẽ từ bảng theo " + STD + " mục 3: `flowchart`, nút Bắt đầu và Kết thúc dạng tròn, nhãn mũi tên là tên sự kiện. `po-tools.py check` so từng chuyển trạng thái giữa bảng và sơ đồ.*
 
-| Trạng thái | Sự kiện chuyển | Ai kích hoạt | Điều kiện | Trạng thái sau |
-| --- | --- | --- | --- | --- |
+```mermaid
+flowchart LR
+    BD(("Bắt đầu")) --> A("<Trạng thái đầu>")
+    A -->|<Sự kiện>| B("<Trạng thái sau>")
+    B --> KT(("Kết thúc"))
+```
+
+| Trạng thái hiện tại | Sự kiện | Ai kích hoạt | Điều kiện | Trạng thái sau | Hệ quả |
+| --- | --- | --- | --- | --- | --- |
+| *<Trạng thái đầu>* | *<Sự kiện>* | *<vai hoặc hệ thống>* | *<điều kiện kiểm được>* | *<Trạng thái sau>* | *<thông báo, dữ liệu đổi theo>* |
 
 ## Dữ liệu cần lưu giữ <!-- tuỳ chọn -->
 
@@ -110,7 +120,7 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 # 5. Units
 
-*Lấy từ `stories.md`. Nhóm US làm và phát hành độc lập được, để Dev biết bắt đầu từ đâu. Thứ tự là đề xuất, Dev quyết thứ tự thật. Profile S bỏ mục này.*
+*Lấy từ `stories.md`. Nhóm US làm và phát hành độc lập được, để Dev biết bắt đầu từ đâu. Thứ tự là đề xuất, Dev quyết thứ tự thật. Từ ba Unit trở lên thì thêm sơ đồ phụ thuộc Unit lấy từ `stories.md`, theo " + STD + " mục 4. Profile S bỏ mục này.*
 
 | Unit | Gồm US | Phụ thuộc | Phát hành độc lập được? |
 | --- | --- | --- | --- |
@@ -141,7 +151,7 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 ### Luồng chính
 
-*Đường vào màn, sau đó ba tới bảy bước: người dùng làm gì, hệ thống đáp gì. Nhánh rẽ đáng kể ghi ngắn ngay dưới luồng chính.*
+*Đường vào màn, sau đó ba tới bảy bước: người dùng làm gì, hệ thống đáp gì. Nhánh rẽ đáng kể ghi ngắn ngay dưới luồng chính. Luồng có từ hai điểm rẽ nhánh thì thêm sơ đồ luồng, theo " + STD + " mục 4.*
 
 ### Business rule
 

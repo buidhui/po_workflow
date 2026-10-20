@@ -37,6 +37,8 @@ Bản phân tích nội bộ. Kết quả chảy vào `stories.md`, PRD mục Da
 | Sự kiện, mail | | file sự kiện · mail số N | đang bật hay tắt |
 | Tính năng Hidden bị chạm | | index KB mục Trạng thái | |
 
+<Từ ba vùng bị ảnh hưởng trở lên: sơ đồ phụ thuộc, `flowchart LR`, mỗi thành phần trong bảng trên một nút, mũi tên theo quan hệ phụ thuộc, nút thuộc vùng High tô màu. Theo `engine/standards/diagrams.md` mục 4.>
+
 ## 3. Desired Situation
 <Từ requirements: tính năng mới làm gì, process mới ra sao.>
 
