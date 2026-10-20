@@ -38,7 +38,7 @@ Một luồng duy nhất theo AWS AI-DLC Workflows, phiên bản ghi trong `engi
 
 ## Domain pack
 
-Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`: manifest `domain.md`, KB, corner checklist, template PRD và User Guide của công ty. Đọc `domain.md` ở đầu mỗi phiên và ở bước Load của mọi stage. Engine không ghi cứng dữ kiện sản phẩm, kể cả tên sản phẩm; sản phẩm đang cài ghi ở frontmatter của `domain.md`. Đổi domain theo [DOMAIN-SETUP.md](DOMAIN-SETUP.md).
+Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`: manifest `domain.md`, KB, corner checklist, template User Guide của công ty; template PRD riêng chỉ khi công ty bắt buộc, khi đó ghi đè template chuẩn `engine/templates/prd.md`. Đọc `domain.md` ở đầu mỗi phiên và ở bước Load của mọi stage. Engine không ghi cứng dữ kiện sản phẩm, kể cả tên sản phẩm; sản phẩm đang cài ghi ở frontmatter của `domain.md`. Đổi domain theo [DOMAIN-SETUP.md](DOMAIN-SETUP.md).
 
 ## Knowledge
 
