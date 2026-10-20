@@ -1,4 +1,4 @@
-> Nguồn: AWS AI-DLC Workflows, commit `0488aff` sau bản 2.11.0, `core/knowledge/aidlc-product-agent/requirements-elicitation.md`, giấy phép MIT-0 (Amazon.com, Inc. or its affiliates). Chép nguyên văn ngày 2026-10-09, chưa chỉnh cho LMS; đường dẫn `aidlc/...` trong bài là của AWS, không có trong repo này. Stage đọc: 1.1 Intent Capture (Stakeholder Interviews) · 2.3 Requirements Analysis (Validation Checklist).
+> Nguồn: AWS AI-DLC Workflows, commit `0488aff` sau bản 2.11.0, `core/knowledge/aidlc-product-agent/requirements-elicitation.md`, giấy phép MIT-0 (Amazon.com, Inc. or its affiliates). Chép nguyên văn ngày 2026-10-09, chưa chỉnh theo sản phẩm; đường dẫn `aidlc/...` trong bài là của AWS, không có trong repo này. Stage đọc: 1.1 Intent Capture (Stakeholder Interviews) · 2.3 Requirements Analysis (Validation Checklist).
 
 # Requirements Elicitation Techniques
 

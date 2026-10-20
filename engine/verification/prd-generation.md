@@ -8,7 +8,7 @@
 
 ## Mục 1 tới 5
 - [ ] Bối cảnh và mục tiêu, Ngoài phạm vi, Giải pháp tổng thể, Units tóm tắt từ artifact đã duyệt, không viết nội dung mới. Ràng buộc nghiệp vụ cho cách làm chỉ có điều phải đúng
-- [ ] **[BLOCK]** Mỗi mục tiêu có ít nhất một tiêu chí thành công `SC<n>` đo được, có cách đo và ngưỡng. Ngưỡng chưa có số liệu nền ghi là đề xuất và có giả định ở mục 9. Không còn dòng mẫu
+- [ ] **[BLOCK]** Mỗi mục tiêu có ít nhất một tiêu chí thành công `SC<n>` đủ chỉ số và nguồn dữ liệu, giá trị hiện tại, giá trị mục tiêu, thời điểm đo, người đo. Chưa có số liệu nền thì ghi đề xuất và có giả định ở mục 9. Dữ liệu đo do hệ thống sinh ra có FR hoặc NFR tương ứng. Không còn dòng mẫu
 - [ ] Bảng thông tin có mã tính năng, PO, ba PIC, Figma, tài liệu liên quan. Không có trạng thái tài liệu hay người duyệt trong thân PRD
 - [ ] **[BLOCK]** Không có mục Database và API. Không sequence diagram, cấu trúc bảng, thuật toán, thư viện
 
@@ -17,7 +17,9 @@
 - [ ] Mỗi US đủ các mục con bắt buộc: User story, Tiền điều kiện, Luồng chính, Business rule, Tiêu chí chấp nhận, Giao diện và validate, Dữ liệu, Trường hợp ngoại lệ, Ngoài phạm vi của US
 - [ ] Mỗi US có dòng Ưu tiên Must, Should hoặc Could, khớp `stories.md`; ưu tiên không phải Must có một câu lý do
 - [ ] US phụ thuộc US khác ghi mã `US<n>` ở Tiền điều kiện
-- [ ] BR mã `BR<US>.<n>`, không trùng, viết theo một trong năm mẫu EARS của template. Rule chạm tính năng có sẵn dẫn mã KB
+- [ ] BR mã `BR<US>.<n>` hoặc `BR0.<n>` dùng chung, không trùng; câu khẳng định về nghiệp vụ theo BABOK 10.9, có loại Định nghĩa hay Hành vi, rule hành vi có mức áp dụng. Rule dùng cho nhiều US đặt ở `BR0.<n>`, không chép lại. Rule chạm tính năng có sẵn dẫn mã KB
+- [ ] Quy tắc tính toán có ít nhất ba ví dụ, một ví dụ ở giá trị biên
+- [ ] **[BLOCK]** Có từ hai vai, hoặc Impact Matrix ghi vùng phân quyền từ Medium: có bảng Quyền theo vai; mỗi ô Không mà người dùng chạm được có tiêu chí cho nhánh bị từ chối
 - [ ] **[BLOCK]** Mỗi US có danh sách tiêu chí mã `AC<US>.<n>`, không trùng. Mỗi tiêu chí theo cấu trúc Given/When/Then, When chỉ một hành động hoặc sự kiện, Then kiểm được, có đạt hoặc không đạt
 - [ ] **[BLOCK]** Mọi BR có ít nhất một tiêu chí trỏ tới. Luồng chính và mỗi nhánh đáng kể có tiêu chí
 - [ ] **[BLOCK]** Mỗi US có ít nhất một tiêu chí cho nhánh lỗi hoặc bị từ chối. Mỗi ngưỡng số có tiêu chí ở giá trị biên
@@ -35,7 +37,7 @@
 
 ## Mục 7 tới 10
 - [ ] NFR áp cho cả tính năng có chỉ số đo; NFR riêng của US được liệt kê mã US. Chưa có chỉ số thì có câu hỏi mở
-- [ ] **[BLOCK]** Chuyển đổi và triển khai phủ đủ Impact Matrix mục Transition và mục Tenant. Điểm PO chưa quyết ghi `[đề xuất]`
+- [ ] **[BLOCK]** Chuyển đổi và triển khai phủ đủ Impact Matrix mục Transition và mục Tenant, mỗi dòng mã `TR<n>`. Điểm PO chưa quyết ghi `[đề xuất]`
 - [ ] Mỗi giả định có hệ quả nếu sai
 - [ ] **[BLOCK]** Câu hỏi mở có người trả lời và việc bị chặn. PRD còn tối đa 3 chỗ `❓PO`
 

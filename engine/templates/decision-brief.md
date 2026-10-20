@@ -36,7 +36,8 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 <Ước lượng của Tech PIC theo Unit of work, so với mốc cứng ở scope-document. Vượt mốc thì nêu lựa chọn: cắt phạm vi, dời mốc, tách đợt.>
 
 ## 8. Rủi ro
-| # | Rủi ro | Ai nêu | Cách giảm | Chấp nhận |
+<Mã `RK<n>` của sổ rủi ro trong `decisions.md`; rủi ro mới nêu ở buổi họp thì thêm vào sổ.>
+| RK | Rủi ro | Ai nêu | Cách giảm | Chấp nhận |
 |---|---|---|---|---|
 
 ## 9. Ý kiến phản đối

@@ -14,12 +14,12 @@ Dạng một dòng: `- <nội dung> (learned YYYY-MM-DD · <intent> <mã stage> 
 - Cần biết một cơ chế kỹ thuật có tồn tại không thì hỏi PO, không tự đào Swagger để kết luận (learned 2026-10-05)
 
 ## PRD
-- PRD không có mục Database và API. Thay bằng Data to Retain: thông tin nào phải lưu và vì sao (learned 2026-10-06)
-- Không hỏi người viết ba thứ: bảng metadata, link Figma và tài khoản staging, Success Metrics. Để trống hoặc tự đề xuất, người viết điền sau (learned 2026-10-06)
+- PRD không có mục Database và API. Thay bằng mục Dữ liệu cần lưu giữ: thông tin nào phải lưu và vì sao (learned 2026-10-06)
+- Ở 2.42 không hỏi lại người viết bảng thông tin, link Figma, tài khoản staging; để trống, người viết điền sau. Tiêu chí thành công lấy từ 1.1, không hỏi lại ở 2.42 (learned 2026-10-06)
 - Không giữ bảng ví dụ của template. Hai PRD cũ mang nguyên chỉ số NPS của một app khác (learned 2026-09-23)
-- Technical Direction chỉ nêu cái gì phải đúng, không vẽ sequence, không thiết kế bảng, không chọn thuật toán (learned 2026-10-05)
+- Ràng buộc nghiệp vụ cho cách làm chỉ nêu cái gì phải đúng, không vẽ sequence, không thiết kế bảng, không chọn thuật toán (learned 2026-10-05)
 - Define hết user story kể cả cái chưa làm, ghi "chưa làm" trong tiêu đề. Bức tranh đầy đủ giúp phân tích ảnh hưởng đúng (learned 2026-09-23)
-- Technical design của Dev viết vào PRD thì thêm mục mới, không thay mục nghiệp vụ PO đã viết. Một lần technical design backend thay mất ràng buộc C1 đến C12, ba rule nền và định nghĩa chỉ số, làm gãy tham chiếu từ các US (learned 2026-10-12)
+- Thiết kế kỹ thuật không viết vào PRD; Tech PIC viết ở `tech-design.md`, theo ADR 0003. Một lần technical design backend viết thẳng vào PRD đã thay mất ràng buộc C1 đến C12, ba rule nền và định nghĩa chỉ số, làm gãy tham chiếu từ các US (learned 2026-10-12)
 
 ## Writing
 - Không viết tắt trong tài liệu bàn giao. "Giải O2" phải là "Giải quyết mục tiêu O2" (learned 2026-10-01)

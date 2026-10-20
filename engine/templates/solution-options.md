@@ -23,21 +23,23 @@ Nhận xét nếu có định hướng: alignment với objective; điểm mạn
 ## 2. Các option
 | Option | Tên | Nguồn gốc: PO, AI, cách hệ đang làm | Góc tiếp cận | Mô tả ngắn |
 |---|---|---|---|---|
+| 0 | Giữ nguyên hiện trạng | | | <hệ quả nếu không làm gì, theo BABOK 7.5 và 7.6; mốc so sánh cho mọi option khác> |
 | A | | | | |
 | B | | | | |
 
 <Tuỳ chọn: các option khác nhau ở luồng xử lý thì mỗi option một sơ đồ luồng ngắn ngay dưới bảng, theo `engine/standards/diagrams.md` mục 4.>
 
 ## 3. So sánh
-| Tiêu chí | Option A | Option B | Option C |
-|---|---|---|---|
-| Business fit | | | |
-| Tác động người dùng và quy trình | | | |
-| Tác động hệ thống, dữ liệu, API, từ Impact Matrix | | | |
-| Effort, tương đối | | | |
-| Risk | | | |
-| Dependency | | | |
-| Nợ đóng cứng tenant | | | |
+<Ma trận quyết định có trọng số, theo BABOK 10.16 Decision Analysis. Trọng số do PO quyết, tổng 100.>
+| Tiêu chí | Trọng số | Option 0 | Option A | Option B |
+|---|---|---|---|---|
+| Đóng góp cho O1, mỗi mục tiêu một dòng | | | | |
+| Tác động người dùng và quy trình | | | | |
+| Tác động hệ thống, dữ liệu, API, từ Impact Matrix | | | | |
+| Effort, tương đối | | | | |
+| Risk | | | | |
+| Dependency | | | | |
+| Nợ đóng cứng tenant | | | | |
 
 ## 4. Pros và cons
 ### Option A

@@ -39,7 +39,7 @@ Ghi chép:
       feature vào frontmatter intent.md, ngay sau khoá intent, rồi in mã; intent đã có mã thì từ chối.
       --dry-run chỉ in.
   po-tools.py stories <intent> [--write] [--us US3]
-      Lập Story List cho Jira từ các khối ## US<n> của prd.md: mỗi US một dòng, 11 cột theo mẫu import
+      Lập Story List cho Jira từ các khối ## US<n> của prd.md: mỗi US một dòng, 12 cột theo mẫu import
       CSV của Jira (Project key, Project name, Project type, Issue Type, Summary, Description, Epic Link,
       3 cột Labels, Comment). Project lấy từ jira_project_key, jira_project_name ở frontmatter domain.md;
       Epic từ dòng Jira Epic của intent.md, ghi "U2: KEY" để gán Epic theo Unit. Description theo cú pháp
@@ -986,8 +986,8 @@ def trace(intent, write_out=False):
         brs = sorted(set(BR_RE.findall(prd)), key=lambda t: (int(t[0]), int(t[1]), t[2]))
         for a, b, c in brs:
             us = "US%s" % a
-            ok = us in prd_us
-            br_rows.append(("BR%s.%s%s" % (a, b, c), us, "OK" if ok else "ORPHAN"))
+            ok = us in prd_us or int(a) == 0  # BR0.<n> là rule dùng chung ở PRD mục 4
+            br_rows.append(("BR%s.%s%s" % (a, b, c), "dùng chung" if int(a) == 0 else us, "OK" if ok else "ORPHAN"))
             if not ok:
                 orphans.append("BR%s.%s%s thuộc %s không có trong prd.md" % (a, b, c, us))
         prd_note = "%d US trong prd.md, %d BR" % (len(prd_us), len(brs))
@@ -1366,6 +1366,13 @@ def check_artifact(ctx, W, st, path):
 
     # sơ đồ: vòng đời trạng thái khớp bảng, theo engine/standards/diagrams.md
     check_lifecycle(W, f, lines, b0)
+    # BABOK 7.2: từ khó kiểm ở dòng yêu cầu, chỉ gợi ý
+    if stem in ("requirements", "prd"):
+        for i in range(b0, len(lines)):
+            m = REQ_LINE.match(lines[i])
+            v = VAGUE_RE.search(lines[i]) if m else None
+            if v:
+                W.info.append("Gợi ý, %s:%d %s có từ khó kiểm chứng '%s': thay bằng điều đo được, theo BABOK 7.2" % (f, i + 1, m.group(1), v.group(1)))
 
     # 2. artifact nội bộ: Assumptions & Open Questions và thẻ nguồn
     if stem in INTERNAL:
@@ -2373,7 +2380,7 @@ def replay(intent):
         meta, sts = us_handoff(intent)
         if meta is not None:
             out += ["", "## Story giao Dev"]
-            csvs = sorted((intent / "stories").glob("story-list-prd-v*.csv")) if (intent / "stories").is_dir() else []
+            csvs = sorted((intent / "stories").glob("story-list-prd-v*.csv"), key=csv_version) if (intent / "stories").is_dir() else []
             out.append("%d story trong PRD v%s, %d đạt điều kiện giao Dev. Story List: %s. Chi tiết: po-tools.py dor %s"
                        % (len(sts), meta["ver"], sum(1 for x in sts if not x["reasons"]), ", ".join(p.name for p in csvs) or "chưa sinh", intent.name))
     out += ["", "## Câu chặn còn mở"]
@@ -2822,7 +2829,7 @@ def ac_layer(prd, prd_us):
     no_ac = []
     for t in sorted(set(BR_RE.findall(prd)), key=lambda t: (int(t[0]), int(t[1]), t[2])):
         u = int(t[0])
-        if "US%d" % u not in prd_us:
+        if u == 0 or "US%d" % u not in prd_us:
             continue
         if u not in with_ac:
             if u not in no_ac:
@@ -2830,6 +2837,10 @@ def ac_layer(prd, prd_us):
         elif t not in covered:
             gaps.append("%s chưa có AC" % br_label(t))
     gaps += ["US%d chưa có AC" % u for u in no_ac]
+    any_ref = set(t for a in acs for t in a["brs"])
+    for t in sorted(set(BR_RE.findall(prd)), key=lambda t: (int(t[1]), t[2])):
+        if int(t[0]) == 0 and t not in any_ref:
+            gaps.append("%s chưa có AC" % br_label(t))
     return rows, gaps, orphans
 
 
@@ -2890,7 +2901,10 @@ JIRA_KEY = re.compile(r"\b([A-Z][A-Z0-9]+-\d+)\b")
 JIRA_DESC_MAX = 32000
 STORY_AC_MAX = 6
 KB_MIN = ("00-index.md", "glossary.md", "concept-model.md", "data-model.md", "permissions.md", "product-direction.md", "corner-checklist.md")
-PRD_QPO_MAX = 3  # Spec Kit giới hạn 3 chỗ chưa rõ trong spec, xem ADR 0004
+PRD_QPO_MAX = 3
+# Từ khó kiểm chứng, theo BABOK 7.2 (không mơ hồ, kiểm được) và ISO/IEC/IEEE 29148 mục 5.2.7
+VAGUE_RE = re.compile(r"(?<!\w)(nhanh chóng|nhanh|dễ dàng|dễ|thân thiện|linh hoạt|hợp lý|phù hợp|tối ưu|một số|nếu cần|tuỳ trường hợp|và/hoặc|v\.v\.|tương đối|đơn giản)(?!\w)", re.I)
+REQ_LINE = re.compile(r"^\s*(?:\|\s*)?(?:[-*+]\s+)?[`*_]*((?:N?FR|BR|AC|SC)-?\d+(?:\.\d+)?)\b")  # Spec Kit giới hạn 3 chỗ chưa rõ trong spec, xem ADR 0004
 JIRA_SECTIONS = (("us", "MÔ TẢ"), ("pre", "ĐIỀU KIỆN TRƯỚC"), ("scenario", "KỊCH BẢN"), ("ac", "TIÊU CHÍ CHẤP NHẬN"),
                  ("ui", "GIAO DIỆN VÀ VALIDATE"), ("br", "BUSINESS RULE"), ("data", "DỮ LIỆU"), ("nfr", "NFR"),
                  ("corner", "TRƯỜNG HỢP NGOẠI LỆ"), ("oos", "NGOÀI PHẠM VI"))
@@ -2987,6 +3001,26 @@ def jira_description(secs, feat, ref):
     return text
 
 
+BR0_DEF = re.compile(r"^\s*(?:[-*+]\s+)?[`*_]*BR-?0\.(\d+)[`*_]*")
+
+
+def shared_rules(lines):
+    """{số n: dòng Markdown} của rule dùng chung BR0.<n> định nghĩa ở PRD mục 4, dạng danh sách hoặc dòng bảng."""
+    out = {}
+    for ln in lines:
+        s_ = ln.strip()
+        if s_.startswith("|"):
+            cells = [clean(c) for c in split_cells(s_)]
+            m = re.fullmatch(r"BR-?0\.(\d+)", cells[0] if cells else "")
+            if m:
+                out.setdefault(int(m.group(1)), "- `BR0.%s` %s" % (m.group(1), " · ".join(c for c in cells[1:] if c and "<" not in c)))
+            continue
+        m = BR0_DEF.match(ln)
+        if m:
+            out.setdefault(int(m.group(1)), ln.rstrip())
+    return out
+
+
 def us_handoff(intent):
     """Đọc PRD và trả mọi thứ cần cho danh sách story: (meta, [story]) hoặc (None, thông báo lỗi)."""
     intent = resolve_intent(intent)
@@ -3025,6 +3059,7 @@ def us_handoff(intent):
     smap = ux_screen_map(ux) if ux is not None else None
     figma = re.findall(r"https?://[^\s|)\]]*figma[^\s|)\]]*", intent_row(imd, "Figma"))
     issues = prd_open_issues(lines)
+    shared0 = shared_rules(lines)
     meta = {"intent": intent, "iname": iname, "feat": feat, "ifeat": ifeat, "pfeat": pfeat, "ver": ver, "status": status,
             "approved": status == "approved", "approved_at": approved_at, "tag": "%s/prd-v%s" % (iname, ver),
             "title": title, "prd_path": show(prd_p), "epic": epic, "epics": epics, "aligned": aligned}
@@ -3057,6 +3092,9 @@ def us_handoff(intent):
             reasons.append("câu chặn còn mở ở Câu hỏi mở: %s" % ", ".join("#" + it["no"] if it["no"] else snippet(it["text"], 40) for it in blk))
         secs = split_us_block(lines, b["start"], b["end"])
         secs["us"] = tidy([l for l in secs["us"] if not PRIORITY_RE.search(l)])  # ưu tiên đã thành cột Priority
+        used0 = sorted({int(t[1]) for t in BR_RE.findall("\n".join(blines)) if int(t[0]) == 0})
+        if used0:
+            secs["br"] = secs["br"] + [""] + [shared0[k] for k in used0 if k in shared0]
         screens = (smap or {}).get(n, [])
         if smap is not None and us_has_ui(secs["ui"]) and not screens:
             reasons.append("giao diện chưa có màn trong ux-design")
@@ -3111,6 +3149,12 @@ def jira_csv_path(meta):
     return meta["intent"] / "stories" / ("story-list-prd-v%s.csv" % meta["ver"])
 
 
+def csv_version(p):
+    """Khoá sắp xếp file Story List theo phiên bản PRD: v1.10 đứng sau v1.9."""
+    m = re.search(r"prd-v(\d+(?:\.\d+)*)", p.name)
+    return tuple(int(x) for x in m.group(1).split(".")) if m else ()
+
+
 def stories_cmd(intent, write_out=False, only=None):
     meta, stories = us_handoff(intent)
     if meta is None:
@@ -3145,7 +3189,7 @@ def stories_cmd(intent, write_out=False, only=None):
         print("\nLưu ý: %d story chưa có dòng Ưu tiên trong PRD, cột Priority để trống: %s." % (len(noprio), ", ".join(noprio)))
     rows = jira_rows(meta, stories)
     path = jira_csv_path(meta)
-    prev = sorted(p for p in (meta["intent"] / "stories").glob("story-list-prd-v*.csv") if p != path) if (meta["intent"] / "stories").is_dir() else []
+    prev = sorted((p for p in (meta["intent"] / "stories").glob("story-list-prd-v*.csv") if p != path), key=csv_version) if (meta["intent"] / "stories").is_dir() else []
     if prev:
         import csv
         old = {}
@@ -3162,6 +3206,9 @@ def stories_cmd(intent, write_out=False, only=None):
         added = [r[si] for r in rows if r[si] not in old]
         print("\nSo với %s: đổi %s; mới %s. Story đã import thì sửa trên Jira theo danh sách này." % (
             prev[-1].name, ", ".join(changed) or "không có", ", ".join(added) or "không có"))
+        removed = sorted(k for k in old if k and k not in {r[si] for r in rows})
+        if removed:
+            print("Story có ở bản trước, không còn trong PRD: %s. Đóng hoặc huỷ trên Jira, không xoá." % ", ".join(removed))
     if not write_out:
         print("\nChạy thử, chưa ghi gì. Thêm --write để ghi %s." % rel(path, meta["intent"]))
         return 0

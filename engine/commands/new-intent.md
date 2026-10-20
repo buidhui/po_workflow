@@ -15,7 +15,7 @@ state.md         từ engine/templates/state.md
 decisions.md     từ engine/templates/decisions.md
 memory.md        từ engine/templates/memory.md
 inputs/          PO đặt yêu cầu gốc, ảnh, csv vào đây
-ideation/  inception/  reviews/  verification/  archive/  design/  user-guide/
+ideation/  inception/  reviews/  verification/  archive/  design/  user-guide/  evaluation/
 ```
 Thư mục con của stage tạo khi stage chạy, không tạo trước. Thư mục rỗng có `.gitkeep`.
 

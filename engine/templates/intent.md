@@ -16,6 +16,7 @@ created: <YYYY-MM-DD>
 | Vai | Tên |
 |---|---|
 | PO | |
+| Người tài trợ, người quyết cuối | |
 | Design PIC | |
 | Tech PIC | |
 | QA PIC | |

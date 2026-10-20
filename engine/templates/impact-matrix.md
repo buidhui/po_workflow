@@ -81,11 +81,13 @@ Vùng không bị ảnh hưởng vẫn ghi lý do. Vùng KB chưa phủ ghi `❓
 | CG-1 | | | |
 
 ## 8. Transition <!-- tuỳ chọn -->
-| Loại | Nội dung |
-|---|---|
-| Data | migration, backfill, dữ liệu cũ |
-| Compatibility | bản cũ và mới chạy song song được không |
-| Cutover | thứ tự bật, rollback, ẩn hiện khi golive |
+| Mã | Loại | Nội dung |
+|---|---|---|
+| TR1 | Data | migration, backfill, dữ liệu cũ |
+| TR2 | Compatibility | bản cũ và mới chạy song song được không |
+| TR3 | Cutover | thứ tự bật, rollback, ẩn hiện khi golive |
+| TR4 | Tổ chức và vận hành | đào tạo, hỗ trợ, quy trình vận hành đổi, theo BABOK 6.4 |
+<Mã TR giữ nguyên khi sang PRD mục 8.>
 
 ## 9. Tenant, theo câu hỏi trong `domain.md` mục 4 phần 2.31 <!-- tuỳ chọn -->
 | Câu hỏi | Trả lời | Xử lý |
@@ -96,7 +98,8 @@ Vùng không bị ảnh hưởng vẫn ghi lý do. Vùng KB chưa phủ ghi `❓
 | Enum mới do hệ thống hay tenant định nghĩa | | |
 
 ## 10. Risk
-| # | Risk | Mức | Giảm nhẹ |
+<Rủi ro ghi vào sổ `decisions.md` mục Rủi ro với mã `RK<n>`; bảng này chỉ trỏ mã.>
+| RK | Rủi ro | Mức | Cách xử lý |
 |---|---|---|---|
 
 ## 11. Assumptions & Open Questions

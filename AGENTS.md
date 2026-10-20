@@ -34,7 +34,7 @@ Một luồng duy nhất theo AWS AI-DLC Workflows, phiên bản ghi trong `engi
 - Script: `python3 engine/scripts/po-tools.py` với `next`, `check`, `review-start`, `approve`, `trace`, `status`, `doctor`, `index`, `replay`, `feature-id`, `stories`, `dor`, `migrate`. Số liệu, tiến độ và stage kế lấy từ script, không tự đếm.
 - Nghi thức ở `engine/protocol/*.md`, thuật ngữ ở `GLOSSARY.md`, bài học ở `memory/team.md` và `memory/project.md`.
 - Tên file artifact ổn định, phiên bản ở frontmatter, bản duyệt chụp vào `archive/` của intent theo `gate-protocol.md`. Không tạo file `v0.x`.
-- Intent chuyển từ luồng cũ giữ họ mã cũ trong tài liệu của chúng, ghi ở `intent.md` của từng intent. Luồng cũ nằm ở tag `pre-aidlc`.
+- Intent chuyển từ luồng cũ giữ họ mã cũ trong tài liệu của chúng, ghi ở `intent.md` của từng intent.
 
 ## Domain pack
 
@@ -44,7 +44,7 @@ Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`, là knowledge
 
 | Thư mục | Nội dung |
 |---|---|
-| `domain/` | Domain pack. `domain.md` là manifest: KB nào trả lời câu gì, nguồn sống và bản chốt, dữ kiện cho từng stage, đích publish |
+| `domain/` | Domain pack, chỉ chứa knowledge base của sản phẩm theo `engine/standards/domain-kb.md`. `domain.md` là manifest: KB nào trả lời câu gì, nguồn sống và bản chốt, dữ kiện cho từng stage |
 | `engine/knowledge/` | Kiến thức vai PO chép từ AWS AI-DLC, không phụ thuộc sản phẩm; `corner-checklist-aws.md` là bản gốc để mỗi domain viết lại |
 | `memory/team.md` | Bài học dùng chung đã giữ lại tại gate, đi theo engine. Đọc ở bước Load của mọi stage |
 | `memory/project.md` | Bài học riêng của sản phẩm đang cài. Đọc ở bước Load của mọi stage, làm mới khi đổi domain |

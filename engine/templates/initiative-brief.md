@@ -31,8 +31,9 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 |---|---|---|---|
 
 ## 4. Rủi ro và giả định lớn
-| # | Nội dung | Mức | Cách giảm, hoặc ai xác nhận |
+| Mã | Nội dung | Mức | Cách giảm, hoặc ai xác nhận |
 |---|---|---|---|
+<Rủi ro dùng mã `RK<n>` của sổ rủi ro trong `decisions.md`; giả định dùng mã của artifact gốc.>
 
 ## 5. Quyết định đã chốt
 | DEC | Nội dung | Ngày |

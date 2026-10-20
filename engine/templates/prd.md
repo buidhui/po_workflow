@@ -62,10 +62,13 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 # 2. Tiêu chí thành công
 
-*Mỗi mục tiêu có ít nhất một tiêu chí đo được sau khi phát hành, không gắn với công nghệ. Ngưỡng chưa có số liệu nền thì ghi là đề xuất và ghi giả định ở mục 9. Có thể dùng khung HEART (Happiness, Engagement, Adoption, Retention, Task success) để tìm chỉ số; cột Nhóm HEART xoá được.*
+*Tiêu chí đánh giá sau phát hành, theo BABOK 6.2 (mục tiêu SMART) và 10.28 Metrics and KPIs; khác tiêu chí chấp nhận ở mục 6, là điều kiện để nhận một story. Mỗi mục tiêu có ít nhất một tiêu chí, đủ chỉ số, giá trị hiện tại, giá trị mục tiêu, thời điểm đo, người đo. Chưa có số liệu nền thì ghi đề xuất và giả định ở mục 9. Dữ liệu đo do hệ thống sinh ra thì phải có FR hoặc NFR tương ứng. Khung HEART (Happiness, Engagement, Adoption, Retention, Task success) dùng để tìm chỉ số.*
 
-| Mã | Tiêu chí | Cách đo | Ngưỡng | Mục tiêu | Nhóm HEART |
-| --- | --- | --- | --- | --- | --- |
+| Mã | Tiêu chí | Chỉ số và nguồn dữ liệu | Hiện tại | Mục tiêu | Thời điểm đo | Người đo | Phục vụ |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| SC1 | | | | | *<ví dụ: 60 ngày sau phát hành>* | | O1 |
+
+--- | --- | --- | --- | --- | --- |
 | SC1 | | | | O1 | |
 
 ---
@@ -110,6 +113,29 @@ stateDiagram-v2
 | Trạng thái hiện tại | Sự kiện | Ai kích hoạt | Điều kiện | Trạng thái sau | Hệ quả |
 | --- | --- | --- | --- | --- | --- |
 | *<Trạng thái đầu>* | *<Sự kiện>* | *<vai hoặc hệ thống>* | *<điều kiện kiểm được>* | *<Trạng thái sau>* | *<thông báo, dữ liệu đổi theo>* |
+
+## Quy tắc nghiệp vụ dùng chung <!-- tuỳ chọn -->
+
+*Quy tắc áp cho nhiều US, mã `BR0.<n>`, theo BABOK 10.9. US chỉ trỏ tới mã, không chép lại. Cách viết như mục Business rule của từng US.*
+
+| Mã | Quy tắc | Loại | Mức áp dụng | Nguồn |
+| --- | --- | --- | --- | --- |
+| BR0.1 | | Định nghĩa hoặc Hành vi | *<với rule hành vi: bắt buộc, vượt được khi có người duyệt, hoặc hướng dẫn>* | *<chính sách, người quyết, mã KB>* |
+
+## Quy tắc tính toán <!-- tuỳ chọn -->
+
+*Công thức của quy tắc định nghĩa có tính toán, như điểm, phí, chỉ số báo cáo. Mỗi công thức ít nhất ba ví dụ, gồm một ví dụ ở giá trị biên; theo phần Calculation Rules của `functional-design-guide.md` bên AWS.*
+
+| BR | Công thức | Đơn vị, làm tròn | Ví dụ: đầu vào → kết quả |
+| --- | --- | --- | --- |
+
+## Quyền theo vai <!-- tuỳ chọn -->
+
+*Bắt buộc khi tính năng có từ hai vai, hoặc Impact Matrix ghi vùng phân quyền từ Medium. Theo BABOK 10.39 Roles and Permissions Matrix. Mỗi ô Không mà người dùng chạm được có một tiêu chí chấp nhận cho nhánh bị từ chối.*
+
+| Thao tác | *<Vai 1>* | *<Vai 2>* | Điều kiện | Khi bị từ chối |
+| --- | --- | --- | --- | --- |
+| | Được, Không hoặc Có điều kiện | | | *<người dùng thấy gì>* |
 
 ## Dữ liệu cần lưu giữ <!-- tuỳ chọn -->
 
@@ -157,16 +183,9 @@ stateDiagram-v2
 
 ### Business rule
 
-*Mỗi rule một câu kiểm chứng được, viết theo một trong năm mẫu EARS:*
-- *Luôn đúng: "<Đối tượng hoặc hệ thống> phải <điều phải đúng>".*
-- *Theo sự kiện: "Khi <sự kiện>, hệ thống phải <phản hồi>".*
-- *Theo trạng thái: "Trong khi <trạng thái>, hệ thống phải <phản hồi>".*
-- *Hành vi không mong muốn: "Nếu <điều kiện không mong muốn>, hệ thống phải <phản hồi>".*
-- *Tuỳ chọn: "Với <cấu hình hoặc tính năng> đang bật, hệ thống phải <phản hồi>".*
+*Theo BABOK 10.9 Business Rules Analysis: mỗi rule một câu khẳng định về nghiệp vụ, độc lập với cách hệ thống thực hiện, kiểm chứng được. Ghi loại: Định nghĩa, tức ràng buộc dữ liệu, cách phân loại, cách tính; hoặc Hành vi, tức điều được phép, bắt buộc, bị cấm. Rule hành vi ghi thêm mức áp dụng: bắt buộc, vượt được khi có người duyệt, hoặc hướng dẫn. Rule dùng cho nhiều US đặt ở mục 4 Quy tắc nghiệp vụ dùng chung và chỉ trỏ mã `BR0.<n>` ở đây. Rule chạm tính năng có sẵn dẫn mã KB, ví dụ `BR-EDIT-07`. Hằng số ghi rõ cứng hay cấu hình được. Câu thông báo trên màn ghi ở bảng giao diện, rule chỉ trỏ tới.*
 
-*Rule chạm tính năng có sẵn dẫn mã KB, ví dụ `BR-EDIT-07`. Hằng số ghi rõ cứng hay cấu hình được. Câu thông báo trên màn ghi ở bảng giao diện, rule chỉ trỏ tới.*
-
-- `BR1.1` *…*
+- `BR1.1` *<quy tắc>* · *Hành vi, bắt buộc*
 
 ### Tiêu chí chấp nhận
 
@@ -224,16 +243,16 @@ stateDiagram-v2
 
 # 8. Chuyển đổi và triển khai
 
-*Yêu cầu chỉ cần trong giai đoạn đưa tính năng vào dùng. Lấy từ Impact Matrix mục Transition và mục Tenant. Dòng không áp dụng thì xoá.*
+*Yêu cầu chuyển đổi, loại transition theo BABOK 2.3: chỉ cần trong giai đoạn đưa tính năng vào dùng. Lấy từ Impact Matrix mục Transition và mục Tenant. Mỗi dòng mã `TR<n>`; dòng kiểm được thì có tiêu chí chấp nhận hoặc cách kiểm trong `test-design.md`. Dòng không áp dụng thì xoá.*
 
-| Hạng mục | Yêu cầu | Nguồn |
-| --- | --- | --- |
-| Dữ liệu hiện có | *Dữ liệu cũ liên quan đang có hay rỗng, giữ, chuyển đổi hay bỏ* | |
-| Cách bật | *Bật một lần hay theo đợt, điều kiện trước khi bật* | |
-| Chạy song song | *Đường cũ và đường mới cùng chạy thế nào* | |
-| Quay lui | *Tắt tính năng thì dữ liệu đã sinh xử lý ra sao* | |
-| Tenant và cấu hình | *Hằng số cứng hay cấu hình theo tổ chức* | |
-| Hướng dẫn người dùng | *User Guide cần viết hoặc sửa, đối tượng cần được báo* | |
+| Mã | Hạng mục | Yêu cầu | Nguồn |
+| --- | --- | --- | --- |
+| TR1 | Dữ liệu hiện có | *Dữ liệu cũ liên quan đang có hay rỗng, giữ, chuyển đổi hay bỏ* | |
+| TR2 | Cách bật | *Bật một lần hay theo đợt, điều kiện trước khi bật* | |
+| TR3 | Chạy song song | *Đường cũ và đường mới cùng chạy thế nào* | |
+| TR4 | Quay lui | *Tắt tính năng thì dữ liệu đã sinh xử lý ra sao* | |
+| TR5 | Tenant và cấu hình | *Hằng số cứng hay cấu hình theo tổ chức* | |
+| TR6 | Hướng dẫn người dùng và vận hành | *User Guide cần viết hoặc sửa, đối tượng cần được báo, đào tạo* | |
 
 ---
 
@@ -258,7 +277,9 @@ stateDiagram-v2
 
 # 11. Truy vết
 
+*Theo BABOK 5.1, mỗi yêu cầu truy được về nguồn và tới nơi đáp ứng nó. Phân loại theo BABOK 2.3: yêu cầu nghiệp vụ là mục tiêu `O` và tiêu chí thành công `SC`; yêu cầu của các bên là user story `US`; yêu cầu giải pháp là `FR`, `NFR`, business rule `BR`, tiêu chí chấp nhận `AC`; yêu cầu chuyển đổi là `TR`.*
+
 | FR | US | BR |
 | --- | --- | --- |
 
-*Mọi FR có US, hoặc ghi Deferred, N/A kèm lý do. Mọi BR thuộc một US. Chi tiết ở `traceability.md`.*
+*Mọi FR có US, hoặc ghi Deferred, N/A kèm lý do. Mọi BR thuộc một US hoặc là `BR0.<n>` dùng chung. Mọi mục tiêu có ít nhất một SC và một US làm đợt này. Chi tiết ở `traceability.md`.*

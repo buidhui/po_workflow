@@ -14,17 +14,19 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 <Người dùng đang xoay xở thế nào: làm gì, theo thứ tự nào, dựa vào tiêu chí gì, mất bao lâu, hay sai ở đâu. Số liệu nếu có.> [Q2]
 
 ## Objectives and success metrics
-| Objective | Đo bằng | Nguồn số | Nguồn |
-|---|---|---|---|
-| O1 <kết quả cần đạt; việc làm ghi ở scope> | <chỉ số> | <bảng, báo cáo> | [Q3] |
+| Objective | Chỉ số | Hiện tại | Mục tiêu | Thời điểm đo | Nguồn số | Nguồn |
+|---|---|---|---|---|---|---|
+| O1 <kết quả cần đạt; việc làm ghi ở scope> | <chỉ số> | <giá trị hiện tại, hoặc "chưa đo"> | <giá trị cần đạt> | <ví dụ 60 ngày sau phát hành> | <bảng, báo cáo> | [Q3] |
+<Mục tiêu theo SMART của BABOK 6.2: cụ thể, đo được, đạt được, liên quan, có thời hạn.>
 
 ## Why now
 <Áp lực, cơ hội, hay nợ cũ.> [Q4]
 
 ## Stakeholder map
-| Vai trò | Quan tâm điều gì | Quyết hay ảnh hưởng | Cần báo gì | Nguồn |
-|---|---|---|---|---|
-| | | | | [Q5] |
+| Vai trò | Quan tâm điều gì | Quyết hay ảnh hưởng | Mức ảnh hưởng | Thái độ với thay đổi | Cần báo gì | Nguồn |
+|---|---|---|---|---|---|---|
+| | | | Cao, Trung bình, Thấp | Ủng hộ, Trung lập, Lo ngại | | [Q5] |
+<Theo BABOK 3.2 và 10.43 Stakeholder List, Map, or Personas. Ghi rõ ai là người tài trợ, người quyết cuối việc làm hay dừng.>
 
 ## Product boundary and constraints
 - Portal: <theo danh sách portal trong domain.md> [Q7]

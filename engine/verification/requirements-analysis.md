@@ -7,10 +7,18 @@
 - [ ] Vùng KB chưa phủ ghi `❓PO`, không kết luận "chưa có" hay "không ảnh hưởng"
 
 ## FR, NFR
-- [ ] **[BLOCK]** Mỗi FR kiểm chứng được, có mã ổn định, ưu tiên, cờ Existing, New, Changed, nguồn
+- [ ] **[BLOCK]** Mỗi FR kiểm chứng được, có mã ổn định, ưu tiên, cột Phục vụ, cờ Existing, New, Changed, nguồn
+- [ ] Mỗi FR viết theo một mẫu EARS; FR Changed dẫn mã rule KB mà nó đổi
+- [ ] Mọi mục tiêu `O<n>` có ít nhất một FR phục vụ, theo BABOK 7.3
 - [ ] **[BLOCK]** Không có FR mô tả bảng, endpoint, thuật toán. FR mô tả điều phải đúng
 - [ ] NFR có chỉ số đo được. NFR chưa có chỉ số không bị bỏ: ghi OQ để PO chốt chỉ số
 - [ ] Constraints ghi hằng số cứng hay cấu hình
+
+## Chất lượng theo BABOK 7.2
+- [ ] Đơn nhất: mỗi FR một hành vi; hai hành vi nối bằng "và" đã tách thành FRn.m
+- [ ] Không mơ hồ: không dùng từ không đo được như nhanh, dễ, thân thiện, linh hoạt, hợp lý, phù hợp, tối ưu, một số, nếu cần, và/hoặc
+- [ ] Nhất quán: không hai FR trái nhau, không trái rule KB mà không ghi là Changed
+- [ ] Khả thi, có ưu tiên, dễ hiểu với người không tham gia buổi hỏi
 
 ## Góc
 - [ ] Mỗi góc áp dụng trong `corner-checklist.md` của domain đã thành FR, assumption có lý do, hoặc out of scope

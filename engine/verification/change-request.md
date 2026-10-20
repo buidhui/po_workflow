@@ -7,6 +7,8 @@
 
 ## Điểm re-entry
 - [ ] **[BLOCK]** Lấy stage thấp nhất bị sai lệch, không lấy stage dễ sửa nhất
+- [ ] **[BLOCK]** Dòng CR trong `decisions.md` có đủ cột đánh giá: mã bị chạm, mục tiêu bị ảnh hưởng, effort và mốc, độ khẩn; rủi ro mới đã vào sổ rủi ro
+- [ ] **[BLOCK]** PO đã quyết Nhận, Hoãn hoặc Bác, có DEC nguyên văn, trước khi chụp archive và sửa artifact
 - [ ] **[BLOCK]** PO đã xác nhận impact preview: stage mở lại, artifact đổi, gate duyệt lại
 
 ## Chế độ sửa

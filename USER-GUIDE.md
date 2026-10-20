@@ -338,7 +338,8 @@ Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev 
 | `/po-review <file>` | Review độc lập bằng AI Reviewer; thêm `--shadow` cho tài liệu người khác viết |
 | `/po-replay <intent>` | Tóm lược diễn biến của intent theo dòng thời gian: quyết định, review, việc còn chặn. Dùng khi chuyển intent cho PO khác |
 | `/po-stories <intent>` | Sinh Story List để import lên Jira từ PRD đã duyệt; profile M, L chạy sau gate 2.43 |
-| `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt |
+| `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt; PO quyết Nhận, Hoãn hoặc Bác trước khi sửa |
+| `/po-evaluate <intent>` | Đánh giá giải pháp sau phát hành theo tiêu chí thành công của PRD |
 | `/generate-user-guide <intent>` | Viết User Guide sau khi Dev làm xong |
 | `/new-domain <sản phẩm>` | Dựng khung domain pack trong repo của sản phẩm mới |
 

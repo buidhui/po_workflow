@@ -22,5 +22,6 @@ Engine cũng bám bản này cho protocol stage, gate và review. Domain pack c�
 | `prioritization-frameworks.md` | MoSCoW, WSJF, RICE, Kano; xử lý hoà và bất đồng | 1.4, 2.4 | Nguyên văn AWS |
 | `product-guide.md` | Persona, MVP, story mapping, workflow planning | 1.1, 1.4, 2.4 | Nguyên văn AWS |
 | `market-research-methods.md` | Competitive analysis, SWOT, build vs buy, market sizing | 1.2 | Nguyên văn AWS |
+| `functional-design-guide.md` | Business rule, quy tắc tính toán, phân quyền, luồng, máy trạng thái | 2.42 | Nguyên văn AWS; PO chỉ dùng phần nghiệp vụ |
 
-File chép nguyên văn giữ tiếng Anh, có dòng nguồn ở đầu. Cập nhật từ AWS: `git clone --depth 1 https://github.com/awslabs/aidlc-workflows`, so với bản trong repo, giữ dòng nguồn. Không chép `functional-design-guide.md`: thiết kế thực thể và state machine là việc của Dev, ngoài phạm vi PO.
+File chép nguyên văn giữ tiếng Anh, có dòng nguồn ở đầu. Cập nhật từ AWS: `git clone --depth 1 https://github.com/awslabs/aidlc-workflows`, so với bản trong repo, giữ dòng nguồn. `functional-design-guide.md` chép để PRD theo đúng cách AWS đặc tả business rule, quy tắc tính toán, phân quyền và máy trạng thái; phần thiết kế thực thể trong file là việc của Tech PIC.

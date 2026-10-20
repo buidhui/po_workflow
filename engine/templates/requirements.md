@@ -11,15 +11,16 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 <Một đoạn.> [desc] [1.1 Q1]
 
 ## 2. Functional requirements
+<Mỗi FR một hành vi, viết theo một trong năm mẫu EARS: luôn đúng "Hệ thống phải…"; theo sự kiện "Khi <sự kiện>, hệ thống phải…"; theo trạng thái "Trong khi <trạng thái>, hệ thống phải…"; hành vi không mong muốn "Nếu <điều kiện>, hệ thống phải…"; tuỳ chọn "Với <cấu hình> đang bật, hệ thống phải…". AWS viết "The system shall…". Hai hành vi nối bằng "và" thì tách thành FRn.m. Cột Phục vụ ghi mục tiêu `O<n>` hoặc Unit `U<n>` mà FR đáp ứng, theo BABOK 5.1 và 7.3.>
 ### Nhóm A: <tên khả năng>
-| ID | Yêu cầu, điều phải đúng | Ưu tiên | Existing, New, Changed | Mã KB liên quan | Nguồn |
-|---|---|---|---|---|---|
-| FR1 | | Must | New | | [Q1] |
-| FR1.1 | | | | | |
+| ID | Yêu cầu, điều phải đúng | Ưu tiên | Phục vụ | Existing, New, Changed | Mã KB liên quan | Nguồn |
+|---|---|---|---|---|---|---|
+| FR1 | | Must | O1 | New | | [Q1] |
+| FR1.1 | | | | | | |
 
 ### Nhóm B: <tên khả năng>
-| ID | Yêu cầu | Ưu tiên | Existing, New, Changed | Mã KB | Nguồn |
-|---|---|---|---|---|---|
+| ID | Yêu cầu | Ưu tiên | Phục vụ | Existing, New, Changed | Mã KB | Nguồn |
+|---|---|---|---|---|---|---|
 
 ## 3. Non-functional requirements
 | ID | Yêu cầu | Chỉ số đo | Nguồn |

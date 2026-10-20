@@ -39,6 +39,13 @@ Học viên quên mật khẩu phải nhờ vận hành đặt lại. ❓PO số
 
 # 4. Giải pháp tổng thể
 
+## Quy tắc nghiệp vụ dùng chung
+
+| Mã | Quy tắc | Loại | Mức áp dụng | Nguồn |
+| --- | --- | --- | --- | --- |
+| BR0.1 | Mật khẩu mới phải khác ba mật khẩu gần nhất | Hành vi | bắt buộc | Chính sách bảo mật |
+| BR0.2 | Mật khẩu có ít nhất 8 ký tự | Định nghĩa | bắt buộc | Chính sách bảo mật |
+
 ## Vòng đời trạng thái
 
 ```mermaid
@@ -93,7 +100,7 @@ Học viên mở Hồ sơ, chọn Đổi mật khẩu, nhập mật khẩu cũ v
 
 ### Tiêu chí chấp nhận
 
-- `AC1.1` Sai mật khẩu cũ · Theo `BR1.1`
+- `AC1.1` Sai mật khẩu cũ · Theo `BR1.1` · `BR0.1`
   - Given học viên đã đăng nhập
   - When học viên nhập sai mật khẩu cũ và bấm Lưu
   - Then hệ thống báo lỗi và không đổi mật khẩu
@@ -136,7 +143,7 @@ Học viên bấm Quên mật khẩu, nhận email, mở liên kết, đặt m�
 
 ### Business rule
 
-- `BR2.1` Khi liên kết đã hết hạn, hệ thống phải từ chối đặt lại mật khẩu.
+- `BR2.1` Liên kết đặt lại hết hạn thì không dùng được, hệ thống báo nhanh cho học viên.
 
 ### Tiêu chí chấp nhận
 
