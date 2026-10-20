@@ -1,0 +1,4 @@
+{
+ "hook_event_name": "UserPromptSubmit",
+ "prompt": "Duyệt bản requirements, chấp nhận cảnh báo"
+}

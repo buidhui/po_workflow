@@ -1,0 +1,22 @@
+# PRD theo template chuẩn engine/templates/prd.md, 2 US. Kiểm: script đọc tên mục mới (Tiền điều kiện, Luồng chính,
+# Giao diện và validate, Trường hợp ngoại lệ, Câu hỏi mở); Unit đọc được khi ô đầu có tên Unit; câu hỏi mở ghi
+# "Không chặn" không thành câu chặn dù nội dung có chữ "chặn"; US thiếu mục Trường hợp ngoại lệ; PRD còn quá 3 chỗ ❓PO.
+[check prd-generation]
+mã thoát: 0
+có: US2 chưa ghi Trường hợp ngoại lệ
+có: PRD còn 4 chỗ ❓PO, quá 3
+không có: US1 chưa ghi Trường hợp ngoại lệ
+không có: chưa có AC nào trỏ tới
+
+[stories]
+mã thoát: 0
+có: | US-LMS-F904-01 | Đổi mật khẩu khi đã đăng nhập | Must | U1 | APP-20 | đạt | - |
+có: | US-LMS-F904-02 | Đặt lại mật khẩu qua email | Should | U1 | APP-20 | chưa đạt | US còn ❓PO; câu chặn còn mở ở Câu hỏi mở: #1 |
+
+[stories --write]
+mã thoát: 0
+tệp stories/story-list-prd-v1.0.csv có: *ĐIỀU KIỆN TRƯỚC* \\ • Học viên đã đăng nhập
+tệp stories/story-list-prd-v1.0.csv có: *KỊCH BẢN* \\ Học viên mở Hồ sơ
+tệp stories/story-list-prd-v1.0.csv có: *GIAO DIỆN VÀ VALIDATE* \\ Không có màn mới
+tệp stories/story-list-prd-v1.0.csv có: *TRƯỜNG HỢP NGOẠI LỆ*
+tệp stories/story-list-prd-v1.0.csv có: • BR-LMS-F904-01.1 Nếu mật khẩu cũ sai

@@ -1,0 +1,30 @@
+name: engine
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 là bản thấp nhất script cam kết chạy được; python:3 là bản mới nhất
+        image: ["python:3.9", "python:3"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cú pháp các script
+        run: python3 -m py_compile engine/scripts/*.py
+      - name: Dữ liệu kiểm thử của script
+        run: python3 engine/scripts/po-tools.py selftest
+      - name: Engine khớp MANIFEST, kể cả file mới
+        run: python3 engine/scripts/po-tools.py engine-check --strict

@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/reviews/review-requirements-analysis-01.md",
+  "old_string": "NOT-READY",
+  "new_string": "READY"
+ }
+}

@@ -1,0 +1,59 @@
+# PRD v1.0 đã duyệt, 3 US. Không có state.md nên không xét 2.43. ux-design.md có màn SCR1 cho US1, chưa có màn cho US2.
+# US1 đủ điều kiện giao Dev; US2 chưa có AC, câu chặn #1 còn mở, giao diện chưa có màn trong ux-design, BR dạng cũ BR-2.1;
+# US3 có AC đủ nhưng phụ thuộc US2 ở Pre-Condition. intent.md có 2 Epic: mặc định APP-8, U2 gán APP-9.
+# Bản CSV v0.9 dạng 11 cột cũ, chưa có cột Priority: so story đổi theo tên cột.
+[stories]
+mã thoát: 0
+có: | US-LMS-F903-01 | Tải chứng chỉ PDF | Must | U1 | APP-8 | đạt | - |
+có: | US-LMS-F903-02 | Xem lại chứng chỉ đã cấp | Should | U2 | APP-9 | chưa đạt | chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design |
+có: | US-LMS-F903-03 | Chia sẻ đường dẫn chứng chỉ | Could | U2 | APP-9 | chưa đạt | phụ thuộc US-LMS-F903-02 chưa đạt |
+có: So với story-list-prd-v0.9.csv: đổi US-LMS-F903-01; mới US-LMS-F903-02, US-LMS-F903-03.
+có: Chạy thử, chưa ghi gì. Thêm --write để ghi stories/story-list-prd-v1.0.csv.
+tệp stories/story-list-prd-v1.0.csv không có: Project key
+
+[check prd-generation]
+mã thoát: 0
+có: BR2.1 chưa có AC nào trỏ tới
+có: BR2.2 chưa có AC nào trỏ tới
+không có: chưa trỏ mã màn
+không có: BR1.1 chưa có AC
+không có: US1 chưa có dòng Ưu tiên
+không có: US1 chưa thấy AC cho nhánh lỗi
+không có: US1 có bảng giao diện
+
+[stories --write]
+mã thoát: 0
+có: Đã ghi stories/story-list-prd-v1.0.csv, 3 story.
+tệp stories/story-list-prd-v1.0.csv có: Project key,Project name,Project type,Issue Type,Summary,Priority,Description,Epic Link,Labels,Labels,Labels,Comment
+tệp stories/story-list-prd-v1.0.csv có: APP,Ứng dụng mẫu,software,Story,Tải chứng chỉ PDF,Highest,"*MÔ TẢ* \\ Là học viên, tôi tải chứng chỉ dạng PDF sau khi hoàn thành khoá học. \\  \\ *ĐIỀU KIỆN TRƯỚC* \\ • Học viên đã hoàn thành khoá học
+tệp stories/story-list-prd-v1.0.csv có: ,Story,Chia sẻ đường dẫn chứng chỉ,Medium,
+tệp stories/story-list-prd-v1.0.csv có: *TIÊU CHÍ CHẤP NHẬN* \\ • AC-LMS-F903-01.1 Khi học viên đã hoàn thành khoá học bấm Tải chứng chỉ, trình duyệt tải về một tệp PDF. Theo BR-LMS-F903-01.1 \\ • AC-LMS-F903-01.2
+tệp stories/story-list-prd-v1.0.csv có: *GIAO DIỆN VÀ VALIDATE* \\ *Màn hình · Giao diện · Field · Yêu cầu* \\ • Trang khoá học · Nút · Tải chứng chỉ · Chỉ hiện khi đã hoàn thành, xem US-LMS-F903-01
+tệp stories/story-list-prd-v1.0.csv có: • BR-LMS-F903-02.1 Danh sách chỉ hiện chứng chỉ còn hiệu lực, cùng luật KB-CERT-03 và BR-EDIT-07
+tệp stories/story-list-prd-v1.0.csv có: *Nội dung thông báo — MAIL-CERT-01*
+tệp stories/story-list-prd-v1.0.csv có: PRD Chứng chỉ PDF v1.0, duyệt ngày 15/10/2026,
+tệp stories/story-list-prd-v1.0.csv có: · tag story-list/prd-v1.0 · US1 trong PRD · Màn: SCR-LMS-F903-01 Trang khoá học · Figma: https://www.figma.com/design/abc/Cert
+tệp stories/story-list-prd-v1.0.csv có: APP-8,LMS-F903,US-LMS-F903-01,LMS-F903-U1,
+tệp stories/story-list-prd-v1.0.csv có: APP-9,LMS-F903,US-LMS-F903-02,LMS-F903-U2,
+tệp stories/story-list-prd-v1.0.csv có: Điều kiện giao Dev: đạt.
+tệp stories/story-list-prd-v1.0.csv có: Điều kiện giao Dev: chưa đạt, chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design.
+tệp stories/story-list-prd-v1.0.csv có: - Chứng chỉ hết hạn có hiện mờ trong danh sách của US-LMS-F903-02 không
+tệp stories/story-list-prd-v1.0.csv không có: Kho lưu tệp PDF
+tệp stories/story-list-prd-v1.0.csv không có: Conner case
+tệp stories/story-list-prd-v1.0.csv không có: Ưu tiên
+
+[stories --us US1]
+mã thoát: 0
+có: | US-LMS-F903-01 |
+không có: US-LMS-F903-02
+
+[dor]
+mã thoát: 1
+có: | US-LMS-F903-01 | Đạt | - |
+có: | US-LMS-F903-02 | Chưa đạt | chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design |
+có: | US-LMS-F903-03 | Chưa đạt | phụ thuộc US-LMS-F903-02 chưa đạt |
+có: Kết luận: 1/3 story đạt điều kiện giao Dev.
+
+[dor --story US-LMS-F903-01]
+mã thoát: 0
+có: Kết luận: 1/1 story đạt điều kiện giao Dev.

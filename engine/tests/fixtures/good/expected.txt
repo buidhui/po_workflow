@@ -1,0 +1,116 @@
+# Intent đủ chuẩn, profile M, 2.4 đang chờ duyệt, 2.42 đang làm. Sổ lượt người ở _root/.po có câu "Duyệt, làm tiếp PRD";
+# review lần 01 của 2.4 ứng với đúng bản stories.md hiện tại.
+# Cú pháp: [lệnh và tham số], sau đó mã thoát, có, không có, tệp. Không có {root} hay {intent} thì thư mục fixture
+# được chèn ngay sau tên lệnh.
+[trace]
+mã thoát: 0
+có: Đạt. GAP: 0. ORPHAN: 0.
+có: | FR1 | qua FR1.1, FR1.2 | OK qua FR con |
+có: | FR2 | Sang đợt 2 theo DEC1 | Deferred |
+có: | BR2.1 | US2 | OK |
+có: | AC1.2 | US1 | BR1.1 | OK |
+có: | AC2.1 | US2 | BR2.1 | OK |
+
+[check user-stories --strict]
+mã thoát: 0
+có: Không có cảnh báo.
+
+[check requirements-analysis --strict]
+mã thoát: 0
+có: Không có cảnh báo.
+
+[check prd-generation --strict]
+mã thoát: 0
+có: 2 mã BR được định nghĩa
+có: 4 mã AC
+có: Không có cảnh báo.
+
+[next]
+mã thoát: 0
+có: Stage: 2.4 User Stories (user-stories), đang [?]
+có: Progress: 1/4 | INCEPTION 1/4 · Next: 2.4 User Stories
+có: 0/1 câu còn trống, 0 câu chặn còn trống
+
+[approve user-stories --words "duyệt, làm tiếp PRD" --who "Người thử" --dry-run]
+mã thoát: 0
+có: Chạy thử, chưa ghi gì.
+có: version 1.0 (trước là 0.2)
+có: archive/user-stories/stories-v1.0-20261020.md
+có: | DEC2 |
+có: "duyệt, làm tiếp PRD" | Người thử | user-stories |
+có: Progress: 2/4 | INCEPTION 2/4 · Next: 2.42 PRD Generation
+tệp inception/user-stories/stories.md có: status: draft
+
+[approve user-stories --words "ok hết" --dry-run]
+mã thoát: 2
+có: Không ghi duyệt: không thấy lời duyệt "ok hết" trong lượt nào của PO
+
+[approve requirements-analysis --words "ok"]
+mã thoát: 2
+có: Chỉ duyệt được stage đang [?]
+
+[dor]
+mã thoát: 1
+có: | US-LMS-F901-01 | Chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
+có: Kết luận: 0/2 story đạt điều kiện giao Dev.
+không có: chưa có AC
+
+[stories]
+mã thoát: 0
+có: | US-LMS-F901-01 | Nhắc qua email | Must |
+có: | chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
+có: Chạy thử, chưa ghi gì. Thêm --write để ghi stories/story-list-prd-v0.1.csv.
+tệp stories/story-list-prd-v0.1.csv không có: Project key
+
+[stories --write]
+mã thoát: 2
+có: Chỉ ghi Story List từ PRD đã duyệt. PRD đang draft.
+tệp stories/story-list-prd-v0.1.csv không có: Project key
+
+[replay]
+mã thoát: 0
+có: 2 story trong PRD v0.1, 0 đạt điều kiện giao Dev. Story List: chưa sinh.
+
+[review-start user-stories]
+mã thoát: 0
+có: Review lần 02 của 2.4 User Stories.
+tệp reviews/review-user-stories-02.digest có: sha256 5615977505ab835ed49a409848ed1ca3d24408504ca04aa4cb8e17ef69d45bc1
+
+[archive requirements-analysis requirements.md --label truoc-cr]
+mã thoát: 0
+có: Đã chụp:
+tệp archive/requirements-analysis/requirements-truoc-cr-20261020.md có: # Requirements: Nhắc lịch học
+
+[archive requirements-analysis requirements.md --label truoc-cr]
+mã thoát: 2
+có: Đã có, không ghi đè
+
+[trace --write]
+mã thoát: 0
+có: Đã ghi:
+tệp inception/prd/traceability.md có: artifact: traceability
+tệp verification/phase-check-inception.md có: good
+
+[index --write]
+mã thoát: 0
+tệp {root}/intents/INDEX.md có: | LMS-F901 | Nhắc lịch học |
+
+[approve user-stories --words "duyệt, làm tiếp PRD" --who "Người thử"]
+mã thoát: 0
+có: Đã duyệt 2.4 User Stories: stories.md v1.0.
+tệp inception/user-stories/stories.md có: status: approved
+tệp decisions.md có: | DEC2 |
+tệp state.md có: - [x] 2.4 user-stories
+tệp archive/user-stories/stories-v1.0-20261020.md có: # User Stories: Nhắc lịch học
+
+[approve user-stories --words "duyệt, làm tiếp PRD"]
+mã thoát: 2
+có: đã duyệt rồi
+
+[status {root}/intents]
+mã thoát: 0
+có: state khớp với đĩa
+
+[next]
+mã thoát: 0
+có: Progress: 2/4

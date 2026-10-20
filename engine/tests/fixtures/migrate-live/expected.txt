@@ -1,0 +1,28 @@
+# Intent chuyển từ engine cũ: state.md và memory.md còn chữ lead và đường dẫn trong .claude/ ở cả phần sống lẫn phần lịch sử.
+# Profile M, 2.41 HLD Brief đang dở, có bản nháp trong inception/hld-brief/. Luồng mới bỏ 2.41, thêm 2.43 sau 2.42,
+# chuyển bản nháp HLD vào archive và đưa Current sang 2.43. Log, dòng stage đã duyệt và nhật ký memory giữ nguyên.
+[migrate]
+mã thoát: 0
+có: | chuẩn hoá phần sống | memory.md | 1 |
+có: | chuẩn hoá phần sống | state.md |
+có: | bỏ stage 2.41 hld-brief | state.md |
+có: | thêm stage 2.43 design-alignment | state.md | chưa làm |
+có: | chuyển HLD Brief của luồng cũ vào archive | inception/hld-brief/hld-brief.md | archive/hld-brief/hld-brief-luong-cu-20261020.md |
+có: Chạy thử, chưa ghi gì.
+tệp state.md có: chờ lead ghi mục 8, 9, 10
+
+[migrate --write]
+mã thoát: 0
+có: Đã ghi 2 file, DEC2, nhật ký trong state.md.
+tệp state.md có: - [ ] 2.42 prd-generation\n- [ ] 2.43 design-alignment
+tệp state.md không có: 2.41 hld-brief
+tệp state.md không có: | hld-brief |
+tệp state.md có: | Stage | 2.43 design-alignment: chờ Design PIC, Tech PIC, QA PIC viết file thiết kế từ PRD đã duyệt |
+tệp state.md có: - [x] 2.3 requirements-analysis · lead Design, Dev, QA đọc bản v1.0 ngày 2026-10-01
+tệp state.md có: - 2026-10-01 created, profile M; lead Design đọc bản nháp
+tệp archive/hld-brief/hld-brief-luong-cu-20261020.md có: # HLD Brief: Chuyển intent luồng cũ
+tệp inception/hld-brief/hld-brief.md không có: # HLD Brief
+tệp memory.md có: sẽ chuyển sang `memory/project.md`, và sang `memory/team.md`
+tệp memory.md có: - 2026-10-01 2.3 lead Design muốn xem bản nháp sớm
+tệp memory.md không có: .claude/memory
+tệp decisions.md có: luồng 2.43 thay 2.41 HLD Brief

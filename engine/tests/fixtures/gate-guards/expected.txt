@@ -1,0 +1,89 @@
+# Profile M, 2.3 chờ duyệt. requirements.md có 2 cảnh báo kiểm máy. Review lần 01 ghi digest của bản khác bản hiện tại.
+# Chưa có sổ lượt người: ca đầu phải bị từ chối. Ca @hook chạy engine/scripts/po-hook.py với payload trong hooks/.
+[approve requirements-analysis --words "duyệt bản requirements"]
+mã thoát: 2
+có: không thấy sổ lượt người
+
+[@hook hooks/prompt.json]
+mã thoát: 0
+tệp {root}/.po/turns.jsonl có: Duyệt bản requirements, chấp nhận cảnh báo
+tệp {root}/.po/hooks/UserPromptSubmit.last có: T
+
+[approve requirements-analysis --words "ok"]
+mã thoát: 2
+có: không thấy lời duyệt "ok"
+
+[approve requirements-analysis --words "duyệt bản requirements"]
+mã thoát: 2
+có: kiểm máy còn 2 cảnh báo
+có: --accept-warnings
+
+[approve requirements-analysis --words "duyệt bản requirements" --accept-warnings "chấp nhận cảnh báo"]
+mã thoát: 2
+có: artifact đã đổi sau review lần 01
+có: --accept-review-gap
+
+[@hook hooks/answer.json]
+mã thoát: 0
+tệp {root}/.po/turns.jsonl có: Duyệt luôn, không cần review lại
+
+[approve requirements-analysis --words "duyệt bản requirements" --accept-warnings "chấp nhận cảnh báo" --accept-review-gap "không cần review lại" --who "Người thử"]
+mã thoát: 0
+có: Đã duyệt 2.3 Requirements Analysis
+tệp decisions.md có: chấp nhận 2 cảnh báo kiểm máy; duyệt khi review không ứng với bản hiện tại
+tệp decisions.md có: "duyệt bản requirements" · "chấp nhận cảnh báo" · "không cần review lại"
+tệp state.md có: - [x] 2.3 requirements-analysis
+
+[@hook hooks/edit-state.json]
+mã thoát: 2
+có: "permissionDecision": "deny"
+có: Chỉ python3 engine/scripts/po-tools.py approve được đánh dấu stage đã duyệt
+
+[@hook hooks/edit-state-ok.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/edit-dec.json]
+mã thoát: 2
+có: chỉ được thêm dòng, không sửa hay xoá dòng DEC cũ (DEC1)
+
+[@hook hooks/append-dec.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/edit-approved.json]
+mã thoát: 2
+có: là artifact của 2.3 Requirements Analysis đã duyệt
+có: /change-request
+
+[@hook hooks/edit-lark.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/reviewer-out.json]
+mã thoát: 2
+có: AI Reviewer chỉ ghi đúng một file review
+
+[@hook hooks/reviewer-ok.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/edit-review.json]
+mã thoát: 2
+có: File review là kết quả của AI Reviewer
+
+[@hook hooks/bash-turns.json]
+mã thoát: 2
+có: Sổ lượt người trong .po/ chỉ hook ghi
+
+[@hook hooks/bash-sub.json]
+mã thoát: 2
+có: Subagent không chạy lệnh ghi của po-tools.py
+
+[@hook hooks/bash-sed.json]
+mã thoát: 2
+có: Không sửa state.md, decisions.md, archive/
+
+[@hook hooks/bash-ok.json]
+mã thoát: 0
+không có: deny

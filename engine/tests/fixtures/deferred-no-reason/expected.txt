@@ -1,0 +1,6 @@
+# FR2 Deferred không có lý do là GAP. FR3 N/A có lý do sau trạng thái là hợp lệ.
+[trace]
+mã thoát: 1
+có: - GAP: FR2 Deferred chưa có lý do
+có: | FR3 | hệ thống chưa có lịch cá nhân để đồng bộ | N/A |
+có: Không đạt. GAP: 1. ORPHAN: 0.

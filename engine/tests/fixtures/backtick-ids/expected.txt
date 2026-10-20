@@ -1,0 +1,6 @@
+# Mã viết trong backtick và in đậm phải đọc được; FR2 không có US nên GAP, không được báo Đạt.
+[trace]
+mã thoát: 1
+có: | FR1 | US1 | OK |
+có: - GAP: FR2 chưa có US
+có: Không đạt. GAP: 1. ORPHAN: 0.

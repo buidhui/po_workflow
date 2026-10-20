@@ -1,0 +1,13 @@
+# Dấu hiệu story quá lớn: tên US1 có chữ 'và', US1 có 7 AC. Chỉ là cảnh báo, --strict thì mã thoát 1.
+[check user-stories]
+mã thoát: 0
+có: Tên US1 có chữ 'và': xem có phải hai việc người dùng làm riêng được không
+không có: Tên US2 có chữ
+
+[check user-stories --strict]
+mã thoát: 1
+
+[check prd-generation]
+mã thoát: 0
+có: US1 có 7 AC, quá 6: story có thể quá lớn
+không có: US2 có

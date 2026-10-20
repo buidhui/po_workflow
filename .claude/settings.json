@@ -1,0 +1,61 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 engine/scripts/po-tools.py *)"
+    ],
+    "deny": [
+      "Edit(intents/*/archive/**)",
+      "Write(intents/*/archive/**)",
+      "Edit(.po/**)",
+      "Write(.po/**)",
+      "Edit(intents/*/reviews/*.digest)",
+      "Write(intents/*/reviews/*.digest)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/engine/scripts/po-tools.py\" status"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/engine/scripts/po-hook.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/engine/scripts/po-hook.py\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/engine/scripts/po-hook.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

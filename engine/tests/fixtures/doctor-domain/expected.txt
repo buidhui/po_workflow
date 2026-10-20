@@ -1,0 +1,6 @@
+# domain.md của fixture thiếu mục 4: doctor báo Lỗi và mã thoát 1, dù máy chạy có đặt git user hay không.
+[doctor]
+mã thoát: 1
+có: | domain.md đủ mục 1 đến 6 | Lỗi | thiếu mục 4 |
+có: | Dự án Jira trong domain.md | Đạt | APP, Ứng dụng mẫu, software |
+có: | Tên sản phẩm trong engine | Đạt |

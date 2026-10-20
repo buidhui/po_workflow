@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/decisions.md",
+  "old_string": "\n\n## Accepted risks",
+  "new_string": "\n| DEC9 | 2026-10-02 09:00 | 2.3 | Thay DEC1: profile L | \"đổi sang L\" | Người thử | profile |\n\n## Accepted risks"
+ }
+}

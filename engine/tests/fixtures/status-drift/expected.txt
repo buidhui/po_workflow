@@ -1,0 +1,12 @@
+# Ba intent trong _root/intents, mỗi intent gây vài loại lệch mà status phải bắt.
+# drift-a: 2.3 [x] không có archive, không có DEC, state ghi v0.9 còn file v1.0, Related intents trỏ tới intent không có.
+# drift-b: requirements.md có trên đĩa mà 2.3 còn [ ]; trùng mã tính năng với drift-a. drift-c: câu chặn còn trống mà 2.3 đã [?].
+[status {root}/intents]
+có: 1. 2.3 requirements-analysis đã [x] nhưng archive/requirements-analysis/ trống
+có: 4. 2.3 requirements-analysis đã [x] nhưng decisions.md không có DEC của stage
+có: 3. requirements: state ghi v0.9, file ghi v1.0
+có: 8. Related intents trỏ tới 'khong-co' không tồn tại
+có: 2. inception/requirements-analysis/requirements.md có trên đĩa nhưng 2.3 requirements-analysis còn [ ]
+có: 5. 2.3 requirements-analysis: Q1 chặn chưa trả lời nhưng stage đã [?]
+có: 10. Mã tính năng LMS-F906 trùng ở 2 intent
+không có: state khớp với đĩa

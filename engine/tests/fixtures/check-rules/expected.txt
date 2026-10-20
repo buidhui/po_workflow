@@ -1,0 +1,22 @@
+# Decision Brief vượt 1500 từ ở phần AI viết, Tech PIC ghi Yêu cầu sửa, thiếu dòng QA PIC, chưa có ba file thiết kế.
+# PRD có mục Database, US1 thiếu Ưu tiên, AC chỉ có luồng thành công. Mã màn không còn kiểm ở 2.42.
+[check design-alignment]
+mã thoát: 0
+có: ## Giới hạn từ (1)
+có: quá giới hạn 1500
+có: Tech PIC chưa ký, đang ghi 'Yêu cầu sửa': gate là Request Changes
+có: Bảng Ký thiếu dòng QA PIC
+có: Chưa có file thiết kế của Design PIC
+có: Chưa có file thiết kế của Tech PIC
+có: Chưa có file thiết kế của QA PIC
+không có: Design PIC chưa ký
+
+[check prd-generation]
+mã thoát: 0
+có: PRD không có mục thiết kế kỹ thuật như Database, API: 'Database'
+có: US1 chưa có dòng Ưu tiên
+có: US1 chưa thấy AC cho nhánh lỗi hoặc bị từ chối
+không có: mã màn
+
+[check prd-generation --strict]
+mã thoát: 1

@@ -1,0 +1,8 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Bash",
+ "agent_type": "general-purpose",
+ "tool_input": {
+  "command": "python3 engine/scripts/po-tools.py approve intents/gate-guards requirements-analysis --words \"ok\""
+ }
+}

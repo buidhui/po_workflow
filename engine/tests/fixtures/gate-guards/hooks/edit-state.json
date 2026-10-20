@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/state.md",
+  "old_string": "- [ ] 2.31 impact-analysis",
+  "new_string": "- [x] 2.31 impact-analysis"
+ }
+}

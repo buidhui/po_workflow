@@ -1,0 +1,9 @@
+# Artifact nội bộ thiếu mục Assumptions & Open Questions phải có cảnh báo; --strict trả 1.
+[check requirements-analysis]
+mã thoát: 0
+có: Thiếu mục 'Assumptions & Open Questions'
+có: Thiếu mục bắt buộc của template engine/templates/requirements.md: '## 5. Assumptions & Open Questions'
+
+[check requirements-analysis --strict]
+mã thoát: 1
+có: Assumptions & Open Questions

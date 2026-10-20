@@ -1,0 +1,9 @@
+# Không đọc được mã FR nào thì phải dừng với mã 2, không bao giờ báo Đạt.
+[trace]
+mã thoát: 2
+có: Không đọc được mã FR nào
+không có: Đạt. GAP
+
+[check requirements-analysis]
+mã thoát: 0
+có: Không đọc được dòng FR nào

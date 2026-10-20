@@ -1,0 +1,10 @@
+{
+ "hook_event_name": "PostToolUse",
+ "tool_name": "AskUserQuestion",
+ "tool_input": {
+  "questions": [],
+  "answers": {
+   "Review lại không?": "Duyệt luôn, không cần review lại"
+  }
+ }
+}

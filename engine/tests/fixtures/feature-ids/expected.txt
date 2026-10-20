@@ -1,0 +1,32 @@
+# Mỗi thư mục con là một intent. Mã lớn nhất cùng mã sản phẩm LMS là F007 (b và d trùng nhau); ABC-F050 khác mã sản phẩm, không tính.
+[feature-id --next]
+mã thoát: 0
+có: LMS-F008
+
+[feature-id --assign c --dry-run]
+mã thoát: 0
+có: LMS-F008
+có: Chạy thử, chưa ghi gì.
+tệp c/intent.md có: feature: <SP-FNNN
+
+[feature-id --assign c]
+mã thoát: 0
+có: LMS-F008
+tệp c/intent.md có: intent: c\nfeature: LMS-F008\ntitle: C
+
+[feature-id --assign f]
+mã thoát: 0
+tệp f/intent.md có: ---\nintent: f\nfeature: LMS-F009\ntitle: F
+
+[feature-id --assign b]
+mã thoát: 2
+có: đã có feature: LMS-F007
+tệp b/intent.md có: feature: LMS-F007
+
+[feature-id --next]
+mã thoát: 0
+có: LMS-F010
+
+[status]
+mã thoát: 1
+có: | b, d | 10. Mã tính năng LMS-F007 trùng ở 2 intent | PO đến sau đổi số bằng feature-id --next

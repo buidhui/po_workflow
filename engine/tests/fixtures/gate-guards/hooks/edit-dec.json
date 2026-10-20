@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/decisions.md",
+  "old_string": "| Chọn profile M |",
+  "new_string": "| ~~Chọn profile M~~ thay bằng L |"
+ }
+}
