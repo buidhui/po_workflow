@@ -104,13 +104,13 @@ def intent_of(path):
     return T.INTENTS / r.parts[0], Path(*r.parts[1:]).as_posix()
 
 
-def only_lark_keys(old, new):
-    """Chỉ đổi khoá lark* ở đầu file, phần thân giữ nguyên: /publish-lark và status được phép ghi."""
+def only_publish_keys(old, new):
+    """Chỉ đổi khoá published* ở đầu file, hoặc lark* của bản cũ, phần thân giữ nguyên: ghi nơi đăng bản đọc được phép."""
     if T.norm_body(old) != T.norm_body(new):
         return False
     a, b = T.frontmatter(old), T.frontmatter(new)
     keys = set(a) | set(b)
-    return all(k.startswith("lark") for k in keys if a.get(k) != b.get(k))
+    return all(k.startswith(("published", "lark")) for k in keys if a.get(k) != b.get(k))
 
 
 def approved_artifact(intent, path):
@@ -169,7 +169,7 @@ def pre_file(payload):
             return deny("decisions.md chỉ được thêm dòng, không sửa hay xoá dòng DEC cũ (%s). Quyết định đổi thì thêm dòng DEC "
                         "mới ghi rõ thay %s." % (dec, dec))
     hit = approved_artifact(intent, path) if old is not None else None
-    if hit and not only_lark_keys(old, new):
+    if hit and not only_publish_keys(old, new):
         so, e, st = hit
         if not T.open_crs(intent, so):
             return deny("%s là artifact của %s %s đã duyệt. Sửa sau khi duyệt phải qua /change-request: mở CR, stage về [R], "

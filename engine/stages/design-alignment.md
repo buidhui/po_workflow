@@ -67,6 +67,6 @@ Chỉ hỏi PO khi cần:
 ## Gate, Alignment
 Trình: điểm đã chốt kèm DEC, điểm còn mở, trạng thái ký từng PIC, ý kiến Phản đối nguyên văn, thay đổi PRD đã làm qua change request. Approve khi ba PIC ghi Đồng ý hoặc Có ý kiến. Một PIC ghi Yêu cầu sửa thì gate là Request Changes. Tới hạn mà còn PIC chưa ký thì PO được chọn Accept as-is ngay, không cần chờ lần Request Changes thứ ba; lý do ghi một DEC, lệnh approve chạy với `--accept-warnings` vì script coi thiếu chữ ký là cảnh báo.
 Trước khi trình gate: điền dòng 6 của `verification/phase-check-inception.md` và cập nhật Kết luận. Với profile M, L, đây là phase check Inception.
-Sau Approve: decision-brief lên version 1.0 và được chụp archive. Gợi ý `/publish-lark decision-brief`. Sau đó chạy `/po-stories` để sinh Story List cho Jira. File thiết kế đổi sau khi duyệt thì team sửa file của mình; thay đổi chạm yêu cầu đi change request.
+Sau Approve: decision-brief lên version 1.0 và được chụp archive. Sau đó chạy `/po-stories` để sinh Story List cho Jira. File thiết kế đổi sau khi duyệt thì team sửa file của mình; thay đổi chạm yêu cầu đi change request.
 
 Phần PO của intent hoàn tất. `/generate-user-guide` sau khi Dev xong, và cập nhật ngược KB.

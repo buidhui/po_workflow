@@ -1,8 +1,20 @@
 # Profile M, 2.3 chờ duyệt. requirements.md có 2 cảnh báo kiểm máy. Review lần 01 ghi digest của bản khác bản hiện tại.
-# Chưa có sổ lượt người: ca đầu phải bị từ chối. Ca @hook chạy engine/scripts/po-hook.py với payload trong hooks/.
+# Chưa có sổ lượt người: ca đầu phải bị từ chối. Lượt "Chưa duyệt đâu…token…" không được tính là lời duyệt "duyệt" hay "ok". Ca @hook chạy engine/scripts/po-hook.py với payload trong hooks/.
 [approve requirements-analysis --words "duyệt bản requirements"]
 mã thoát: 2
 có: không thấy sổ lượt người
+
+[@hook hooks/prompt-neg.json]
+mã thoát: 0
+tệp {root}/.po/turns.jsonl có: Chưa duyệt đâu
+
+[approve requirements-analysis --words "duyệt"]
+mã thoát: 2
+có: không thấy lời duyệt "duyệt"
+
+[approve requirements-analysis --words "ok"]
+mã thoát: 2
+có: không thấy lời duyệt "ok"
 
 [@hook hooks/prompt.json]
 mã thoát: 0
@@ -56,7 +68,7 @@ mã thoát: 2
 có: là artifact của 2.3 Requirements Analysis đã duyệt
 có: /change-request
 
-[@hook hooks/edit-lark.json]
+[@hook hooks/edit-published.json]
 mã thoát: 0
 không có: deny
 

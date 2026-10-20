@@ -42,12 +42,15 @@ Học viên quên mật khẩu phải nhờ vận hành đặt lại. ❓PO số
 ## Vòng đời trạng thái
 
 ```mermaid
-flowchart LR
-    BD(("Bắt đầu")) --> MOI("Mới tạo")
-    MOI -->|Gửi email| CHO("Chờ đặt lại")
-    CHO -->|Đặt mật khẩu mới| XONG("Đã đặt lại")
-    XONG -->|Mở lại<br/>liên kết| CHO
-    HUY("Đã huỷ")
+stateDiagram-v2
+    state "Mới tạo" as MOI
+    state "Chờ đặt lại" as CHO
+    state "Đã đặt lại" as XONG
+    state "Đã huỷ" as HUY
+    [*] --> MOI
+    MOI --> CHO : Gửi email
+    CHO --> XONG : Đặt mật khẩu mới
+    XONG --> CHO : Mở lại liên kết
 ```
 
 | Trạng thái hiện tại | Sự kiện | Ai kích hoạt | Điều kiện | Trạng thái sau | Hệ quả |
@@ -90,7 +93,10 @@ Học viên mở Hồ sơ, chọn Đổi mật khẩu, nhập mật khẩu cũ v
 
 ### Tiêu chí chấp nhận
 
-- `AC1.1` Cho học viên đã đăng nhập, khi nhập sai mật khẩu cũ, thì hệ thống báo lỗi và không đổi mật khẩu. Theo `BR1.1`
+- `AC1.1` Sai mật khẩu cũ · Theo `BR1.1`
+  - Given học viên đã đăng nhập
+  - When học viên nhập sai mật khẩu cũ và bấm Lưu
+  - Then hệ thống báo lỗi và không đổi mật khẩu
 
 ### Giao diện và validate
 

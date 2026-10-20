@@ -1,6 +1,6 @@
 # Checklist: 2.42 PRD Generation
 
-Áp cho PRD theo template chuẩn `engine/templates/prd.md`. PRD theo template công ty ở `domain/templates/prd.md` thì đọc mục theo tên mục của template đó.
+Áp cho PRD theo template chuẩn `engine/templates/prd.md`. PRD đã duyệt theo template cũ, có mục Specific Requirement, chỉ kiểm phần áp được.
 
 ## Tiền điều kiện
 - [ ] **[BLOCK]** M, L: stories approved. S: requirements approved
@@ -18,7 +18,7 @@
 - [ ] Mỗi US có dòng Ưu tiên Must, Should hoặc Could, khớp `stories.md`; ưu tiên không phải Must có một câu lý do
 - [ ] US phụ thuộc US khác ghi mã `US<n>` ở Tiền điều kiện
 - [ ] BR mã `BR<US>.<n>`, không trùng, viết theo một trong năm mẫu EARS của template. Rule chạm tính năng có sẵn dẫn mã KB
-- [ ] **[BLOCK]** Mỗi US có danh sách tiêu chí mã `AC<US>.<n>`, không trùng. Mỗi tiêu chí kiểm được, có đạt hoặc không đạt, dạng "Cho…, khi…, thì…" hoặc "Khi…, …"
+- [ ] **[BLOCK]** Mỗi US có danh sách tiêu chí mã `AC<US>.<n>`, không trùng. Mỗi tiêu chí theo cấu trúc Given/When/Then, When chỉ một hành động hoặc sự kiện, Then kiểm được, có đạt hoặc không đạt
 - [ ] **[BLOCK]** Mọi BR có ít nhất một tiêu chí trỏ tới. Luồng chính và mỗi nhánh đáng kể có tiêu chí
 - [ ] **[BLOCK]** Mỗi US có ít nhất một tiêu chí cho nhánh lỗi hoặc bị từ chối. Mỗi ngưỡng số có tiêu chí ở giá trị biên
 - [ ] Bảng giao diện đúng dạng A hoặc B, cột Yêu cầu đủ định dạng, placeholder, options, mặc định, disable, tooltip, validate, câu thông báo, hành vi. Validate của một màn gom thành một tiêu chí trỏ về bảng

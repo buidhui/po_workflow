@@ -21,16 +21,10 @@ Dạng một dòng: `- <nội dung> (learned YYYY-MM-DD · <intent> <mã stage> 
 - Define hết user story kể cả cái chưa làm, ghi "chưa làm" trong tiêu đề. Bức tranh đầy đủ giúp phân tích ảnh hưởng đúng (learned 2026-09-23)
 - Technical design của Dev viết vào PRD thì thêm mục mới, không thay mục nghiệp vụ PO đã viết. Một lần technical design backend thay mất ràng buộc C1 đến C12, ba rule nền và định nghĩa chỉ số, làm gãy tham chiếu từ các US (learned 2026-10-12)
 
-## Lark
-- Node intent phải có trước. Tài liệu nằm trong node intent, không nằm thẳng dưới node cha chung (learned 2026-10-06)
-- Tên tài liệu trên Lark có thể khác tên file. Lần publish sau giữ tên trên Lark, định danh là token (learned 2026-10-06)
-- API trả 200 không có nghĩa nội dung vào đúng vị trí. Đếm lại heading, bảng, sơ đồ, ảnh sau mỗi lần publish (learned 2026-09-23)
-- Mermaid trên Lark: stateDiagram-v2 mất dòng mô tả, dùng flowchart. Xuống dòng trong nhãn mũi tên thành node rác (learned 2026-10-06)
-- Cảnh báo trước khi publish nếu tài liệu chứa tài khoản staging; người đọc trên Lark rộng hơn thư mục local (learned 2026-09-23)
-
 ## Writing
 - Không viết tắt trong tài liệu bàn giao. "Giải O2" phải là "Giải quyết mục tiêu O2" (learned 2026-10-01)
-- Mã đứng liền nhau phải có dấu phân cách, Lark dính `US1US6` thành một chữ (learned 2026-10-01)
+- Mã đứng liền nhau phải có dấu phân cách, nhiều trình hiển thị dính `US1US6` thành một chữ (learned 2026-10-01)
+- Không ghi tài khoản staging hay thông tin nhạy cảm vào artifact; người đọc repo rộng hơn người viết (learned 2026-09-23)
 - Trích mã thì kèm nội dung. Một dự án L sinh hàng trăm mã, không ai nhớ hết (learned 2026-10-01)
 - Dọn dấu vết quy trình trước khi bàn giao. Dev và QA không tra được "9A" hay "Gate 3" là gì (learned 2026-09-23)
 - Sơ đồ viết sẵn trong file dưới dạng Mermaid, không vẽ thêm sau khi publish. File nguồn là bản duy nhất (learned 2026-10-06)

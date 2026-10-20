@@ -30,11 +30,5 @@ created: <YYYY-MM-DD>
 | Figma | |
 | Jira Epic / Story | <mã Epic, ví dụ ABC-12. Nhiều Epic thì ghi thêm U2: ABC-13 để gán theo Unit> |
 | KB cần đọc | |
-| Thiết kế và Decision Brief | <sau 2.43: link Lark hoặc Figma của từng team, nếu có ngoài repo> |
+| Thiết kế và Decision Brief | <sau 2.43: link Figma hoặc tài liệu của từng team, nếu có ngoài repo> |
 
-## Lark
-| | |
-|---|---|
-| Wiki space | |
-| Intent node | <tạo trước khi publish tài liệu đầu tiên, tên là tên intent> |
-| Published | initiative-brief: — · prd: — · decision-brief: — |

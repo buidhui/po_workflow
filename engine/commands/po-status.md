@@ -5,7 +5,7 @@ Chỉ đọc. Không sửa file nào. Phát hiện lệch thì báo, không tự
 ## Bảng tổng
 Với mỗi `intents/*/state.md`, một dòng:
 
-| Intent | Profile | Stage hiện tại | Trạng thái | Việc kế tiếp | Câu chặn | CR mở | Lark |
+| Intent | Profile | Stage hiện tại | Trạng thái | Việc kế tiếp | Câu chặn | CR mở | Bản đăng |
 |---|---|---|---|---|---|---|---|
 
 Trạng thái lấy từ ký hiệu stage: chờ duyệt, đang làm, đang sửa, dừng, xong.
@@ -20,12 +20,12 @@ Với mỗi intent, kiểm và liệt kê mọi phát hiện, không dừng ở 
 4. Stage `[x]` không có dòng DEC nào cùng stage trong `decisions.md`.
 5. Questions file có câu chặn còn trống nhưng stage đã qua `[?]`.
 6. `[?]` hoặc `[-]` quá 7 ngày không thay đổi: nhắc.
-7. Lark: phiên bản đã publish khác phiên bản hiện tại của artifact bàn giao.
+7. Bản đăng: repo sản phẩm có đăng bản đọc ra ngoài, và phiên bản đã đăng khác phiên bản hiện tại của artifact bàn giao.
 8. `intent.md` có Related intents trỏ tới intent hoặc dự án không tồn tại.
 9. Lệch: artifact ghi `inputs:` là bản cũ hơn bản hiện tại của đầu vào, nên các stage sau đang dựa trên bản cũ; hoặc artifact đã duyệt khác bản chụp trong `archive/` mà không có change request đang mở.
 10. Một mã tính năng nằm ở hai intent trở lên.
 
-Kiểm môi trường làm việc, như tên git, lark-cli, file chưa commit, domain pack: `po-tools.py doctor`.
+Kiểm môi trường làm việc, như tên git, file chưa commit, domain pack: `po-tools.py doctor`.
 
 Kết quả:
 | # | Intent | Lệch | Gợi ý xử lý |

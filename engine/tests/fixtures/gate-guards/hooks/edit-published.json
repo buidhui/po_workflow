@@ -4,6 +4,6 @@
  "tool_input": {
   "file_path": "{intent}/inception/requirements-analysis/requirements.md",
   "old_string": "status: approved",
-  "new_string": "status: approved\nlark: AbCdEfGhIjKlMnOpQrStUv"
+  "new_string": "status: approved\npublished: AbCdEfGhIjKlMnOpQrStUv"
  }
 }

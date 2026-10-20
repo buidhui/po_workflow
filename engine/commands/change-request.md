@@ -42,7 +42,7 @@ Trình bằng hộp chọn: stage re-entry kèm lý do, artifact sẽ đổi, ga
 Trước gate 2.42: chạy `po-tools.py trace`; kiểm business rule mồ côi (rule cũ còn US nào dùng không), mã tham chiếu gãy (`BR-2.3` bị xoá mà nơi khác còn trỏ), Out of scope lỗi thời (thứ từng ghi "không làm" nay đã làm, hoặc ngược lại).
 
 ## 7. Sau khi duyệt
-Duyệt từng artifact bằng `po-tools.py approve`: script chụp archive bản mới, cập nhật Versions và Log trong `state.md`. Đóng CR trong bảng. PRD hoặc Decision Brief duyệt lại thì gắn tag mới sau khi commit. PRD duyệt lại: profile M, L cập nhật Decision Brief nếu thay đổi chạm điểm đã chốt và lấy lại chữ ký; sau đó chạy `/po-stories`, script sinh CSV mới và in story nào đổi, story nào mới để sửa trên Jira; báo các PIC xem lại. Sau đó chạy `po-tools.py index --write`, để agent của Dev lấy đúng bản. Publish lại artifact bàn giao đã lên Lark. Chạy `po-tools.py status` để chắc không còn stage nào dựa trên bản cũ.
+Duyệt từng artifact bằng `po-tools.py approve`: script chụp archive bản mới, cập nhật Versions và Log trong `state.md`. Đóng CR trong bảng. PRD hoặc Decision Brief duyệt lại thì gắn tag mới sau khi commit. PRD duyệt lại: profile M, L cập nhật Decision Brief nếu thay đổi chạm điểm đã chốt và lấy lại chữ ký; sau đó chạy `/po-stories`, script sinh CSV mới và in story nào đổi, story nào mới để sửa trên Jira; báo các PIC xem lại. Sau đó chạy `po-tools.py index --write`, để agent của Dev lấy đúng bản. Chạy `po-tools.py status` để chắc không còn stage nào dựa trên bản cũ.
 
 ## Output
 CR đã ghi; stage mở lại; artifact đã sửa và version; gate chờ duyệt lại; tác động ngược phát hiện được. Tự kiểm theo `engine/verification/change-request.md`.

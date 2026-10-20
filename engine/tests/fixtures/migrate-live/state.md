@@ -33,7 +33,7 @@ status: Running
 | Parked | no |
 
 ## Versions
-| Artifact | Version | Status | Approved | Lark |
+| Artifact | Version | Status | Approved | Bản đăng |
 |---|---|---|---|---|
 | requirements | v1.0 | approved | 2026-10-01 | - |
 | hld-brief | v0.1 | draft, chờ lead | - | - |

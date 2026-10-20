@@ -125,7 +125,7 @@ BABOK v3 cũng nêu 6 nhóm năng lực nền. Quy trình hỗ trợ PO thể hi
 | Kiến thức nghiệp vụ | Hiểu ngành, tổ chức và giải pháp đang có | Knowledge base của sản phẩm trong domain pack; đọc lại nguồn sống như schema, API spec khi yêu cầu chạm tới |
 | Kỹ năng giao tiếp | Viết, trình bày, lắng nghe | Template thống nhất cho mọi artifact; Decision Brief tối đa 1.500 từ; văn phong bàn giao có mã kèm nội dung |
 | Kỹ năng tương tác | Điều phối, thuyết phục, làm việc nhóm, thương lượng và giải quyết bất đồng | File câu hỏi gắn người trả lời; buổi họp chốt trên Decision Brief; ý kiến phản đối được chép nguyên văn |
-| Công cụ và công nghệ | Công cụ văn phòng, công cụ phân tích, công cụ giao tiếp | Claude Code, script kiểm tra, Git, Jira qua import CSV, Lark |
+| Công cụ và công nghệ | Công cụ văn phòng, công cụ phân tích, công cụ giao tiếp | Claude Code, script kiểm tra, Git, Jira qua import CSV |
 
 Scrum Guide 2020 giao cho PO 4 trách nhiệm với backlog. PO có thể giao việc cho người khác nhưng vẫn chịu trách nhiệm cuối.
 
@@ -134,7 +134,7 @@ Scrum Guide 2020 giao cho PO 4 trách nhiệm với backlog. PO có thể giao v
 | Xây dựng và truyền đạt rõ mục tiêu sản phẩm | Mục tiêu đo được của từng intent ở 1.1; định hướng sản phẩm trong knowledge base của domain pack; Initiative Brief ở 1.7 |
 | Tạo và truyền đạt rõ các hạng mục backlog | PRD và Story List import lên Jira; mỗi story có tiêu chí chấp nhận và business rule có mã |
 | Sắp thứ tự các hạng mục backlog | MoSCoW cho Unit ở 1.4; dòng Ưu tiên của từng user story chuyển thành Priority trên Jira |
-| Bảo đảm backlog minh bạch, dễ thấy và được hiểu | Repo là nguồn chính thức; bản duyệt đăng Lark cho người đọc; `intents/INDEX.md`; Decision Brief cho các team |
+| Bảo đảm backlog minh bạch, dễ thấy và được hiểu | Repo là nguồn chính thức, bản duyệt có tag git; `intents/INDEX.md`; Decision Brief cho các team |
 
 Kỹ thuật theo thực hành ngành mà AI dùng, lấy từ knowledge pack trong `engine/knowledge/`:
 
@@ -310,7 +310,7 @@ AI chia yêu cầu thành user story, mỗi US gắn một Unit và mỗi FR có
 
 Bước hỏi là Field Intake: AI tra Impact Matrix, data model, API spec và KB, phân loại mỗi màn là mới, sửa màn có sẵn hoặc chỉ đọc, sau đó lập một bảng field, rule, validate để PO duyệt. Với field hiện có, AI chỉ hỏi phần thay đổi. Profile S cũng phải qua bước này.
 
-PRD theo template chuẩn `engine/templates/prd.md`, dùng chung cho mọi sản phẩm. Cơ sở của từng mục và bảng ánh xạ từ template công ty cũ ở `engine/standards/adr/0004-template-prd-chuan.md`: template lấy thành phần từ các artifact của AWS AI-DLC, ISO/IEC/IEEE 29148, mẫu câu EARS, GitHub Spec Kit và bốn loại yêu cầu của BABOK. PRD có 11 mục: 1. Bối cảnh và mục tiêu; 2. Tiêu chí thành công đo được, mã `SC<n>`; 3. Ngoài phạm vi; 4. Giải pháp tổng thể; 5. Units; 6. Yêu cầu theo user story; 7. Yêu cầu phi chức năng; 8. Chuyển đổi và triển khai; 9. Giả định; 10. Câu hỏi mở; 11. Truy vết. Mục 1 tới 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: User story kèm ưu tiên, Tiền điều kiện, Luồng chính, Business rule mã `BR<US>.<n>` theo mẫu EARS, Tiêu chí chấp nhận mã `AC<US>.<n>`, Giao diện và validate, Dữ liệu, NFR riêng nếu có, Trường hợp ngoại lệ lấy từ coverage gap của Impact Matrix, Ngoài phạm vi của US. Một dữ kiện chỉ ghi ở một nơi: câu thông báo ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó. Công ty bắt buộc template riêng cho một sản phẩm thì đặt ở `domain/templates/prd.md`, file đó ghi đè template chuẩn. Cách viết tiêu chí chấp nhận ở mục 6.5.
+PRD theo template chuẩn `engine/templates/prd.md`, dùng chung cho mọi sản phẩm. Cơ sở của từng mục và bảng ánh xạ từ template công ty cũ ở `engine/standards/adr/0004-template-prd-chuan.md`: template lấy thành phần từ các artifact của AWS AI-DLC, ISO/IEC/IEEE 29148, mẫu câu EARS, GitHub Spec Kit và bốn loại yêu cầu của BABOK. PRD có 11 mục: 1. Bối cảnh và mục tiêu; 2. Tiêu chí thành công đo được, mã `SC<n>`; 3. Ngoài phạm vi; 4. Giải pháp tổng thể; 5. Units; 6. Yêu cầu theo user story; 7. Yêu cầu phi chức năng; 8. Chuyển đổi và triển khai; 9. Giả định; 10. Câu hỏi mở; 11. Truy vết. Mục 1 tới 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: User story kèm ưu tiên, Tiền điều kiện, Luồng chính, Business rule mã `BR<US>.<n>` theo mẫu EARS, Tiêu chí chấp nhận mã `AC<US>.<n>`, Giao diện và validate, Dữ liệu, NFR riêng nếu có, Trường hợp ngoại lệ lấy từ coverage gap của Impact Matrix, Ngoài phạm vi của US. Một dữ kiện chỉ ghi ở một nơi: câu thông báo ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó. Cách viết tiêu chí chấp nhận ở mục 6.5.
 
 Sơ đồ theo `engine/standards/diagrams.md`. Tính năng có đối tượng đổi trạng thái thì PRD bắt buộc có Vòng đời trạng thái: bảng chuyển trạng thái là nguồn chính, sơ đồ trạng thái vẽ từ bảng, `po-tools.py check` so từng chuyển trạng thái giữa hai bên và báo trạng thái không tới được hoặc bị cụt. Sơ đồ phụ thuộc Unit khi có từ ba Unit, sơ đồ luồng khi luồng chính có từ hai điểm rẽ nhánh. Các artifact khác có sơ đồ ở chỗ phù hợp: luồng giá trị ở scope, sơ đồ phụ thuộc ở Impact Matrix, luồng màn ở ux-design. Sơ đồ vẽ bằng `flowchart` của Mermaid, vì Lark dựng `stateDiagram-v2` mất nhãn mũi tên. Cách làm theo AWS: bảng hoặc YAML là nguồn, sơ đồ là bản dẫn xuất để đọc.
 
@@ -409,11 +409,17 @@ Mã đã cấp không đổi và không dùng lại. Tách một story thì ph�
 
 ### 6.5 Tiêu chí chấp nhận trong PRD
 
-Tiêu chí chấp nhận là hợp đồng giữa PO và QA. Business rule định nghĩa luật; bảng UI đặc tả màn hình; mỗi tiêu chí chấp nhận là một câu kiểm được, có đạt hoặc không đạt, viết theo hành vi người dùng thấy, và ghi rõ business rule mà nó kiểm.
+Tiêu chí chấp nhận là hợp đồng giữa PO và QA. Business rule định nghĩa luật; bảng UI đặc tả màn hình; mỗi tiêu chí chấp nhận theo cấu trúc Given/When/Then, có đạt hoặc không đạt, viết theo hành vi người dùng thấy, và ghi rõ business rule mà nó kiểm. Cấu trúc này theo kỹ thuật Acceptance and Evaluation Criteria của BABOK (10.1) và cách viết tiêu chí của AWS; QA chuyển thẳng được thành kịch bản kiểm thử.
 
 ```
-- AC1.1 Cho một nhánh đang sâu 6 cấp, khi tạo nhóm con dưới nhóm cấp 6, thì hệ thống chặn và hiện câu thông báo của bảng giao diện. Theo BR1.3
-- AC1.2 Khi bỏ trống field bắt buộc ở màn Tạo nhóm, hệ thống báo lỗi và không cho lưu, theo cột Yêu cầu của bảng giao diện
+- AC1.1 Chặn tạo nhóm vượt số cấp tối đa · Theo BR1.3
+  - Given một nhánh đang sâu 6 cấp, số cấp tối đa của tổ chức là 6
+  - When người dùng tạo nhóm con dưới nhóm ở cấp 6
+  - Then hệ thống không tạo nhóm và hiện câu thông báo của bảng giao diện
+- AC1.2 Bỏ trống field bắt buộc · Theo bảng giao diện màn Tạo nhóm
+  - Given người dùng đang ở màn Tạo nhóm
+  - When người dùng bỏ trống một field bắt buộc và bấm Lưu
+  - Then hệ thống báo lỗi ở field đó và không lưu
 ```
 
 Độ phủ bắt buộc: luồng chính và mỗi nhánh đáng kể trong thẻ US có ít nhất một tiêu chí; mỗi US có ít nhất một tiêu chí cho nhánh lỗi hoặc bị từ chối, như AC1.1 ở trên, và mỗi ngưỡng số có tiêu chí ở giá trị biên, theo AWS requirements-guide; mỗi business rule có ít nhất một tiêu chí trỏ tới. Validate của cùng một màn gom thành một tiêu chí trỏ về bảng UI thay vì mỗi dòng bảng một tiêu chí, để số test case không tăng theo số field. Checklist của 2.42 chặn khi còn business rule chưa có tiêu chí chấp nhận hoặc US chưa có tiêu chí cho nhánh lỗi. Ở 2.43, QA PIC lập kế hoạch phủ từng tiêu chí trong `test-design.md` và ghi tiêu chí nào không kiểm thử được ở mục Ý kiến về PRD; Decision Brief đưa ra họp. AWS giao việc đánh giá tính kiểm thử được cho quality agent ở 2.4; PO-Workflow làm ở 2.43 vì tiêu chí chấp nhận viết ở PRD.
@@ -451,7 +457,7 @@ Một story được giao cho Dev khi đạt đủ 7 điều kiện:
 
 ### 6.8 Phiên bản, tag và chỉ mục
 
-Mỗi lần duyệt PRD hoặc Decision Brief, script in tên tag dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. PO commit artifact vừa duyệt, gắn tag và đẩy tag lên. File CSV của Story List commit cùng PRD với profile S, cùng Decision Brief với profile M, L. Lệnh `po-tools.py index --write` sinh `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, link Lark và số story đạt điều kiện giao Dev. Agent AI của Dev, dù chạy trên công cụ nào, đọc PRD theo tag nên luôn lấy đúng bản đã chốt. Bản trên Lark dành cho người đọc; không sửa trên Lark để chép ngược về repo.
+Mỗi lần duyệt PRD hoặc Decision Brief, script in tên tag dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. PO commit artifact vừa duyệt, gắn tag và đẩy tag lên. File CSV của Story List commit cùng PRD với profile S, cùng Decision Brief với profile M, L. Lệnh `po-tools.py index --write` sinh `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, nơi đăng bản đọc nếu có và số story đạt điều kiện giao Dev. Agent AI của Dev, dù chạy trên công cụ nào, đọc PRD theo tag nên luôn lấy đúng bản đã chốt. Bản đăng ra ngoài repo, nếu có, chỉ để đọc; không sửa ở đó để chép ngược về repo.
 
 ### 6.9 Khi yêu cầu thay đổi sau bàn giao
 
@@ -463,7 +469,7 @@ File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bả
 
 ## 7. Sau PRD
 
-`/publish-lark` đẩy Initiative Brief, PRD hoặc Decision Brief đã duyệt lên Lark wiki, vào node của intent. Lần đầu tạo doc mới; các lần sau cập nhật đúng doc cũ, giữ token và tên đã đặt trên Lark. Sau khi đẩy, AI đọc lại và đếm heading, bảng, sơ đồ so với file nguồn, vì API báo thành công không bảo đảm nội dung đã vào đúng vị trí.
+Bản chính thức của mọi artifact là file trong repo: bản đã duyệt có tag git và bản chụp trong `archive/`. Engine không kèm công cụ đăng tài liệu ra wiki hay công cụ khác. Repo sản phẩm cần đăng bản đọc ra ngoài thì tự thêm lệnh riêng và ghi nơi đăng ở khoá `published` của frontmatter; `po-tools.py status` báo khi bản đăng lệch phiên bản với file.
 
 `/change-request` phân loại thay đổi trước. Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate. Thay đổi chạm stage đã duyệt thì ghi `CR<n>` kèm nguyên văn, chụp artifact bị chạm với nhãn pre-CR, trình bảng ảnh hưởng, sau đó quay về stage thấp nhất bị sai lệch:
 
@@ -485,7 +491,7 @@ File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bả
 | Thư mục | Nội dung | Thuộc về |
 |---|---|---|
 | `engine/` | Stage, lệnh, protocol, template, checklist, agent, script, chuẩn bàn giao, kiến thức vai PO | Engine |
-| `domain/` | Domain pack: manifest `domain.md`, KB, corner checklist, template User Guide; template PRD riêng chỉ khi công ty bắt buộc | Sản phẩm |
+| `domain/` | Domain pack: knowledge base của sản phẩm theo `engine/standards/domain-kb.md`, gồm manifest `domain.md`, các file KB, corner checklist | Sản phẩm |
 | `intents/` | Hồ sơ từng yêu cầu | Sản phẩm |
 | `memory/` | `team.md` bài học dùng chung; `project.md` bài học của sản phẩm | Cả hai |
 | `.claude/` | Phần cấu hình riêng cho Claude Code: lối tắt cho các lệnh gạch chéo và cho AI Reviewer, trỏ tới file trong `engine/`; quyền và hook trong `settings.json` | Công cụ |
@@ -498,14 +504,14 @@ Mỗi intent có cấu trúc:
 
 ```
 intents/<YYMMDD-slug>/
-├── intent.md        bối cảnh, mã tính năng, liên kết Figma, Jira, Lark
+├── intent.md        bối cảnh, mã tính năng, liên kết Figma, Jira
 ├── state.md         trạng thái từng stage, việc kế tiếp, phiên bản, nhật ký
 ├── decisions.md     quyết định nguyên văn, người quyết định, change request, rủi ro chấp nhận
 ├── memory.md        quan sát của AI trong lúc làm
 ├── inputs/          yêu cầu gốc và tài liệu đầu vào
 ├── ideation/  inception/   artifact theo stage
 ├── stories/         Story List để import lên Jira, mỗi phiên bản PRD một file
-├── design/          ảnh design để chèn khi đẩy Lark
+├── design/          ảnh thiết kế, mockup PO dùng làm tham chiếu
 ├── user-guide/      User Guide viết sau khi Dev làm xong
 ├── reviews/         review của AI Reviewer, dấu artifact lúc review, sổ finding
 ├── verification/    phase check, kết quả kiểm bằng máy
@@ -533,7 +539,7 @@ Kết luận: quy trình đủ cho 1 người dùng. Công cụ cho mức team v
 
 | Mức | Nghĩa | Hiện trạng |
 |---|---|---|
-| Người với người | Người viết, người đọc tự diễn giải | Đạt. PRD và Decision Brief viết bằng lời, mã kèm nội dung, bản duyệt đăng Lark cho người đọc |
+| Người với người | Người viết, người đọc tự diễn giải | Đạt. PRD và Decision Brief viết bằng lời, mã kèm nội dung, bản duyệt có tag git cho người đọc và agent |
 | Người với máy | AI soạn theo template, người duyệt; máy kiểm tài liệu trước khi người duyệt | Đạt. Questions file có định dạng cố định; script `check`, `trace`, `approve`; AI Reviewer độc lập |
 | Máy với máy | Agent của team khác đọc đúng bản đã duyệt, trích nội dung theo mã, ghi kết quả ngược lại mà không cần người diễn giải | Một phần. Đã có: mã đầy đủ ổn định, tag cho bản duyệt, `intents/INDEX.md`, Story List dạng CSV import thẳng lên Jira, `AGENTS.md` cho mọi công cụ. Chưa có: agent phía Dev hoặc QA đọc thật; định dạng mới là quy ước Markdown, chưa có schema để máy của hai bên cùng kiểm; chưa ghi ngược tự động từ Jira về repo, như trạng thái story hoặc test case |
 

@@ -35,6 +35,6 @@ Ba câu, không cần tóm tắt xác nhận:
 Kiểm ranh giới phase Ideation sang Inception theo `engine/templates/phase-check.md`, ghi `verification/phase-check-ideation.md`: mọi objective có hạng mục phục vụ; mọi Unit truy về objective; Out không mâu thuẫn In; OQ chặn đã đóng. Không đạt thì sửa stage tương ứng trước khi mở gate.
 
 ## Gate
-Lựa chọn: Approve sang Inception · Request Changes · Reject Initiative kết thúc intent, ghi lý do, `state.md` chuyển Archived. Brief ngắn nên trình nguyên văn. PO muốn thì publish Lark với tên `[Brief] <tên tính năng>` qua `/publish-lark initiative-brief`.
+Lựa chọn: Approve sang Inception · Request Changes · Reject Initiative kết thúc intent, ghi lý do, `state.md` chuyển Archived. Brief ngắn nên trình nguyên văn.
 
 Stage kế: 2.3.

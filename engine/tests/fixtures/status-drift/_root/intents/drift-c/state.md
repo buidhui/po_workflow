@@ -19,7 +19,7 @@ status: Running
 | Open CR | none |
 
 ## Versions
-| Artifact | Version | Status | Approved | Lark |
+| Artifact | Version | Status | Approved | Bản đăng |
 |---|---|---|---|---|
 
 

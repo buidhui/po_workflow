@@ -32,7 +32,7 @@ status: Running
 | Parked | no |
 
 ## Versions
-| Artifact | Version | Status | Approved | Lark |
+| Artifact | Version | Status | Approved | Bản đăng |
 |---|---|---|---|---|
 | prd | v1.0 | approved | 2026-10-10 | - |
 

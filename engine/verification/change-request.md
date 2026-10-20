@@ -22,4 +22,4 @@
 
 ## Sau duyệt
 - [ ] Archive bản mới, CR đóng trong bảng, Versions trong `state.md` cập nhật
-- [ ] Artifact bàn giao đã publish lại Lark nếu trước đó đã lên
+- [ ] Bản đăng ngoài repo, nếu có, đã đăng lại theo bản mới

@@ -30,7 +30,7 @@ Theo dõi và kiểm:
       2 khi chưa có PRD hoặc mã tính năng.
   po-tools.py replay  <intent>
       In bản bàn giao intent cho PO khác: tóm tắt, dòng thời gian, quyết định, CR, review,
-      số story theo trạng thái, câu chặn còn mở, link Lark. Không ghi gì.
+      số story theo trạng thái, câu chặn còn mở, nơi đăng bản đọc nếu có. Không ghi gì.
 
 Ghi chép:
   po-tools.py feature-id [--next] [--assign <intent>] [--dry-run]
@@ -1225,6 +1225,28 @@ def norm_state(t):
     return re.sub(r"\s+", " ", t).lower()
 
 
+STATE_DEF = re.compile(r'^\s*state\s+"([^"]+)"\s+as\s+([A-Za-z][A-Za-z0-9_]*)')
+STATE_EDGE = re.compile(r'^\s*(\[\*\]|[A-Za-z][A-Za-z0-9_]*)\s*-->\s*(\[\*\]|[A-Za-z][A-Za-z0-9_]*)\s*(?::\s*(.*\S))?\s*$')
+
+
+def parse_state(block):
+    """(nhãn nút {mã: (nhãn, là [*]?)}, mũi tên [(mã đầu, sự kiện, mã cuối)]) của một sơ đồ stateDiagram-v2.
+    [*] ở đầu mũi tên là trạng thái bắt đầu, ở cuối là trạng thái kết thúc."""
+    nodes, edges = {"[*]": ("[*]", True)}, []
+    for ln in block:
+        m = STATE_DEF.match(ln)
+        if m:
+            nodes[m.group(2)] = (m.group(1).strip(), False)
+            continue
+        m = STATE_EDGE.match(ln)
+        if m:
+            edges.append((m.group(1), (m.group(3) or "").strip(), m.group(2)))
+    for a, _, b in edges:
+        for x in (a, b):
+            nodes.setdefault(x, (x, False))
+    return nodes, edges
+
+
 def parse_flow(block):
     """(nhãn nút {mã: (nhãn, tròn?)}, mũi tên [(mã đầu, nhãn mũi tên, mã cuối)]) của một sơ đồ flowchart."""
     nodes, edges = {}, []
@@ -1270,13 +1292,14 @@ def check_lifecycle(W, f, lines, b0):
             tline.setdefault((a, e, b), k + 1)
     blocks = mermaid_blocks(lines, lo, hi)
     if table and not blocks:
-        W.add("diagram", f, lo + 1, "Vòng đời trạng thái có bảng nhưng chưa có sơ đồ: vẽ flowchart từ bảng, theo engine/standards/diagrams.md mục 3")
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái có bảng nhưng chưa có sơ đồ: vẽ stateDiagram-v2 từ bảng, theo engine/standards/diagrams.md mục 3")
         return
     if not blocks:
         return
     diag, starts, ends, states, dline = set(), set(), set(), set(), {}
     for bl, block in blocks:
-        nodes, edges = parse_flow(block)
+        head = next((x.strip() for x in block if x.strip()), "")
+        nodes, edges = parse_state(block) if head.startswith("stateDiagram") else parse_flow(block)
         for a, lab, b in edges:
             la, ca = nodes[a]
             lb, cb = nodes[b]
@@ -1298,7 +1321,7 @@ def check_lifecycle(W, f, lines, b0):
         W.add("diagram", f, dline[k], "Vòng đời trạng thái: chuyển '%s' sang '%s' bằng '%s' có trong sơ đồ, không có trong bảng" % (k[0], k[2], k[1]))
     states |= {x for a, _, b in table for x in (a, b)}
     if not starts:
-        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: sơ đồ chưa có nút Bắt đầu nối tới trạng thái đầu")
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: sơ đồ chưa có [*] --> <trạng thái đầu>")
     else:
         seen, todo = set(starts), list(starts)
         while todo:
@@ -1308,20 +1331,10 @@ def check_lifecycle(W, f, lines, b0):
                     seen.add(b)
                     todo.append(b)
         for x in sorted(states - seen):
-            W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không đi tới được từ nút Bắt đầu" % x)
+            W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không đi tới được từ trạng thái bắt đầu" % x)
     outs = {a for a, _, _ in diag | table}
     for x in sorted(states - outs - ends):
-        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không có đường ra; nếu là trạng thái cuối thì nối tới nút Kết thúc" % x)
-
-
-def check_mermaid(W, f, lines, b0):
-    """Hai lỗi Lark đã biết, theo engine/standards/diagrams.md mục 5."""
-    for bl, block in mermaid_blocks(lines, b0):
-        if block and re.match(r"\s*stateDiagram", block[0]):
-            W.add("diagram", f, bl + 1, "Sơ đồ dùng stateDiagram: Lark dựng mất nhãn mũi tên, vẽ bằng flowchart theo engine/standards/diagrams.md mục 3")
-        for k, ln in enumerate(block):
-            if re.search(r"\|[^|]*<br\s*/?>[^|]*\|", ln):
-                W.add("diagram", f, bl + 2 + k, "Nhãn mũi tên có <br/>: Lark tách thành nút rác, viết nhãn một dòng")
+        W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không có đường ra; nếu là trạng thái cuối thì thêm '%s --> [*]'" % (x, x))
 
 
 def check_artifact(ctx, W, st, path):
@@ -1334,10 +1347,6 @@ def check_artifact(ctx, W, st, path):
     tpls = [data_path(t) for t in st.templates if Path(t).stem == stem]
     if not tpls and (REPO / "engine/templates" / (stem + ".md")).exists():
         tpls = [REPO / "engine/templates" / (stem + ".md")]
-    # template của sản phẩm ở domain/templates ghi đè template engine, cùng thứ tự với AWS (stage-protocol, Template overrides)
-    dom_tpl = ROOT / "domain" / "templates" / (stem + ".md")
-    if dom_tpl.exists():
-        tpls = [dom_tpl]
     if stem == "prd" and prd_is_legacy(lines):
         tpls = [t for t in tpls if "engine/templates" not in t.as_posix()]
         W.info.append("%s: PRD theo template công ty cũ (có mục Specific Requirement), không kiểm heading của template chuẩn" % f)
@@ -1355,8 +1364,7 @@ def check_artifact(ctx, W, st, path):
     elif tpls:
         W.info.append("%s: template là của công ty (%s), không kiểm heading" % (f, ", ".join(show(t) for t in tpls)))
 
-    # sơ đồ: lỗi Mermaid trên Lark, vòng đời trạng thái khớp bảng
-    check_mermaid(W, f, lines, b0)
+    # sơ đồ: vòng đời trạng thái khớp bảng, theo engine/standards/diagrams.md
     check_lifecycle(W, f, lines, b0)
 
     # 2. artifact nội bộ: Assumptions & Open Questions và thẻ nguồn
@@ -1532,8 +1540,13 @@ def check_artifact(ctx, W, st, path):
                 W.add("prd", f, a["line"], "%s định nghĩa lần nữa, lần đầu ở dòng %d" % (a["id"], seen_ac[a["id"]]))
             else:
                 seen_ac[a["id"]] = a["line"]
-            if not re.search(r"\bkhi\b", clean(a["text"]), re.I):
-                W.info.append("Gợi ý, %s:%d %s chưa có chữ 'Khi': viết dạng 'Khi <điều kiện>, <kết quả quan sát được>'" % (f, a["line"], a["id"]))
+            miss = [k for k in ("Given", "When", "Then") if not re.search(r"\b%s\b" % k, a["text"], re.I)]
+            if miss:
+                msg = "%s chưa theo cấu trúc Given/When/Then, thiếu %s" % (a["id"], ", ".join(miss))
+                if legacy:
+                    W.info.append("Gợi ý, %s:%d %s" % (f, a["line"], msg))
+                else:
+                    W.add("prd", f, a["line"], msg)
         W.info.append("%s: %d mã AC" % (f, len(seen_ac)))
         refd = set(br_label(t) for a in acs for t in a["brs"])
         if defs and not acs:
@@ -1771,11 +1784,16 @@ def set_current(lines, key, value):
     return False
 
 
+def published_ref(fm):
+    """Nơi đăng bản đọc ngoài repo, nếu domain có đăng: khoá published, nhận cả khoá lark của bản cũ."""
+    return (fm.get("published") or fm.get("lark") or "").strip()
+
+
 def upsert_version(lines, stem, ver, day):
     rng = section_lines(lines, lambda t: t.lower() == "versions")
     if not rng:
         at = next((i for i, l in enumerate(lines) if re.match(r"^##\s+Log\b", l)), len(lines))
-        lines[at:at] = ["## Versions", "| Artifact | Version | Status | Approved | Lark |", "|---|---|---|---|---|",
+        lines[at:at] = ["## Versions", "| Artifact | Version | Status | Approved | Bản đăng |", "|---|---|---|---|---|",
                         table_line([stem, "v" + ver, "approved", day, "-"]), ""]
         return "thêm mục Versions"
     tabs = parse_tables(lines, rng[0], rng[1])
@@ -1783,7 +1801,7 @@ def upsert_version(lines, stem, ver, day):
         lines.insert(rng[0] + 1, table_line([stem, "v" + ver, "approved", day, "-"]))
         return "thêm dòng"
     t = tabs[0]
-    h = t["header"] or ["Artifact", "Version", "Status", "Approved", "Lark"]
+    h = t["header"] or ["Artifact", "Version", "Status", "Approved", "Bản đăng"]
     vc, sc, ac = col(h, "Version"), col(h, "Status"), col(h, "Approved")
     vc, sc, ac = 1 if vc is None else vc, 2 if sc is None else sc, 3 if ac is None else ac
     for cells, k in t["rows"]:
@@ -1797,7 +1815,7 @@ def upsert_version(lines, stem, ver, day):
     row = [""] * len(h)
     row[0], row[vc], row[sc], row[ac] = stem, "v" + ver, "approved", day
     if len(h) > 4:
-        row[col(h, "Lark") or 4] = "-"
+        row[col(h, "Bản đăng", "Lark") or 4] = "-"
     lines.insert(t["end"], table_line(row))
     return "thêm dòng"
 
@@ -1863,6 +1881,18 @@ def human_turns():
     return out
 
 
+NEGATION = ("chưa", "không", "ko", "đừng", "khoan", "chẳng", "chớ", "no", "not", "dont", "don't", "never")
+
+
+def said(w, t):
+    """Lời w có trong lượt t: khớp nguyên từ, và ba từ ngay trước không có từ phủ định như "chưa duyệt", "không ok"."""
+    for m in re.finditer(r"(?<!\w)%s(?!\w)" % re.escape(w), t):
+        before = re.findall(r"\w+(?:'\w+)?", t[:m.start()])[-3:]
+        if not any(x in NEGATION for x in before):
+            return True
+    return False
+
+
 def presence(words, since, label):
     """Lời PO phải có nguyên văn trong một lượt người ghi sau mốc since, như HUMAN_TURN của AWS AI-DLC.
     Trả None khi đạt, câu lý do khi không. PO tự gõ lệnh trong terminal thì coi là có mặt."""
@@ -1876,7 +1906,7 @@ def presence(words, since, label):
     if len(w) < 2:
         return "lời %s quá ngắn để đối chiếu với lời PO." % label
     for ts, text in turns:
-        if ts >= since and w in norm_words(text):
+        if ts >= since and said(w, norm_words(text)):
             return None
     return ("không thấy lời %s \"%s\" trong lượt nào của PO từ %s, lúc artifact được sửa lần cuối. Trình gate, chờ PO trả lời, "
             "sau đó chép đúng lời PO vào tham số." % (label, (words or "").strip(), since.strftime("%H:%M %d/%m/%Y")))
@@ -2178,9 +2208,9 @@ def status(root):
             stage_txt, state_txt = "%s %s" % (active["code"], active["slug"]), WORD_STATE.get(active["mark"], active["mark"])
         if fm.get("status", "").lower() in ("archived", "rejected", "parked"):
             state_txt = fm["status"]
-        lark = " · ".join("%s %s" % (k, v[4]) for k, v in vers.items() if len(v) > 4 and clean(v[4]) not in EMPTY)
+        pub = " · ".join("%s %s" % (k, v[4]) for k, v in vers.items() if len(v) > 4 and clean(v[4]) not in EMPTY)
         rows.append((it.name, fm.get("profile", "?"), stage_txt, state_txt, cur.get("Next action", ""),
-                     cur.get("Blocking questions open", ""), cur.get("Open CR", ""), lark or "-"))
+                     cur.get("Blocking questions open", ""), cur.get("Open CR", ""), pub or "-"))
 
         dec = read(it / "decisions.md") or ""
         dec_stages = [c[2] for c in table_rows(dec) if len(c) > 2 and re.fullmatch(r"DEC\d+", clean(c[0]))]
@@ -2235,14 +2265,14 @@ def status(root):
             v_state, v_file = cell(cells, 1).lstrip("v"), ffm.get("version", "")
             if ver_tuple(v_state) and ver_tuple(v_file) and ver_tuple(v_state) != ver_tuple(v_file):
                 findings.append((it.name, "3. %s: state ghi v%s, file ghi v%s" % (name, v_state, v_file), "Đồng bộ state.md"))
-            lark_cell = cell(cells, 4)
-            mv = re.search(r"v(\d+\.\d+)", lark_cell)
+            pub_cell = cell(cells, 4)
+            mv = re.search(r"v(\d+\.\d+)", pub_cell)
             if mv and ver_tuple(v_file) and ver_tuple(mv.group(1)) != ver_tuple(v_file):
-                findings.append((it.name, "7. %s: Lark đang v%s, file đang v%s" % (name, mv.group(1), v_file), "Publish lại, hoặc ghi chú vì sao chưa"))
-            tok_state = re.search(r"\b[A-Za-z0-9]{20,}\b", lark_cell)
-            tok_file = ffm.get("lark", "")
+                findings.append((it.name, "7. %s: bản đăng đang v%s, file đang v%s" % (name, mv.group(1), v_file), "Đăng lại, hoặc ghi chú vì sao chưa"))
+            tok_state = re.search(r"\b[A-Za-z0-9]{20,}\b", pub_cell)
+            tok_file = published_ref(ffm)
             if tok_state and re.fullmatch(r"[A-Za-z0-9]{20,}", tok_file) and tok_state.group(0) != tok_file:
-                findings.append((it.name, "7. %s: state.md ghi doc Lark %s, frontmatter ghi %s" % (name, tok_state.group(0), tok_file), "Sửa khoá lark ở frontmatter theo doc đang dùng"))
+                findings.append((it.name, "7. %s: state.md ghi bản đăng %s, frontmatter ghi %s" % (name, tok_state.group(0), tok_file), "Sửa khoá published ở frontmatter theo bản đang dùng"))
         order = [e["slug"] for e in ents]
         for stem, (stg, relp) in amap.items():
             f = it / relp
@@ -2274,7 +2304,7 @@ def status(root):
 
     print("## Intent\n")
     if rows:
-        print(md_table(["Intent", "Profile", "Stage", "Trạng thái", "Việc kế tiếp", "Câu chặn", "CR mở", "Lark"], rows))
+        print(md_table(["Intent", "Profile", "Stage", "Trạng thái", "Việc kế tiếp", "Câu chặn", "CR mở", "Bản đăng"], rows))
     else:
         print("_Chưa có intent nào trong %s_" % root)
     print("\n## Kiểm tra lệch\n")
@@ -2364,23 +2394,24 @@ def replay(intent):
             if q["blocking"] and not q["answered"]:
                 qlines.append("- %s %s: %s (%s:%d)" % (entry_label(e), q["id"], clean(q["title"]), rel(qp, intent), q["line"]))
     out += qlines or ["Không có câu chặn nào còn trống."]
-    out += ["", "## Lark"]
+    out += ["", "## Bản đăng"]
     llines = []
     for k, (cells, _) in so.versions.items():
         if clean(cell(cells, 4)) not in EMPTY:
             llines.append("- state.md Versions, %s: %s" % (k, clean(cell(cells, 4))))
     for stem, (stg, relp) in stages().artifact_map().items():
         fmx = frontmatter(read(intent / relp))
-        if fmx.get("lark") and clean(fmx["lark"]).lower() not in EMPTY:
-            llines.append("- %s frontmatter lark: %s" % (relp, fmx["lark"]))
+        ref = published_ref(fmx)
+        if ref and clean(ref).lower() not in EMPTY:
+            llines.append("- %s frontmatter published: %s" % (relp, ref))
     il = imd.splitlines()
-    rng = section_lines(il, lambda t: t.lower() == "lark")
+    rng = section_lines(il, lambda t: t.lower() in ("bản đăng", "lark"))
     if rng:
         for t in parse_tables(il, rng[0], rng[1]):
             for cells, _ in t["rows"]:
                 if clean(cell(cells, 0)) and clean(cell(cells, 1)) not in EMPTY:
                     llines.append("- intent.md, %s: %s" % (clean(cell(cells, 0)), clean(cell(cells, 1))))
-    out += llines or ["Chưa có link Lark."]
+    out += llines or ["Chưa đăng ra ngoài repo."]
     print("\n".join(out))
     return 0
 
@@ -2414,13 +2445,13 @@ def index(write_out=False):
         scell = "%d, %d đạt" % (len(hst), sum(1 for x in hst if not x["reasons"])) if hmeta is not None else "-"
         rows.append((feat or "%s-%s (chưa cấp mã)" % (code, it.name), title, "v" + ver, fm.get("status", "-") or "-", at or "-",
                      fm.get("services", "") or "-", scell, show(arch) if arch else "-", "%s/prd-v%s" % (it.name, ver),
-                     fm.get("lark", "") or "-"))
+                     published_ref(fm) or "-"))
     out = ["# Spec index", "",
            "Sinh bởi `python3 engine/scripts/po-tools.py index --write` ngày %s. Không sửa tay, chạy lại lệnh khi PRD đổi." % today().isoformat(),
            "",
-           "Repo này là nguồn chuẩn của spec cho agent và Dev: đọc PRD theo đường dẫn archive (bản đã duyệt, không bao giờ sửa) hoặc theo tag git ở bảng dưới. Bản trên Lark là bản cho người đọc, chép từ repo, có thể chậm hơn repo.",
+           "Repo này là nguồn chuẩn của spec cho agent và Dev: đọc PRD theo đường dẫn archive (bản đã duyệt, không bao giờ sửa) hoặc theo tag git ở bảng dưới. Bản đăng ra ngoài repo, nếu có, chép từ repo, có thể chậm hơn repo.",
            ""]
-    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện giao Dev", "Bản duyệt mới nhất", "Tag git gợi ý", "Lark"], rows)
+    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện giao Dev", "Bản duyệt mới nhất", "Tag git gợi ý", "Bản đăng"], rows)
                if rows else "_Chưa có intent nào có PRD._")
     text = "\n".join(out) + "\n"
     for n in notes:
@@ -2858,6 +2889,7 @@ JIRA_COLS = ["Project key", "Project name", "Project type", "Issue Type", "Summa
 JIRA_KEY = re.compile(r"\b([A-Z][A-Z0-9]+-\d+)\b")
 JIRA_DESC_MAX = 32000
 STORY_AC_MAX = 6
+KB_MIN = ("00-index.md", "glossary.md", "concept-model.md", "data-model.md", "permissions.md", "product-direction.md", "corner-checklist.md")
 PRD_QPO_MAX = 3  # Spec Kit giới hạn 3 chỗ chưa rõ trong spec, xem ADR 0004
 JIRA_SECTIONS = (("us", "MÔ TẢ"), ("pre", "ĐIỀU KIỆN TRƯỚC"), ("scenario", "KỊCH BẢN"), ("ac", "TIÊU CHÍ CHẤP NHẬN"),
                  ("ui", "GIAO DIỆN VÀ VALIDATE"), ("br", "BUSINESS RULE"), ("data", "DỮ LIỆU"), ("nfr", "NFR"),
@@ -3271,8 +3303,6 @@ def doctor():
         add("Hook ghi lượt PO", "Đạt" if hb.exists() else "Cảnh báo",
             ("chạy lần cuối %s" % (read(hb) or "").strip()) if hb.exists() else "chưa chạy lần nào trên máy này, approve sẽ từ chối",
             "-" if hb.exists() else "Mở Claude Code ở gốc repo và gõ một câu; kiểm python3 chạy được, xem .claude/settings.json")
-    lark = shutil.which("lark-cli")
-    add("lark-cli trên PATH", "Đạt" if lark else "Cảnh báo", lark or "không thấy, không publish Lark được", "-" if lark else "Cài lark-cli, xem /publish-lark")
     rc, out = git("status", "--porcelain", "--", "intents", "memory")
     if rc != 0:
         add("Thay đổi chưa commit ở intents/, memory/", "Cảnh báo", "không chạy được git status", "Kiểm lại git")
@@ -3319,6 +3349,21 @@ def doctor():
         add("domain.md đủ mục 1 đến 6", "Lỗi" if miss or not dl else "Đạt",
             ("thiếu mục %s" % ", ".join(miss)) if dl and miss else ("không thấy domain/domain.md" if not dl else "đủ"),
             "Viết theo DOMAIN-SETUP.md" if miss or not dl else "-")
+    if not no_domain:
+        # KB tối thiểu và bản đồ KB, theo engine/standards/domain-kb.md mục 7
+        dd = ROOT / "domain"
+        miss_kb = [n for n in KB_MIN if not (dd / n).exists()]
+        add("KB tối thiểu theo domain-kb.md", "Cảnh báo" if miss_kb else "Đạt", ("thiếu " + ", ".join(miss_kb)) if miss_kb else "đủ",
+            "Dựng từ engine/templates/domain/, xem engine/standards/domain-kb.md mục 7" if miss_kb else "-")
+        rng = section_lines(dl, lambda t: "bản đồ kb" in t.lower())
+        mapped = []
+        if rng:
+            for t in parse_tables(dl, rng[0], rng[1]):
+                for cells, _ in t["rows"]:
+                    mapped += [x for x in backticks(cell(cells, 0)) if x.endswith(".md") and "<" not in x]
+        lost = [x for x in mapped if not (dd / x).exists()]
+        add("File trong bản đồ KB", "Cảnh báo" if lost else "Đạt", ("không có " + ", ".join(lost)) if lost else "%d file đều có" % len(mapped),
+            "Tạo file hoặc sửa domain.md mục 3" if lost else "-")
     kb = [show(p) for p in sorted((ROOT / "domain").rglob("*.md")) if "chưa viết" in (read(p) or "")] if (ROOT / "domain").is_dir() else []
     add("KB còn chữ 'chưa viết'", "Cảnh báo" if kb else "Đạt", ", ".join(kb) or "không có", "Viết nốt KB hoặc ghi vùng chưa phủ" if kb else "-")
     S = load_stages()

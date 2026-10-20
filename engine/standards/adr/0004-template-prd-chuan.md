@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Trạng thái | Đã quyết, thay template PRD theo sản phẩm ở `domain/templates/prd.md` |
+| Trạng thái | Đã quyết, thay template PRD theo sản phẩm từng nằm trong domain pack |
 | Ngày | 2026-10-20 |
 | Người quyết định | PO phụ trách PO-Workflow |
 
@@ -26,10 +26,10 @@ Ngoài ra, một dữ kiện thường được viết lại ở hai hoặc ba n
 
 | Điểm | AWS | Quyết định |
 |---|---|---|
-| PRD | Không sinh PRD. PRD chỉ là tài liệu đầu vào có thể có (`core/aidlc-common/stages/ideation/intent-capture.md`, `docs/guide/08-knowledge.md`). Vai trò của PRD được chia cho `intent-statement.md`, `scope-document.md`, `requirements.md`, `stories.md`, `unit-of-work.md`, sau đó `rules.md` và `entities.md` ở phase Construction | Giữ PRD là tài liệu bàn giao duy nhất cho Design, Tech, QA, vì các team đọc trên Lark. Cấu trúc PRD lấy theo thành phần của các artifact AWS |
-| Template | Không có template mặc định ("ships NO default template files"). Thứ tự chọn: template của team ở `memory/templates/X.md`, sau đó template mặc định, cuối cùng là mô tả trong file stage. Template đã chọn được dùng nguyên khung, các mục `##` được kiểm (`core/aidlc-common/protocols/stage-protocol.md` mục Template overrides) | Engine có template mặc định `engine/templates/prd.md`. Domain chỉ có `domain/templates/prd.md` khi sản phẩm bắt buộc template riêng; khi có, file đó ghi đè template engine, theo cùng thứ tự với AWS |
+| PRD | Không sinh PRD. PRD chỉ là tài liệu đầu vào có thể có (`core/aidlc-common/stages/ideation/intent-capture.md`, `docs/guide/08-knowledge.md`). Vai trò của PRD được chia cho `intent-statement.md`, `scope-document.md`, `requirements.md`, `stories.md`, `unit-of-work.md`, sau đó `rules.md` và `entities.md` ở phase Construction | Giữ PRD là tài liệu bàn giao duy nhất cho Design, Tech, QA, để các team đọc một tài liệu liền mạch. Cấu trúc PRD lấy theo thành phần của các artifact AWS |
+| Template | Không có template mặc định ("ships NO default template files"). Thứ tự chọn: template của team ở `memory/templates/X.md`, sau đó template mặc định, cuối cùng là mô tả trong file stage. Template đã chọn được dùng nguyên khung, các mục `##` được kiểm (`core/aidlc-common/protocols/stage-protocol.md` mục Template overrides) | Engine có template `engine/templates/prd.md`, dùng chung cho mọi sản phẩm. Domain chỉ chứa knowledge base, không chứa template, nên không có tầng ghi đè; template riêng của công ty, nếu có, chỉ dùng làm bảng ánh xạ khi đăng bản đọc ra ngoài repo |
 | Câu yêu cầu | "The system shall [verb] [object] [condition]" (`core/knowledge/aidlc-product-agent/requirements-guide.md`) | Business rule viết theo mẫu EARS, gồm cả dạng "hệ thống phải" của AWS |
-| Tiêu chí chấp nhận | Given/When/Then, 3 tới 6 tiêu chí mỗi story (`user-story-patterns.md`) | Một câu "Cho… khi… thì…". Quá 6 tiêu chí ở một US thì `po-tools.py` cảnh báo story có thể quá lớn |
+| Tiêu chí chấp nhận | Given/When/Then, 3 tới 6 tiêu chí mỗi story (`user-story-patterns.md`) | Given/When/Then như AWS, theo BABOK 10.1. Quá 6 tiêu chí ở một US thì `po-tools.py` cảnh báo story có thể quá lớn |
 | Giả định và câu hỏi mở | Mục `## Assumptions & Open Questions` bắt buộc ở artifact | Hai mục Giả định và Câu hỏi mở |
 | Truy vết | FR sang US sang AC sang BR sang code (`core/knowledge/aidlc-shared/verification.md`) | Giữ mã `US1`, `AC1.1`, `BR1.1` và bảng truy vết hiện có |
 
@@ -50,13 +50,13 @@ Template PRD chuẩn đặt ở `engine/templates/prd.md`, dùng chung cho mọi
 | Mục | Cơ sở |
 |---|---|
 | Frontmatter và bảng thông tin rút gọn | Spec Kit ghi trạng thái ở phần đầu spec; AWS ghi version ở frontmatter. Trạng thái và người duyệt chỉ ghi ở frontmatter và `state.md`, để không lặp lại sự việc CR4 |
-| Lịch sử phiên bản | Giữ từ template công ty, vì người đọc trên Lark không xem được git |
+| Lịch sử phiên bản | Giữ từ template công ty: người đọc thấy thay đổi giữa các bản mà không phải đọc lịch sử git |
 | 1. Bối cảnh và mục tiêu | Yêu cầu business của BABOK; mục mục tiêu và các bên liên quan của ISO 29148; `intent-statement.md` của AWS. PRD tóm tắt và dẫn về artifact đã duyệt |
 | 2. Tiêu chí thành công | Success Criteria của Spec Kit: đo được, không gắn công nghệ, có mã. Success Metrics của AWS. HEART là kỹ thuật gợi ý, không bắt buộc |
 | 3. Ngoài phạm vi | No-gos của Shape Up, Non-goals của Google, ranh giới in/out của `scope-document.md` bên AWS, mục giới hạn của ISO 29148 |
 | 4. Giải pháp tổng thể | Mục góc nhìn sản phẩm và ràng buộc thiết kế của ISO 29148; phần nghiệp vụ của `functional-design` bên AWS. Cách làm kỹ thuật do Tech PIC viết ở `tech-design.md`, theo ADR 0003 |
 | 5. Units | Units Generation của AWS |
-| 6. Yêu cầu theo user story | User Scenarios của Spec Kit và `stories.md` của AWS. Mười mục con: User story kèm ưu tiên và lý do; Tiền điều kiện; Luồng chính; Business rule theo EARS; Tiêu chí chấp nhận "Cho… khi… thì…"; Giao diện và validate, là nơi duy nhất ghi validate của màn; Dữ liệu (Key Entities của Spec Kit); NFR riêng của US; Trường hợp ngoại lệ (Edge Cases của Spec Kit, corner checklist của AWS, coverage gap của Impact Matrix); Ngoài phạm vi của US |
+| 6. Yêu cầu theo user story | User Scenarios của Spec Kit và `stories.md` của AWS. Mười mục con: User story kèm ưu tiên và lý do; Tiền điều kiện; Luồng chính; Business rule theo EARS; Tiêu chí chấp nhận Given/When/Then; Giao diện và validate, là nơi duy nhất ghi validate của màn; Dữ liệu (Key Entities của Spec Kit); NFR riêng của US; Trường hợp ngoại lệ (Edge Cases của Spec Kit, corner checklist của AWS, coverage gap của Impact Matrix); Ngoài phạm vi của US |
 | 7. Yêu cầu phi chức năng | Thuộc tính chất lượng của ISO 29148; nhóm NFR của AWS: hiệu năng, bảo mật, khả năng mở rộng, độ tin cậy, khả năng quan sát; mỗi NFR có chỉ số đo |
 | 8. Chuyển đổi và triển khai | Yêu cầu transition của BABOK: dữ liệu hiện có, chuyển đổi dữ liệu, cách bật, chạy song song, quay lui, tenant, hướng dẫn người dùng. Các template spec cho AI như Spec Kit và Kiro không có phần này |
 | 9. Giả định | Mục giả định và phụ thuộc của ISO 29148; Assumptions của AWS và Spec Kit. Mỗi giả định ghi hệ quả nếu sai |
@@ -79,7 +79,7 @@ Template PRD chuẩn đặt ở `engine/templates/prd.md`, dùng chung cho mọi
 | Chưa có | 9. Giả định |
 | Open Issues | 10. Câu hỏi mở |
 | Traceability | 11. Truy vết |
-| Comments | Bình luận trên Lark |
+| Comments | Góp ý qua review trong repo |
 
 Mã `US1`, `AC1.1`, `BR1.1` không đổi, nên `po-tools.py` truy vết, kiểm điều kiện giao Dev và sinh Story List như cũ. Script nhận thêm tên mục mới và bỏ qua kiểm tên mục với PRD viết theo template cũ.
 
@@ -95,7 +95,7 @@ Mã `US1`, `AC1.1`, `BR1.1` không đổi, nên `po-tools.py` truy vết, kiểm
 - Góc ngoại lệ và yêu cầu chuyển đổi đã có trong Impact Matrix được đưa vào PRD, nên Design, Tech, QA nhận đủ.
 - Một dữ kiện chỉ ghi ở một nơi: validate ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó.
 - Người quen template công ty cần đọc bảng ánh xạ một lần. PRD đã duyệt theo template cũ giữ nguyên; chuyển sang template mới qua change request.
-- Nếu công ty bắt buộc template riêng cho một sản phẩm, đặt lại `domain/templates/prd.md`; script khi đó không kiểm tên mục.
+- Template riêng của công ty không thay template engine. Công ty cần bản đọc theo mẫu riêng thì repo sản phẩm tự chuyển đổi khi đăng ra ngoài; bản chính thức vẫn là file trong git.
 
 ## Cách đo hiệu quả
 

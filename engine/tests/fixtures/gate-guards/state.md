@@ -32,7 +32,7 @@ status: Running
 | Parked | no |
 
 ## Versions
-| Artifact | Version | Status | Approved | Lark |
+| Artifact | Version | Status | Approved | Bản đăng |
 |---|---|---|---|---|
 | requirements | v0.3 | draft | - | - |
 

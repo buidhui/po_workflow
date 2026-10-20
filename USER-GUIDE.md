@@ -86,13 +86,9 @@ Kiểm môi trường sau khi cài và mỗi khi thấy bất thường:
 python3 engine/scripts/po-tools.py doctor
 ```
 
-Lệnh kiểm tên git, Python, `lark-cli`, thư mục đang mở, hook ghi lượt PO đã chạy chưa, file chưa commit, nguồn KB quá hạn đối chiếu, domain pack, mã tính năng trùng, và tên sản phẩm xuất hiện trong engine. Mỗi dòng không đạt có gợi ý cách sửa.
+Lệnh kiểm tên git, Python, thư mục đang mở, hook ghi lượt PO đã chạy chưa, file chưa commit, nguồn KB quá hạn đối chiếu, domain pack, mã tính năng trùng, và tên sản phẩm xuất hiện trong engine. Mỗi dòng không đạt có gợi ý cách sửa.
 
-### 2.4 Lark CLI
-
-`/publish-lark` cần `lark-cli` chạy được từ terminal. Lần đầu dùng, hoặc khi AI báo token hết hạn, chạy `lark-cli auth login` và cấp quyền trong trình duyệt.
-
-### 2.5 Chụp màn hình cho User Guide
+### 2.4 Chụp màn hình cho User Guide
 
 `.mcp.json` cấu hình sẵn Playwright để chụp màn hình. Lần đầu mở repo, Claude Code hỏi có cho phép MCP server này không; chọn đồng ý. Nếu không dùng Playwright, gõ `skip-screenshot` khi viết User Guide.
 
@@ -109,7 +105,7 @@ po-workflow/
 ├── CHANGELOG.md · VERSION     phiên bản engine và cách nâng cấp
 ├── engine/                    quy trình, không phụ thuộc sản phẩm và công cụ
 │   ├── stages/                mỗi stage một file
-│   ├── commands/              lệnh: po, new-intent, po-status, po-review, po-replay, po-stories, change-request, publish-lark, generate-user-guide, new-domain
+│   ├── commands/              lệnh: po, new-intent, po-status, po-review, po-replay, po-stories, change-request, generate-user-guide, new-domain
 │   ├── protocol/              nghi thức chung: stage, gate, review, câu hỏi, profile
 │   ├── templates/             mẫu artifact, mẫu yêu cầu
 │   ├── verification/          checklist của từng stage và từng lệnh
@@ -118,7 +114,7 @@ po-workflow/
 │   ├── knowledge/             kiến thức vai PO lấy từ AWS
 │   ├── scripts/               po-tools.py kiểm tra, truy vết, duyệt, sinh story, chỉ mục; po-hook.py hook của Claude Code
 │   └── tests/                 dữ liệu kiểm thử của script, PO không cần đọc
-├── domain/                    domain pack: domain.md, KB, corner checklist, template User Guide
+├── domain/                    knowledge base của sản phẩm: domain.md, các file KB, corner checklist
 ├── memory/
 │   ├── team.md                bài học dùng chung, đi theo engine
 │   └── project.md             bài học của sản phẩm đang cài
@@ -127,7 +123,7 @@ po-workflow/
 └── intents/
     ├── INDEX.md               chỉ mục PRD đã duyệt cho Dev
     └── 261009-ten-intent/
-        ├── intent.md          bối cảnh, mã tính năng, Figma, Jira, Lark
+        ├── intent.md          bối cảnh, mã tính năng, Figma, Jira
         ├── state.md           đang ở stage nào, việc kế tiếp
         ├── decisions.md       quyết định nguyên văn, người quyết định
         ├── memory.md          quan sát của AI, PO đọc tại gate
@@ -167,7 +163,7 @@ Mỗi stage đi qua 7 bước: AI đọc nền, hỏi, tóm tắt để PO xác 
 
 1.2 chỉ chạy khi PO muốn so sánh với sản phẩm khác; danh sách mặc định ghi trong `domain/domain.md`.
 
-Stage 1.7 chỉ có ở profile L: AI tóm tắt thành Initiative Brief một trang. Gate này có thêm lựa chọn Reject Initiative để dừng intent. Khi cần, đẩy lên Lark với tên `[Brief] <tên tính năng>`.
+Stage 1.7 chỉ có ở profile L: AI tóm tắt thành Initiative Brief một trang. Gate này có thêm lựa chọn Reject Initiative để dừng intent.
 
 ### 4.4 Inception
 
@@ -244,7 +240,7 @@ Mọi thay đổi chạm stage đã duyệt đi qua `/change-request`. Lệnh c�
 3. Đề xuất stage phải quay lại và các gate phải duyệt lại, chờ PO xác nhận.
 4. Chạy xuôi từ stage đó, chỉ sửa phần bị chạm.
 
-Khi Decision Brief đổi, các PIC ký lại. Khi PRD đổi, phiên bản tăng, các team xem lại file thiết kế theo bản mới, Story List được sinh lại và PRD được đẩy lại lên Lark sau khi duyệt.
+Khi Decision Brief đổi, các PIC ký lại. Khi PRD đổi, phiên bản tăng, các team xem lại file thiết kế theo bản mới, Story List được sinh lại sau khi duyệt.
 
 ## 7. Bàn giao sau khi chốt
 
@@ -270,7 +266,7 @@ git push origin <intent>/prd-v1.0
 python3 engine/scripts/po-tools.py index --write
 ```
 
-Lệnh cuối cập nhật `intents/INDEX.md` với mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, link Lark và số story đạt điều kiện giao Dev. Commit file này.
+Lệnh cuối cập nhật `intents/INDEX.md` với mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, nơi đăng bản đọc nếu có và số story đạt điều kiện giao Dev. Commit file này.
 
 ### 7.3 Trước khi giao Dev
 
@@ -323,7 +319,7 @@ Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ. Design
 
 ## 9. Dành cho Dev
 
-Bản trên Lark dành cho người đọc. Việc được giao qua story trên Jira. Agent AI của Dev đọc PRD trong repo theo tag của bản đã duyệt, nên luôn lấy đúng bản đã chốt.
+Bản chính thức là file trong repo theo tag của bản đã duyệt. Việc được giao qua story trên Jira. Agent AI của Dev đọc PRD trong repo theo tag của bản đã duyệt, nên luôn lấy đúng bản đã chốt.
 
 1. Đọc `intents/INDEX.md` để biết tính năng nào đã có PRD duyệt, tag nào, service nào bị chạm, bao nhiêu story đạt điều kiện giao Dev.
 2. Lấy đúng bản theo tag, bằng `git show <tag>:<đường dẫn>` hoặc qua GitHub MCP server của công cụ đang dùng.
@@ -343,7 +339,6 @@ Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev 
 | `/po-replay <intent>` | Tóm lược diễn biến của intent theo dòng thời gian: quyết định, review, việc còn chặn. Dùng khi chuyển intent cho PO khác |
 | `/po-stories <intent>` | Sinh Story List để import lên Jira từ PRD đã duyệt; profile M, L chạy sau gate 2.43 |
 | `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt |
-| `/publish-lark <intent> <artifact>` | Đẩy Initiative Brief, PRD hoặc Decision Brief đã duyệt lên Lark |
 | `/generate-user-guide <intent>` | Viết User Guide sau khi Dev làm xong |
 | `/new-domain <sản phẩm>` | Dựng khung domain pack trong repo của sản phẩm mới |
 
@@ -375,11 +370,11 @@ Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`. AI đọc `do
 | 1. Sản phẩm và phạm vi | Sản phẩm là gì, phần nào ngoài phạm vi |
 | 2. Nguồn sống và bản chốt | Nguồn nào còn cập nhật, đọc ở đâu, đối chiếu lần cuối ngày nào |
 | 3. Bản đồ KB | File KB nào trả lời câu gì, stage nào dùng |
-| 4. Dữ kiện cho từng stage | Sản phẩm so sánh, shared entity dễ vỡ, nguồn field, nơi đăng Lark, đích User Guide |
+| 4. Dữ kiện cho từng stage | Sản phẩm so sánh, shared entity dễ vỡ, nguồn field, đích User Guide |
 | 5. Ví dụ dùng trong engine | Ví dụ thật của sản phẩm để AI hiểu đúng quy tắc |
 | 6. Thành phần của domain pack | Danh sách file |
 
-Cùng thư mục có KB theo module, `corner-checklist.md` liệt kê corner case thường bị bỏ sót của sản phẩm, và `templates/` chứa template User Guide của công ty cùng bản gốc template PRD cũ để đối chiếu. PRD dùng template chuẩn `engine/templates/prd.md`. Kiến thức vai PO không phụ thuộc sản phẩm nằm ở `engine/knowledge/`.
+Cùng thư mục có các file KB theo `engine/standards/domain-kb.md`: mục lục, glossary, mô hình khái niệm, mỗi module một file, mô hình dữ liệu, phân quyền, tích hợp, sự kiện, số liệu phi chức năng, định hướng sản phẩm, và `corner-checklist.md` liệt kê corner case thường bị bỏ sót. Domain không chứa template; template của mọi artifact, kể cả PRD và User Guide, nằm trong `engine/templates/`. Kiến thức vai PO không phụ thuộc sản phẩm nằm ở `engine/knowledge/`.
 
 Ba giới hạn của KB:
 
@@ -415,7 +410,6 @@ Ký hiệu chung trong artifact:
 | Reviewer báo NOT-READY nhưng PO chấp nhận | Nêu finding nào chấp nhận; AI ghi Accepted risk vào `decisions.md` |
 | PIC chưa viết file thiết kế hoặc chưa ký Decision Brief | Chờ tới hạn. Quá hạn mà thiếu file: PO quyết định viết Decision Brief với phần đã có, ghi DEC. Quá hạn mà thiếu chữ ký: PO chọn Accept as-is ngay tại gate, lý do ghi DEC |
 | Story không đạt điều kiện giao Dev | Chạy `po-tools.py dor`, xử lý theo lý do script in ra |
-| Lark báo hết hạn đăng nhập | Chạy `lark-cli auth login` |
 | Không chụp được màn hình | Gõ `skip-screenshot`; AI để trống vị trí ảnh và liệt kê ảnh còn thiếu |
 
 Các hành vi sau đúng với thiết kế:

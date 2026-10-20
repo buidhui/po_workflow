@@ -40,7 +40,7 @@ Ký hiệu: `[ ]` chưa làm · `[-]` đang làm · `[?]` chờ duyệt · `[R]`
 | Parked | <no / yes, ngày> |
 
 ## Versions
-| Artifact | Version | Status | Approved | Lark |
+| Artifact | Version | Status | Approved | Bản đăng |
 |---|---|---|---|---|
 | initiative-brief | | | | |
 | decision-brief | | | | |

@@ -4,16 +4,22 @@ Tài liệu này dành cho người phụ trách quy trình và mô tả việc 
 
 ## 1. Hai tầng của repo
 
-Engine là phần không phụ thuộc sản phẩm: protocol, lệnh, template chung, checklist, agent, script, chuẩn bàn giao, gói kiến thức vai PO từ AWS. Domain pack là mọi thứ riêng của sản phẩm và công ty, nằm trọn trong một thư mục:
+Engine là phần không phụ thuộc sản phẩm: protocol, lệnh, template chung, checklist, agent, script, chuẩn bàn giao, gói kiến thức vai PO từ AWS. Domain pack là knowledge base của sản phẩm, nằm trọn trong một thư mục. Template của artifact, kể cả PRD và User Guide, thuộc engine, dùng chung cho mọi sản phẩm; domain không chứa template. Domain cần những gì và người phụ trách phải cung cấp gì định nghĩa ở `engine/standards/domain-kb.md`:
 
 ```
 domain/
-├── domain.md                      manifest: sản phẩm, nguồn, bản đồ KB, dữ kiện cho từng stage
-├── 00-index.md, 01-<module>.md …  knowledge base của sản phẩm
-├── corner-checklist.md            góc hay sót, viết lại theo nghiệp vụ của domain
-└── templates/
-    ├── user-guide.md              template User Guide theo chuẩn tài liệu của công ty
-    └── prd.md                     chỉ khi công ty bắt buộc template PRD riêng; ghi đè template chuẩn
+├── domain.md            manifest: sản phẩm, nguồn, bản đồ KB, dữ kiện cho từng stage
+├── 00-index.md          module, trạng thái tính năng, vùng chưa phủ
+├── glossary.md          thuật ngữ nghiệp vụ
+├── concept-model.md     thực thể nghiệp vụ và quan hệ chứa
+├── 01-<module>.md …     mỗi module một file
+├── data-model.md        thực thể dữ liệu, quan hệ, thực thể dùng chung
+├── permissions.md       ma trận vai và quyền
+├── integrations.md      hệ ngoài, nhóm API, vùng API chưa phủ
+├── events.md            sự kiện, thông báo, job
+├── nfr-baseline.md      số liệu phi chức năng hiện có
+├── product-direction.md định hướng, tenant, sản phẩm so sánh
+└── corner-checklist.md  góc hay sót của sản phẩm
 ```
 
 Hai phần nằm ngoài thư mục đó nhưng thuộc về domain, phải làm mới khi đổi domain: `memory/project.md` chứa bài học riêng của sản phẩm hiện tại, và `intents/` chứa việc của sản phẩm hiện tại. `memory/team.md` là bài học dùng chung cho mọi sản phẩm, như cách đánh version, cách hỏi, cách viết PRD và publish; file này đi theo engine, giữ nguyên.
@@ -47,27 +53,15 @@ Mỗi nguồn ghi vào `domain.md` mục 2 với đường dẫn hoặc link, lo
 
 ## 4. Dựng KB cùng AI
 
-KB là bản chắt lọc từ nguồn. Mỗi file trả lời ba câu hỏi: có gì, ràng buộc gì, chạm vào đâu. Thứ tự và quy ước dưới đây giữ nguyên cho mọi domain để command tra được:
-
-| File | Nội dung | Bắt buộc |
-|---|---|---|
-| `00-index.md` | mục lục, trạng thái tính năng kể cả Hidden, mục "câu hỏi để sau". Bảng nguồn ghi ở `domain.md` mục 2 | có |
-| `01` đến `NN` | mỗi module nghiệp vụ một file: khái niệm, luồng chính, rule có mã, màn, dữ liệu | có |
-| `data-model` | bảng, khoá ngoại, quan hệ, shared entity dễ vỡ | có |
-| `events` hoặc `mail-events` | sự kiện, thông báo, mail tự động và trạng thái bật tắt | nếu sản phẩm có |
-| `api-surface` | nhóm API, vùng chưa phủ, endpoint có nhưng tính năng không có | có |
-| `product-direction` | portal, tenant, phần đóng cứng, hướng sản phẩm | có |
-| `domain-principles` | quan hệ chứa giữa các thực thể, ranh giới thực thể | có |
-
-Số thứ tự tự do, vì command tra file theo bản đồ KB trong `domain.md` mục 3; tên file phải ghi vào bản đồ này.
+KB là bản chắt lọc từ nguồn. Mỗi file trả lời ba câu hỏi: có gì, ràng buộc gì, chạm vào đâu. Danh sách file, nội dung tối thiểu, mức bắt buộc và mức sẵn sàng ở `engine/standards/domain-kb.md` mục 2, 3, 7; template ở `engine/templates/domain/`. Tên file giữ như chuẩn để lệnh tra được; module đánh số tự do vì stage tra theo bản đồ KB trong `domain.md` mục 3.
 
 Cách làm với AI, từng file một:
 
 1. Đưa AI một nguồn và chỉ định file KB cần viết. AI chắt lọc, mỗi rule một mã.
-2. Mã rule: `BR-<MODULE>-NN` khi rule có trong tài liệu chính thức, `KB-<MODULE>-NN` khi AI trích từ văn xuôi và chưa ai duyệt. Hai loại khác nhau về độ tin cậy, không gộp.
+2. Mã rule: `BR-<MODULE>-NN` khi rule có trong tài liệu chính thức hoặc đã được PO duyệt, `KB-<MODULE>-NN` khi AI trích từ văn xuôi và chưa ai duyệt; mỗi rule ghi loại định nghĩa hay hành vi, theo `engine/standards/domain-kb.md` mục 4.
 3. Điểm nguồn không đề cập thì ghi `❓PO`, không để AI tự điền.
 4. PO duyệt từng file; duyệt xong ghi ngày đối chiếu vào `domain.md` mục 2.
-5. Ghi rõ vùng KB chưa phủ ngay trong `api-surface`, để Impact Analysis không kết luận "không ảnh hưởng" ở vùng chưa có thông tin.
+5. Ghi rõ vùng KB chưa phủ ở `00-index.md` và vùng API chưa phủ ở `integrations.md`, để Impact Analysis không kết luận "không ảnh hưởng" ở vùng chưa có thông tin.
 
 Về khối lượng: KB của sản phẩm đầu tiên áp dụng quy trình có 16 file, khoảng 27.700 từ, chắt từ 57 trang tài liệu người dùng, 85 bảng và 708 operation, và vẫn chỉ phủ khoảng một nửa hệ thống.
 
@@ -86,7 +80,7 @@ Về khối lượng: KB của sản phẩm đầu tiên áp dụng quy trình c
    Script lấy 3 khoá này điền vào 3 cột đầu của Story List; thiếu thì `doctor` cảnh báo
 2. Nguồn sống và bản chốt, kèm ngày đối chiếu và phiên bản nguồn
 3. Bản đồ KB: file nào trả lời câu gì, dùng ở stage nào; vùng chưa phủ; quy ước mã
-4. Dữ kiện cho từng stage: KB đọc ở 1.1 và 1.4; sản phẩm so sánh mặc định cho 1.2; KB và ví dụ cho 2.3; shared entity, hệ thông báo, phân quyền, luồng tự sinh, tenant cho 2.31; nguồn field và template PRD cho 2.42; đích publish; đích User Guide
+4. Dữ kiện cho từng stage: KB đọc ở 1.1 và 1.4; sản phẩm so sánh mặc định cho 1.2; KB và ví dụ cho 2.3; thực thể dùng chung, hệ thông báo, phân quyền, luồng tự sinh, tenant cho 2.31; nguồn field cho 2.42; nơi lưu tài liệu người dùng và các đối tượng người dùng cho User Guide
 5. Ví dụ dùng trong engine, để command dùng chung cho mọi domain
 6. Thành phần của pack
 
@@ -96,11 +90,11 @@ Mục 4 quyết định chất lượng của từng stage: mỗi stage chỉ đ
 
 Chép `engine/knowledge/corner-checklist-aws.md` thành `domain/corner-checklist.md`, giữ phần "Cách dùng", thay toàn bộ "Điều kiện theo bề mặt" bằng góc của domain mới. Corner case nên đưa vào là loại từng gây lỗi thật hoặc chắc chắn sẽ gặp: trạng thái kết thúc, người dùng bị khoá, dữ liệu cũ trước ngày bật tính năng, thao tác hàng loạt, hai người làm cùng lúc. Stage 2.3 và 2.42 quét theo file này.
 
-## 7. Template của công ty
+## 7. Template và công cụ của công ty
 
-Template PRD: mặc định dùng template chuẩn `engine/templates/prd.md`, chung cho mọi sản phẩm, nên domain không cần file template PRD. Cơ sở của từng mục và bảng ánh xạ từ template công ty sang template chuẩn ở `engine/standards/adr/0004-template-prd-chuan.md`. Chỉ khi công ty bắt buộc template riêng cho sản phẩm thì đặt file đó ở `domain/templates/prd.md` và ghi tên mục cấm đổi trong `domain.md` mục 4 phần 2.42; file này ghi đè template chuẩn, theo cùng thứ tự với AWS.
+Template artifact thuộc engine: PRD theo `engine/templates/prd.md`, cơ sở ở `engine/standards/adr/0004-template-prd-chuan.md`; User Guide theo `engine/templates/user-guide.md`. Domain không chứa template. Bản chính thức của mọi tài liệu là file trong git theo tag của bản đã duyệt.
 
-Template User Guide: theo cấu trúc tài liệu người dùng mà công ty đang dùng, như GitBook, Confluence, Notion. Đích publish ghi ở `domain.md` phần Publish; nếu không dùng Lark thì `/publish-lark` không áp dụng và cần một lệnh publish khác cho công cụ đó.
+Công ty muốn đăng bản đọc ra wiki hay công cụ tài liệu riêng thì tự thêm lệnh ở repo sản phẩm, ngoài thư mục `engine/`, và ghi nơi đăng ở khoá `published` trong frontmatter của artifact; `po-tools.py status` báo khi bản đăng lệch phiên bản. Template riêng của công ty, nếu có, dùng làm bảng ánh xạ khi đăng, không thay template của engine.
 
 ## 8. Chuẩn bàn giao cho các team
 
@@ -124,9 +118,10 @@ Chuẩn trong `engine/standards/` áp dụng nguyên vẹn cho sản phẩm mớ
 - [ ] `domain.md` mục 2 có bảng nguồn kèm ngày đối chiếu; `00-index.md` có mục vùng chưa phủ
 - [ ] Mỗi file KB đã được PO duyệt
 - [ ] `corner-checklist.md` viết theo domain, không còn ví dụ của sản phẩm trước
-- [ ] Không có `templates/prd.md`, hoặc có vì công ty bắt buộc và tên mục cấm đổi đã ghi ở `domain.md` mục 4 phần 2.42
+- [ ] Đủ KB tối thiểu theo `engine/standards/domain-kb.md` mục 7; `doctor` không cảnh báo dòng KB tối thiểu và bản đồ KB
+- [ ] Thông tin ở bảng mục 6 của chuẩn KB đã có, hoặc phần thiếu đã ghi ở vùng chưa phủ
 - [ ] `project.md` trống, `intents/` trống, `team.md` giữ nguyên
-- [ ] `python3 engine/scripts/po-tools.py doctor` không còn dòng Lỗi. Lệnh kiểm `domain.md` đủ 6 mục, file Template và Checklist của mọi stage tồn tại, và engine không còn tên nào trong khoá `names` của `domain.md`
+- [ ] `python3 engine/scripts/po-tools.py doctor` không còn dòng Lỗi. Lệnh kiểm `domain.md` đủ 6 mục, KB tối thiểu, file trong bản đồ KB, file Template và Checklist của mọi stage, và engine không còn tên nào trong khoá `names` của `domain.md`
 - [ ] Mã sản phẩm `code` đã chốt và không trùng sản phẩm khác; các PIC đã nhận chuẩn bàn giao và có quyền ghi repo
 - [ ] Frontmatter `domain.md` có `jira_project_key` và `jira_project_name`; `doctor` không cảnh báo dòng Dự án Jira
 - [ ] Chạy thử một intent S tới PRD, `po-tools.py status` khớp

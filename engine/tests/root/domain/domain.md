@@ -33,10 +33,10 @@ Domain dùng chung cho mọi fixture của `po-tools.py selftest`, không phải
 ## 4. Dữ kiện cho từng stage
 
 ### 2.42 PRD Generation
-Template PRD: `templates/prd.md`.
+Nguồn field: `docs/`.
 
 ## 5. Ví dụ dùng trong engine
 - Câu trả lời nguyên văn kèm chữ cái: `A, "giữ như hiện tại"`
 
 ## 6. Thành phần của domain pack
-- `domain.md`, `corner-checklist.md`, `templates/prd.md`
+- `domain.md`, `corner-checklist.md`

@@ -96,13 +96,15 @@ services: <service hoặc repo code bị chạm theo Impact Matrix; lệch với
 
 ## Vòng đời trạng thái <!-- tuỳ chọn -->
 
-*Bắt buộc khi tính năng có đối tượng đổi trạng thái mà người dùng thấy, như đơn, lớp, chứng chỉ, yêu cầu duyệt; mỗi đối tượng một sơ đồ và một bảng. Mức nghiệp vụ. Bảng là nguồn chính, sơ đồ vẽ từ bảng theo " + STD + " mục 3: `flowchart`, nút Bắt đầu và Kết thúc dạng tròn, nhãn mũi tên là tên sự kiện. `po-tools.py check` so từng chuyển trạng thái giữa bảng và sơ đồ.*
+*Bắt buộc khi tính năng có đối tượng đổi trạng thái mà người dùng thấy, như đơn, lớp, chứng chỉ, yêu cầu duyệt; mỗi đối tượng một sơ đồ và một bảng, theo kỹ thuật State Modelling của BABOK (10.44). Mức nghiệp vụ. Bảng là nguồn chính; sơ đồ vẽ từ bảng bằng `stateDiagram-v2` theo `engine/standards/diagrams.md` mục 3: `[*]` là trạng thái bắt đầu và kết thúc, nhãn mũi tên là tên sự kiện. `po-tools.py check` so từng chuyển trạng thái giữa bảng và sơ đồ.*
 
 ```mermaid
-flowchart LR
-    BD(("Bắt đầu")) --> A("<Trạng thái đầu>")
-    A -->|<Sự kiện>| B("<Trạng thái sau>")
-    B --> KT(("Kết thúc"))
+stateDiagram-v2
+    state "<Trạng thái đầu>" as A
+    state "<Trạng thái sau>" as B
+    [*] --> A
+    A --> B : <Sự kiện>
+    B --> [*]
 ```
 
 | Trạng thái hiện tại | Sự kiện | Ai kích hoạt | Điều kiện | Trạng thái sau | Hệ quả |
@@ -120,7 +122,7 @@ flowchart LR
 
 # 5. Units
 
-*Lấy từ `stories.md`. Nhóm US làm và phát hành độc lập được, để Dev biết bắt đầu từ đâu. Thứ tự là đề xuất, Dev quyết thứ tự thật. Từ ba Unit trở lên thì thêm sơ đồ phụ thuộc Unit lấy từ `stories.md`, theo " + STD + " mục 4. Profile S bỏ mục này.*
+*Lấy từ `stories.md`. Nhóm US làm và phát hành độc lập được, để Dev biết bắt đầu từ đâu. Thứ tự là đề xuất, Dev quyết thứ tự thật. Từ ba Unit trở lên thì thêm sơ đồ phụ thuộc Unit lấy từ `stories.md`, theo `engine/standards/diagrams.md` mục 4. Profile S bỏ mục này.*
 
 | Unit | Gồm US | Phụ thuộc | Phát hành độc lập được? |
 | --- | --- | --- | --- |
@@ -151,7 +153,7 @@ flowchart LR
 
 ### Luồng chính
 
-*Đường vào màn, sau đó ba tới bảy bước: người dùng làm gì, hệ thống đáp gì. Nhánh rẽ đáng kể ghi ngắn ngay dưới luồng chính. Luồng có từ hai điểm rẽ nhánh thì thêm sơ đồ luồng, theo " + STD + " mục 4.*
+*Đường vào màn, sau đó ba tới bảy bước: người dùng làm gì, hệ thống đáp gì. Nhánh rẽ đáng kể ghi ngắn ngay dưới luồng chính. Luồng có từ hai điểm rẽ nhánh thì thêm sơ đồ luồng, theo `engine/standards/diagrams.md` mục 4.*
 
 ### Business rule
 
@@ -168,9 +170,12 @@ flowchart LR
 
 ### Tiêu chí chấp nhận
 
-*Mỗi dòng một tiêu chí có đạt hoặc không đạt, viết theo hành vi người dùng thấy: "Cho <tiền điều kiện>, khi <hành động hoặc sự kiện>, thì <kết quả quan sát được>. Theo `BR1.1`". Phần "Cho" bỏ được khi mục Tiền điều kiện đã đủ. Luồng chính và mỗi nhánh đáng kể có ít nhất một tiêu chí; mỗi US có ít nhất một tiêu chí cho nhánh lỗi hoặc bị từ chối; mỗi ngưỡng số có tiêu chí ở giá trị biên; mỗi BR có ít nhất một tiêu chí trỏ tới; NFR đo được thì thành tiêu chí. Validate của một màn gom thành một tiêu chí trỏ về bảng giao diện. Không viết tiêu chí cho điều không kiểm được.*
+*Mỗi tiêu chí theo cấu trúc Given/When/Then, theo kỹ thuật Acceptance and Evaluation Criteria của BABOK (10.1) và cách viết tiêu chí của AWS: Given là tiền điều kiện và dữ liệu ban đầu, When là một hành động hoặc sự kiện, Then là kết quả người dùng hoặc hệ thống quan sát được. Thêm tiền điều kiện hay kết quả thì dùng dòng And. Mỗi tiêu chí kiểm một hành vi, có đạt hoặc không đạt, và ghi rõ BR mà nó kiểm. Luồng chính và mỗi nhánh đáng kể có ít nhất một tiêu chí; mỗi US có ít nhất một tiêu chí cho nhánh lỗi hoặc bị từ chối; mỗi ngưỡng số có tiêu chí ở giá trị biên; mỗi BR có ít nhất một tiêu chí trỏ tới; mỗi chuyển trạng thái của mục 4 có ít nhất một tiêu chí; NFR đo được thì thành tiêu chí. Validate của một màn gom thành một tiêu chí trỏ về bảng giao diện. Không viết tiêu chí cho điều không kiểm được.*
 
-- `AC1.1` *Cho …, khi …, thì …. Theo `BR1.1`*
+- `AC1.1` *<tên tình huống>* · Theo `BR1.1`
+  - Given *<tiền điều kiện, dữ liệu ban đầu>*
+  - When *<hành động hoặc sự kiện>*
+  - Then *<kết quả quan sát được>*
 
 ### Giao diện và validate
 

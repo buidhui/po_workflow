@@ -34,4 +34,4 @@ Domain dùng chung cho mọi fixture của `po-tools.py selftest`, không phải
 - Câu trả lời nguyên văn kèm chữ cái: `A, "giữ như hiện tại"`
 
 ## 6. Thành phần của domain pack
-- `domain.md`, `corner-checklist.md`, `templates/prd.md`
+- `domain.md`, `corner-checklist.md`
