@@ -223,7 +223,7 @@ flowchart LR
     subgraph TEAMS["Các team, ở 2.43"]
         direction LR
         D["ux-design<br/>màn hình SCR"]
-        T["tech-design<br/>thành phần, Unit of work"]
+        T["tech-design<br/>Backend, Frontend, hợp đồng API"]
         Q["test-design<br/>phủ AC"]
     end
     S242 ==> D
@@ -312,13 +312,13 @@ Bước hỏi là Field Intake: AI tra Impact Matrix, data model, API spec và K
 
 PRD theo template chuẩn `engine/templates/prd.md`, dùng chung cho mọi sản phẩm. Cơ sở của từng mục và bảng ánh xạ từ template công ty cũ ở `engine/standards/adr/0004-template-prd-chuan.md`: template lấy thành phần từ các artifact của AWS AI-DLC, ISO/IEC/IEEE 29148, mẫu câu EARS, GitHub Spec Kit và bốn loại yêu cầu của BABOK. PRD có 11 mục: 1. Bối cảnh và mục tiêu; 2. Tiêu chí thành công đo được, mã `SC<n>`; 3. Ngoài phạm vi; 4. Giải pháp tổng thể; 5. Units; 6. Yêu cầu theo user story; 7. Yêu cầu phi chức năng; 8. Chuyển đổi và triển khai; 9. Giả định; 10. Câu hỏi mở; 11. Truy vết. Mục 1 tới 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: User story kèm ưu tiên, Tiền điều kiện, Luồng chính, Business rule mã `BR<US>.<n>` theo BABOK 10.9, có loại định nghĩa hay hành vi, rule dùng chung mã `BR0.<n>`, Tiêu chí chấp nhận mã `AC<US>.<n>`, Giao diện và validate, Dữ liệu, NFR riêng nếu có, Trường hợp ngoại lệ lấy từ coverage gap của Impact Matrix, Ngoài phạm vi của US. Một dữ kiện chỉ ghi ở một nơi: câu thông báo ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó. Cách viết tiêu chí chấp nhận ở mục 6.5.
 
-Sơ đồ theo `engine/standards/diagrams.md`. Tính năng có đối tượng đổi trạng thái thì PRD bắt buộc có Vòng đời trạng thái: bảng chuyển trạng thái là nguồn chính, sơ đồ trạng thái vẽ từ bảng, `po-tools.py check` so từng chuyển trạng thái giữa hai bên và báo trạng thái không tới được hoặc bị cụt. Sơ đồ phụ thuộc Unit khi có từ ba Unit, sơ đồ luồng khi luồng chính có từ hai điểm rẽ nhánh. Các artifact khác có sơ đồ ở chỗ phù hợp: luồng giá trị ở scope, sơ đồ phụ thuộc ở Impact Matrix, luồng màn ở ux-design. Sơ đồ vẽ bằng `flowchart` của Mermaid, vì Lark dựng `stateDiagram-v2` mất nhãn mũi tên. Cách làm theo AWS: bảng hoặc YAML là nguồn, sơ đồ là bản dẫn xuất để đọc.
+Sơ đồ theo `engine/standards/diagrams.md`. Tính năng có đối tượng đổi trạng thái thì PRD bắt buộc có Vòng đời trạng thái: bảng chuyển trạng thái là nguồn chính, sơ đồ trạng thái vẽ từ bảng, `po-tools.py check` so từng chuyển trạng thái giữa hai bên và báo trạng thái không tới được hoặc bị cụt. Sơ đồ phụ thuộc Unit khi có từ ba Unit, sơ đồ luồng khi luồng chính có từ hai điểm rẽ nhánh. Các artifact khác có sơ đồ ở chỗ phù hợp: luồng giá trị ở scope, sơ đồ phụ thuộc ở Impact Matrix, luồng màn ở ux-design. Sơ đồ viết bằng Mermaid ngay trong file: sơ đồ trạng thái dùng `stateDiagram-v2` theo ký pháp UML, sơ đồ luồng và phụ thuộc dùng `flowchart`. Cách làm theo AWS: bảng hoặc YAML là nguồn, sơ đồ là bản dẫn xuất để đọc.
 
 PRD viết trước khi các team thiết kế. Với điểm phụ thuộc thiết kế hoặc kỹ thuật mà artifact đã duyệt chưa nói, AI ghi đề xuất có đánh dấu kèm câu hỏi gắn tên PIC; các team trả lời ở 2.43. Quy tắc cố định: không có mục Database và API, không thiết kế bảng hoặc thuật toán, hằng số ghi rõ là giá trị cứng hoặc cấu hình, field hiện có không mô tả như mới, không dấu vết quy trình, không viết tắt.
 
 ### 2.43 Design Alignment
 
-Chạy ở profile M và L, sau khi PRD được duyệt. Design PIC, Tech PIC, QA PIC đọc PRD và viết ba file riêng trong intent: `inception/ux-design/ux-design.md` gồm danh sách màn có mã `SCR`, luồng, accessibility; `inception/tech-design/tech-design.md` gồm thành phần bị chạm, quyết định kỹ thuật, dữ liệu, cách đáp ứng BR và NFR, Unit of work và độ lớn; `inception/test-design/test-design.md` gồm chiến lược, kế hoạch phủ từng AC, vùng hồi quy. Mỗi file có mục Ý kiến về PRD với lập trường Đồng ý, Đề xuất sửa, Phản đối. AI của PO chỉ tạo khung file, không viết và không sửa nội dung.
+Chạy ở profile M và L, sau khi PRD được duyệt. Design PIC, Tech PIC, QA PIC đọc PRD và viết ba file riêng trong intent: `inception/ux-design/ux-design.md` gồm danh sách màn có mã `SCR`, luồng, accessibility; `inception/tech-design/tech-design.md` gồm thành phần bị chạm ở cả Backend và Frontend, quyết định kỹ thuật, hợp đồng API giữa hai phía, dữ liệu và xử lý ở Backend, màn, component, trạng thái và validate ở Frontend, cách đáp ứng BR, NFR và TR, Unit of work và độ lớn; `inception/test-design/test-design.md` gồm chiến lược, kế hoạch phủ từng AC, vùng hồi quy. Mỗi file có mục Ý kiến về PRD với lập trường Đồng ý, Đề xuất sửa, Phản đối. AI của PO chỉ tạo khung file, không viết và không sửa nội dung.
 
 AI đối chiếu ba file với PRD: script kiểm US có giao diện đã có màn chưa, AC đã có trong kế hoạch test chưa, US đã có trong thiết kế kỹ thuật chưa, file có dựng từ bản PRD hiện tại không; AI xét thêm mâu thuẫn giữa các thiết kế, độ lớn so với mốc, ý kiến của các team. Kết quả là Decision Brief, tối đa 1.500 từ cho phần tổng hợp, chỉ ghi điểm cần người quyết định, kèm bảng Ký. Họp trên Decision Brief; quyết định đổi yêu cầu đi qua change request trên PRD. Gate là Alignment gate: Approve khi cả ba PIC ghi Đồng ý hoặc Có ý kiến; PIC quá hạn chưa ký thì PO được chọn Accept as-is kèm lý do. Story List chỉ sinh sau gate này. Quyết định chọn cách làm này và so sánh với AWS ghi ở `engine/standards/adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
 
@@ -349,7 +349,7 @@ Dữ liệu kiểm thử của script nằm trong `engine/tests/fixtures/`: mỗ
 | Team | Nhận | Ở đâu | Khi nào |
 |---|---|---|---|
 | Design | PRD với bảng UI để viết `ux-design.md`; Decision Brief để chốt; story trên Jira có mã màn | `inception/`, Jira | Từ khi PRD được duyệt |
-| Tech | PRD, Impact Matrix để viết `tech-design.md`; Decision Brief; story trên Jira để chia Unit of work và sub-task | `inception/`, Jira | Từ khi PRD được duyệt |
+| Tech, gồm Backend và Frontend | PRD, Impact Matrix, danh sách màn của ux-design để viết `tech-design.md`; Decision Brief; story trên Jira để chia Unit of work và sub-task | `inception/`, Jira | Từ khi PRD được duyệt |
 | QA | PRD với tiêu chí chấp nhận có mã để viết `test-design.md`; Decision Brief; story trên Jira để gắn test case | `inception/`, Jira | Từ khi PRD được duyệt |
 | Agent AI của Dev | PRD theo tag của bản đã duyệt; ba file thiết kế; bảng chỉ mục; story trên Jira | Repo, `intents/INDEX.md`, Jira | Sau gate 2.43; profile S sau gate 2.42 |
 
@@ -401,11 +401,13 @@ PRD và artifact của PO dùng mã ngắn để dễ đọc. Khi sinh Story Lis
 | Business rule | `BR-<tính năng>-<NN>.<n>` | `BR-APP-F012-01.2` | PO, ở 2.42 |
 | Câu hỏi mở | `Q-<tính năng>-<NN>.<n>` | `Q-APP-F012-01.3` | Người hỏi |
 | Màn hình | `SCR-<tính năng>-<NN>` | `SCR-APP-F012-02` | Design PIC |
-| Test case | `TC-<tính năng>-<NN>` | `TC-APP-F012-01` | QA PIC |
-| Nhánh code | `feat/<tính năng>-<mô tả>` | `feat/APP-F012-quiz-retake` | Dev |
-| Commit | Trailer `Feature:` và `Story:` | `Feature: APP-F012` | Dev |
+| Test case | `TC-<tính năng>-<NNN>` | `TC-APP-F012-001` | QA PIC |
+| Nhánh code | `<loại>/<key Jira>-<mô tả>` | `feat/LMS-123-lam-lai-bai-kiem-tra` | Dev |
+| Commit | Trailer `Refs`, `Feature`, `Story`, `Implements` | `Implements: AC-APP-F012-01.1` | Dev |
 
 Mã đã cấp không đổi và không dùng lại. Tách một story thì phần tách ra nhận số mới; AC chuyển đi nhận mã mới và dòng cũ ghi "chuyển sang", để test case trỏ mã cũ vẫn truy được tới mã mới. Chi tiết ở `engine/standards/id-conventions.md`.
+
+Cách mã xuất hiện ở từng nơi nằm ở `engine/standards/naming-conventions.md`: frontmatter dùng chung với khoá `feature` và `inputs`, tên frame Figma bắt đầu bằng mã màn, nhánh mang key Jira, commit có trailer `Implements`, test tự động gắn tag mã AC, đặc tả API có trường `x-requirements`, file truy vết theo khuôn `traceability.json` của AWS. Nhờ vậy agent của từng team tìm được mọi file liên quan từ một mã bằng `git grep`, và khi PRD đổi thì liệt kê được chỗ phải sửa. Khi team dùng AWS AI-DLC, Spec Kit, Kiro hoặc OpenSpec, mã riêng của công cụ ghi kèm mã đầy đủ trong ngoặc trên cùng dòng, vì các công cụ đó không đọc được mã đầy đủ.
 
 ### 6.5 Tiêu chí chấp nhận trong PRD
 

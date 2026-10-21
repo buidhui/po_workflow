@@ -32,6 +32,6 @@ inputs: <prd@1.0>
 
 <AC không kiểm thử được, thiếu nhánh lỗi hoặc giá trị biên, corner case PRD chưa nói, BR mơ hồ. Lập trường: Đồng ý, Đề xuất sửa, Phản đối.>
 
-## 6. Rủi ro và câu hỏi cần chốt
+## 6. Rủi ro và câu hỏi cần trả lời
 | # | Nội dung | Cần ai trả lời | Chặn |
 |---|---|---|---|

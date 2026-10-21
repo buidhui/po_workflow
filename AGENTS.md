@@ -15,7 +15,7 @@ File này là luật chung cho mọi công cụ AI làm việc trên repo; `CLAU
 | Thư mục | Nội dung | Thuộc về |
 |---|---|---|
 | `engine/` | Stage, lệnh, protocol, template, checklist, agent, script, kiến thức vai PO. Không phụ thuộc sản phẩm, không phụ thuộc công cụ | Engine |
-| `engine/standards/` | Chuẩn bàn giao chung với Design, Tech, QA: nguyên tắc chia story, quy ước mã, quy tắc bàn giao, ADR | Engine |
+| `engine/standards/` | Chuẩn bàn giao chung với Design, Tech, QA: nguyên tắc chia story, quy ước mã, quy ước đặt tên và liên kết, quy tắc bàn giao, ADR | Engine |
 | `domain/` | Domain pack của sản phẩm đang cài | Sản phẩm |
 | `intents/` | Hồ sơ từng yêu cầu | Sản phẩm |
 | `memory/` | `team.md` bài học dùng chung, gộp theo dòng khi nâng cấp engine; `project.md` bài học của sản phẩm | Cả hai |
@@ -30,7 +30,7 @@ Công cụ AI khác: đọc file này, sau đó chạy lệnh bằng cách đọ
 Một luồng duy nhất theo AWS AI-DLC Workflows, phiên bản ghi trong `engine/knowledge/README.md`. Mỗi yêu cầu là một intent trong `intents/`.
 
 - Lệnh: `/new-intent` tạo intent, `/po` chạy stage kế tiếp, `/po-status` xem trạng thái, `/po-review` review độc lập, `/po-replay` tóm lược diễn biến của intent khi bàn giao cho người khác, `/po-stories` sinh Story List để import lên Jira sau gate 2.43, profile S thì sau gate 2.42.
-- Đầu ra của PO là đầu vào của Design, Tech và QA, nên theo chuẩn trong `engine/standards/`: mã tính năng cấp khi tạo intent, tiêu chí chấp nhận có mã trong PRD, mỗi user story một story trên Jira.
+- Đầu ra của PO là đầu vào của Design, Tech và QA, nên theo chuẩn trong `engine/standards/`: mã tính năng cấp khi tạo intent, tiêu chí chấp nhận có mã trong PRD, mỗi user story một story trên Jira. Ngoài repo PO chỉ dùng mã đầy đủ; cách mã xuất hiện ở frontmatter, Figma, git, test, API theo `engine/standards/naming-conventions.md`.
 - Script: `python3 engine/scripts/po-tools.py` với `next`, `check`, `review-start`, `approve`, `trace`, `status`, `doctor`, `index`, `replay`, `feature-id`, `stories`, `dor`, `migrate`. Số liệu, tiến độ và stage kế lấy từ script, không tự đếm.
 - Nghi thức ở `engine/protocol/*.md`, thuật ngữ ở `GLOSSARY.md`, bài học ở `memory/team.md` và `memory/project.md`.
 - Tên file artifact ổn định, phiên bản ở frontmatter, bản duyệt chụp vào `archive/` của intent theo `gate-protocol.md`. Không tạo file `v0.x`.
@@ -38,7 +38,7 @@ Một luồng duy nhất theo AWS AI-DLC Workflows, phiên bản ghi trong `engi
 
 ## Domain pack
 
-Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`, là knowledge base của sản phẩm theo `engine/standards/domain-kb.md`: manifest `domain.md`, các file KB, corner checklist. Domain không chứa template; template của mọi artifact nằm trong `engine/templates/`.md`, KB, corner checklist, template User Guide của công ty; template PRD riêng chỉ khi công ty bắt buộc, khi đó ghi đè template chuẩn `engine/templates/prd.md`. Đọc `domain.md` ở đầu mỗi phiên và ở bước Load của mọi stage. Engine không ghi cứng dữ kiện sản phẩm, kể cả tên sản phẩm; sản phẩm đang cài ghi ở frontmatter của `domain.md`. Đổi domain theo [DOMAIN-SETUP.md](DOMAIN-SETUP.md).
+Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`, là knowledge base của sản phẩm theo `engine/standards/domain-kb.md`: manifest `domain.md`, các file KB, corner checklist. Domain không chứa template; template của mọi artifact nằm trong `engine/templates/`. Đọc `domain.md` ở đầu mỗi phiên và ở bước Load của mọi stage. Engine không ghi cứng dữ kiện sản phẩm, kể cả tên sản phẩm; sản phẩm đang cài ghi ở frontmatter của `domain.md`. Đổi domain theo [DOMAIN-SETUP.md](DOMAIN-SETUP.md).
 
 ## Knowledge
 

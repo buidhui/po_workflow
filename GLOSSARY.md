@@ -31,6 +31,8 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | AI Reviewer | Agent `ai-reviewer` review độc lập, không thấy hội thoại, kết luận READY hoặc NOT-READY | AWS gọi vai này là Product Lead |
 | Sổ finding | `reviews/findings-<slug>.md`, danh sách finding của một stage và quyết định của PO; finding đã quyết không bị chấm lại | AWS, engine giữ danh sách finding |
 | Mã tính năng | `<mã sản phẩm>-F<NNN>`, ví dụ `APP-F012`. Cấp khi tạo intent, đi theo tính năng tới PRD, story trên Jira, test case, nhánh code | Quy ước chung các team, `engine/standards/id-conventions.md` |
+| Mã đầy đủ | Mã có mã tính năng, như `AC-APP-F012-01.1`, duy nhất trong toàn công ty. Dùng ở mọi nơi ngoài repo PO: Jira, Figma, nhánh, commit, test, đặc tả API | `engine/standards/naming-conventions.md` mục 3 |
+| Trailer của commit | Dòng `Khoá: giá trị` ở cuối thông điệp commit, như `Implements: AC-APP-F012-01.1`; git đọc lại được bằng `git log --format='%(trailers:key=Implements,valueonly)'` | Conventional Commits 1.0.0; `git interpret-trailers` |
 | Story List | `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`, mỗi US trong PRD một dòng theo mẫu import CSV của Jira. Sinh bằng `/po-stories` sau gate 2.43, profile S thì sau gate 2.42; các team làm việc trên story Jira | Quy ước chung các team, `engine/standards/handoff-rules.md`, ADR 0002 |
 | Checkpoint | Buổi PO họp với Design PIC, Tech PIC, QA PIC trên Decision Brief ở 2.43, sau khi các team thiết kế từ PRD | Quy ước chung các team |
 | Điều kiện giao Dev, DoR | Điều kiện để giao một story cho Dev: PRD đã duyệt, với profile M, L thì 2.43 đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn, giao diện có màn trong `ux-design.md`, story phụ thuộc đã đạt. Kiểm bằng `po-tools.py dor` | Quy ước chung các team. Bản hẹp phía PO của Definition of Ready của AWS; hai mục thiết kế đã xem và đã ước lượng do Design, Dev làm trên Jira |
@@ -39,7 +41,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Template PRD chuẩn | `engine/templates/prd.md`, dùng chung cho mọi sản phẩm: 11 mục, mỗi US mười mục con. Cơ sở của từng mục ở ADR 0004 | PO-Workflow |
 | EARS | Easy Approach to Requirements Syntax: năm mẫu câu cho một yêu cầu hệ thống, gồm luôn đúng, theo sự kiện "Khi…", theo trạng thái "Trong khi…", hành vi không mong muốn "Nếu…", tuỳ chọn "Với … đang bật". Yêu cầu chức năng ở `requirements.md` viết theo mẫu này; business rule thì không | Mavin và cộng sự, Rolls-Royce, RE'09; Kiro của AWS |
 | Tiêu chí thành công, SC | Chỉ số đo sau phát hành cho từng mục tiêu `O<n>` của PRD, mã `SC<n>`, có cách đo và ngưỡng | GitHub Spec Kit; Success Metrics của AWS |
-| Sơ đồ trạng thái | Sơ đồ vòng đời của một đối tượng đổi trạng thái, vẽ bằng `flowchart` từ bảng chuyển trạng thái; bắt buộc trong PRD khi tính năng có đối tượng như vậy. Quy ước ở `engine/standards/diagrams.md` | AWS: máy trạng thái trong functional design |
+| Sơ đồ trạng thái | Sơ đồ vòng đời của một đối tượng đổi trạng thái, vẽ bằng `stateDiagram-v2` từ bảng chuyển trạng thái; bắt buộc trong PRD khi tính năng có đối tượng như vậy. Quy ước ở `engine/standards/diagrams.md` | AWS: máy trạng thái trong functional design |
 | Phân loại yêu cầu | Bốn loại theo BABOK 2.3: yêu cầu nghiệp vụ, là mục tiêu `O` và tiêu chí thành công `SC`; yêu cầu của các bên, là user story `US`; yêu cầu giải pháp, gồm chức năng `FR`, `BR`, `AC` và phi chức năng `NFR`; yêu cầu chuyển đổi `TR`, chỉ cần khi đưa giải pháp vào dùng | BABOK v3 2.3 |
 | Kiểm chứng và xác nhận | Kiểm chứng (verify) là xét yêu cầu có đạt chất lượng không: đơn nhất, đầy đủ, nhất quán, ngắn gọn, khả thi, không mơ hồ, kiểm được, có ưu tiên, dễ hiểu. Xác nhận (validate) là xét yêu cầu có phục vụ mục tiêu nghiệp vụ không, qua cột Phục vụ và truy vết về `O` | BABOK v3 7.2, 7.3 |
 | Business rule, loại | Định nghĩa: ràng buộc dữ liệu, cách phân loại, cách tính. Hành vi: điều được phép, bắt buộc, bị cấm, có mức áp dụng bắt buộc, vượt được khi có người duyệt, hoặc hướng dẫn. Rule viết độc lập với cách hệ thống thực hiện. Rule dùng cho nhiều US mã `BR0.<n>` | BABOK v3 10.9 |
@@ -48,7 +50,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Sổ rủi ro, RK | Mục Rủi ro trong `decisions.md`, mỗi rủi ro một mã `RK<n>` với khả năng, tác động, cách xử lý, owner, trạng thái; artifact khác chỉ trỏ mã | BABOK v3 6.3, 10.38 |
 | Yêu cầu chuyển đổi, TR | Yêu cầu chỉ cần trong giai đoạn đưa tính năng vào dùng: dữ liệu cũ, cách bật, chạy song song, quay lui, đào tạo. Mã `TR<n>` ở Impact Matrix mục 8 và PRD mục 8 | BABOK v3 2.3, 6.4 |
 | Đánh giá giải pháp | Đo lại tiêu chí thành công sau phát hành, tìm hạn chế, đề xuất hành động, bằng lệnh `/po-evaluate` | BABOK v3 chương 8 |
-| PIC | Người phụ trách một mảng của tính năng: Design PIC, Tech PIC, QA PIC. Viết file thiết kế của mình và ký Decision Brief ở 2.43 | PO-Workflow |
+| PIC | Người phụ trách một mảng của tính năng: Design PIC, Tech PIC, QA PIC. Viết file thiết kế của mình và ký Decision Brief ở 2.43. Tech PIC chịu trách nhiệm cả phần Backend và Frontend của `tech-design.md` | PO-Workflow |
 | Verification checklist | Checklist tự kiểm của stage cho phần cần phán đoán, mục blocking | PO-Workflow. AWS không có tên tương đương; compartment `## Sensors` của AWS là phần kiểm tự động, ứng với Kiểm bằng máy |
 | Kiểm bằng máy | `po-tools.py check` và `trace`: phần kiểm được bằng script, chạy trước checklist | Tương đương sensor của AWS |
 | Sổ lượt người | `.po/turns.jsonl`, hook ghi mỗi lượt PO gõ hoặc chọn; `approve` chỉ ghi duyệt khi lời PO có trong sổ. Không commit, AI không sửa được | AWS gọi là HUMAN_TURN, kiểm có người thật ở gate |
@@ -124,7 +126,9 @@ Mã trên là mã ngắn, dùng trong artifact của PO và PRD. Ngoài các tà
 | Business rule | `BR-<tính năng>-<NN>.<n>` | `BR-APP-F012-01.2` | Script đổi từ `BR1.2` |
 | Câu hỏi trên story Jira | `Q-<tính năng>-<NN>.<n>` | `Q-APP-F012-01.3` | Người hỏi |
 | Màn hình | `SCR-<tính năng>-<NN>` | `SCR-APP-F012-02` | Design PIC |
-| Test case | `TC-<tính năng>-<NN>` | `TC-APP-F012-01` | QA PIC |
+| Test case | `TC-<tính năng>-<NNN>` | `TC-APP-F012-001` | QA PIC |
+| Yêu cầu phi chức năng | `NFR-<tính năng>-<NN>` | `NFR-APP-F012-03` | Script đổi từ `NFR3` |
+| Yêu cầu chuyển đổi | `TR-<tính năng>-<NN>` | `TR-APP-F012-01` | Script đổi từ `TR1` |
 
 ## Ký hiệu
 | Ký hiệu | Nghĩa |

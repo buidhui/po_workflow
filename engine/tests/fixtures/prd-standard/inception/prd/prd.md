@@ -111,7 +111,7 @@ Không có màn mới hoặc màn bị sửa.
 
 ### Dữ liệu
 
-Không có.
+Lưu ba mật khẩu gần nhất đã băm, thời gian lưu theo `NFR1`; tài khoản cũ chưa có lịch sử xử lý theo `TR1`.
 
 ### Trường hợp ngoại lệ
 

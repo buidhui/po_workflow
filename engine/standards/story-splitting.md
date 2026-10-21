@@ -28,7 +28,7 @@ Dùng bộ tiêu chí INVEST. Bảng dưới ghi nơi kiểm từng tiêu chí t
 | Độc lập | Làm và giao được mà không chờ story khác, hoặc chỉ phụ thuộc một chiều | Mục Phụ thuộc của thẻ US; bảng Unit trong `stories.md` |
 | Còn thương lượng được | Chi tiết còn mở tới khi PO viết PRD và các team chốt ở 2.43 | Thẻ US chưa có tiêu chí chấp nhận; chi tiết viết ở 2.42 |
 | Có giá trị | Vai thấy được lợi ích của mình | Mục Vai và mục tiêu của thẻ US có vế "để ..." |
-| Ước lượng được | Tech PIC ước được cỡ | 2.43, `tech-design.md` mục 6 |
+| Ước lượng được | Tech PIC ước được cỡ | 2.43, `tech-design.md` mục 7 |
 | Nhỏ | Làm xong trong một sprint | 2.42 có từ 3 tới 6 tiêu chí chấp nhận; 2.43 Tech PIC xác nhận |
 | Kiểm được | Có tiêu chí chấp nhận đạt hoặc không đạt | 2.42; script kiểm US có AC và mọi BR có AC |
 

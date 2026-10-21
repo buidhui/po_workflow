@@ -26,7 +26,7 @@ BABOK v3 coi sơ đồ là một cách đặc tả yêu cầu: mục 7.1 Specify
 | `impact-matrix.md` | 2. Current Situation | Sơ đồ phụ thuộc: thành phần bị chạm và quan hệ, vùng High tô màu | Khi có từ ba vùng bị ảnh hưởng | 6.1 Analyze Current State | Component Diagram ở 2.6 Domain Design |
 | `solution-options.md` | 2. Các option | Sơ đồ luồng cho từng option | Tuỳ chọn, khi các option khác nhau ở luồng xử lý | 10.35 Process Modelling | |
 | `ux-design.md` | 2. Luồng và tương tác | Sơ đồ luồng màn, mỗi nút là một màn có mã `SCR` | Khuyến nghị | | `user-flow.md` ở 1.6, `interaction-spec.md` ở 2.5 |
-| `tech-design.md` | 1. Thành phần bị chạm; 3. Dữ liệu; 4. API | Sơ đồ thành phần; sơ đồ quan hệ thực thể; sơ đồ tuần tự cho tích hợp | Tuỳ chọn, Tech PIC quyết | 10.15 Data Modelling, 10.42 Sequence Diagrams | Component Diagram ở 2.6; sơ đồ quan hệ thực thể ở 3.1 |
+| `tech-design.md` | 1. Thành phần bị chạm; 3. Hợp đồng giữa Frontend và Backend; 4. Backend, Dữ liệu | Sơ đồ thành phần gồm cả ứng dụng Frontend và service Backend; sơ đồ tuần tự cho tích hợp nhiều bước; sơ đồ quan hệ thực thể | Tuỳ chọn, Tech PIC quyết | 10.15 Data Modelling, 10.42 Sequence Diagrams | Component Diagram ở 2.6; sơ đồ quan hệ thực thể ở 3.1 |
 | `test-design.md` | 2. Phủ tiêu chí chấp nhận | Không vẽ thêm; mỗi chuyển trạng thái trong sơ đồ của PRD có ít nhất một ca, cộng ca chuyển trạng thái không hợp lệ | Khi PRD có vòng đời trạng thái | 10.44 State Modelling | |
 | Knowledge base của domain | File module, file mô hình dữ liệu | Sơ đồ trạng thái cho thực thể có vòng đời; sơ đồ quan hệ thực thể | Theo `engine/standards/domain-kb.md` | 10.44, 10.15 | Reverse engineering ở 2.1 |
 

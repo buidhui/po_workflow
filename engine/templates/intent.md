@@ -19,6 +19,7 @@ created: <YYYY-MM-DD>
 | Người tài trợ, người quyết cuối | |
 | Design PIC | |
 | Tech PIC | |
+| Phụ trách Backend, Frontend | <nếu khác Tech PIC; Tech PIC vẫn là người ký> |
 | QA PIC | |
 
 ## Related intents

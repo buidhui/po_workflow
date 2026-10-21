@@ -2,7 +2,7 @@
 # Giao diện và validate, Trường hợp ngoại lệ, Câu hỏi mở); Unit đọc được khi ô đầu có tên Unit; câu hỏi mở ghi
 # "Không chặn" không thành câu chặn dù nội dung có chữ "chặn"; US thiếu mục Trường hợp ngoại lệ; PRD còn quá 3 chỗ ❓PO;
 # vòng đời trạng thái vẽ bằng stateDiagram-v2 lệch giữa bảng và sơ đồ, trạng thái cụt; AC2.1 không theo Given/When/Then;
-# BR0.1 dùng chung có AC và vào Story List, BR0.2 chưa có AC; BR2.1 có từ khó kiểm chứng.
+# BR0.1 dùng chung có AC và vào Story List, BR0.2 chưa có AC; BR2.1 có từ khó kiểm chứng; NFR1, TR1 đổi sang mã đầy đủ.
 [check prd-generation]
 mã thoát: 0
 có: US2 chưa ghi Trường hợp ngoại lệ
@@ -33,3 +33,4 @@ tệp stories/story-list-prd-v1.0.csv có: *GIAO DIỆN VÀ VALIDATE* \\ Không 
 tệp stories/story-list-prd-v1.0.csv có: *TRƯỜNG HỢP NGOẠI LỆ*
 tệp stories/story-list-prd-v1.0.csv có: • BR-LMS-F904-01.1 Nếu mật khẩu cũ sai
 tệp stories/story-list-prd-v1.0.csv có: • BR-LMS-F904-00.1 Mật khẩu mới phải khác ba mật khẩu gần nhất
+tệp stories/story-list-prd-v1.0.csv có: thời gian lưu theo NFR-LMS-F904-01; tài khoản cũ chưa có lịch sử xử lý theo TR-LMS-F904-01

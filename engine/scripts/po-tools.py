@@ -18,7 +18,8 @@ Theo dõi và kiểm:
       chữ mẫu còn sót, thẻ US đủ chín mục, mục cấm trong PRD; ở 2.43 thêm giới hạn từ và chữ ký của
       Decision Brief, độ phủ của ba file thiết kế so với PRD,
       cột ưu tiên của FR. Với PRD còn kiểm: mã AC trùng, BR chưa có AC trỏ tới, frontmatter
-      thiếu feature; AC không có chữ "Khi" chỉ là gợi ý. Mã thoát 0; --strict trả 1 khi có cảnh báo.
+      thiếu feature, AC thiếu Given, When, Then, sơ đồ trạng thái lệch bảng chuyển trạng thái;
+      từ khó kiểm chứng chỉ là gợi ý. Mã thoát 0; --strict trả 1 khi có cảnh báo.
   po-tools.py trace   <intent> [--write]
       Truy vết FR, US, BR, AC từ requirements.md, stories.md và prd.md: mỗi BR có AC cùng US trỏ tới,
       mã AC không trùng, AC thuộc US có trong PRD. Mã thoát 0 là đạt, 1 là có GAP hoặc ORPHAN,
@@ -26,7 +27,7 @@ Theo dõi và kiểm:
       verification/phase-check-inception.md.
   po-tools.py dor     <intent> [--story US-<feature>-<NN>]
       Điều kiện giao Dev của từng US trong prd.md: PRD đã duyệt, US có AC, mọi BR có AC trỏ tới, không còn
-      ❓PO, không còn câu chặn trong Open Issues. Mã thoát 0 khi mọi story đạt, 1 khi có story chưa đạt,
+      ❓PO, không còn câu chặn ở mục Câu hỏi mở. Mã thoát 0 khi mọi story đạt, 1 khi có story chưa đạt,
       2 khi chưa có PRD hoặc mã tính năng.
   po-tools.py replay  <intent>
       In bản bàn giao intent cho PO khác: tóm tắt, dòng thời gian, quyết định, CR, review,
@@ -1647,7 +1648,8 @@ def ux_screen_map(text):
 
 def design_coverage(intent, W):
     """Đối chiếu ba file thiết kế ở 2.43 với PRD: file có chưa, dựng từ bản PRD nào, còn chữ mẫu không,
-    US có giao diện có màn chưa, AC có trong kế hoạch test chưa, US có trong tech-design chưa."""
+    US có giao diện có màn chưa, AC có trong kế hoạch test chưa, US có trong tech-design chưa,
+    màn của ux-design có ở phần Frontend của tech-design chưa."""
     intent = Path(intent)
     prd_p = stage_file(intent, "prd-generation")
     prd = read(prd_p)
@@ -1688,6 +1690,12 @@ def design_coverage(intent, W):
         for b in blocks:
             if b["num"] not in have:
                 W.add("design", TEAM_DESIGNS[1][1], None, "US%d chưa có trong tech-design" % b["num"])
+        if texts.get("ux-design") is not None:
+            got = set(int(s) for s in re.findall(r"SCR(?:-[A-Z][A-Z0-9]*-F\d{3,}-)?(\d+)\b", texts["tech-design"]))
+            scr = sorted(set(int(s[3:]) for v in ux_screen_map(texts["ux-design"]).values() for s, _ in v))
+            for n in scr:
+                if n not in got:
+                    W.add("design", TEAM_DESIGNS[1][1], None, "SCR%d có trong ux-design nhưng phần Frontend của tech-design chưa có màn này" % n)
 
 
 def check(intent, slug, strict=False):
@@ -2575,6 +2583,8 @@ SHORT_US = re.compile(r"(?<![\w-])US(\d+)\b")
 SHORT_AC = re.compile(r"(?<![\w-])AC-?(\d+)\.(\d+)\b")
 SHORT_BR = re.compile(r"(?<![\w-])BR-?(\d+)\.(\d+)([a-z]?)\b")
 SHORT_SCR = re.compile(r"(?<![\w-])SCR(\d+)\b")
+SHORT_NFR = re.compile(r"(?<![\w-])NFR(\d+)\b")
+SHORT_TR = re.compile(r"(?<![\w-])TR(\d+)\b")
 PRIORITY_RE = re.compile(r"Ưu tiên\W{0,8}(Must|Should|Could|Won[’']?t)\b", re.I)
 PRIORITY_JIRA = {"must": "Highest", "should": "High", "could": "Medium", "wont": "Low"}
 # AC cho nhánh lỗi hoặc bị từ chối: chỉ là gợi ý bằng từ khoá, PO và reviewer quyết.
@@ -2605,10 +2615,12 @@ CONT_RE = re.compile(r"^\s{2,}\S")
 
 
 def to_full(text, feat):
-    """Đổi mã ngắn US1, AC1.1, BR1.1, BR-1.1, SCR2 sang mã đầy đủ; mã KB như BR-EDIT-07 giữ nguyên."""
+    """Đổi mã ngắn US1, AC1.1, BR1.1, BR-1.1, SCR2, NFR3, TR1 sang mã đầy đủ; mã KB như BR-EDIT-07 giữ nguyên."""
     text = SHORT_BR.sub(lambda m: "BR-%s-%02d.%s%s" % (feat, int(m.group(1)), m.group(2), m.group(3)), text)
     text = SHORT_AC.sub(lambda m: "AC-%s-%02d.%s" % (feat, int(m.group(1)), m.group(2)), text)
     text = SHORT_SCR.sub(lambda m: "SCR-%s-%02d" % (feat, int(m.group(1))), text)
+    text = SHORT_NFR.sub(lambda m: "NFR-%s-%02d" % (feat, int(m.group(1))), text)
+    text = SHORT_TR.sub(lambda m: "TR-%s-%02d" % (feat, int(m.group(1))), text)
     return SHORT_US.sub(lambda m: "US-%s-%02d" % (feat, int(m.group(1))), text)
 
 

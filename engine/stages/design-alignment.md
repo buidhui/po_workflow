@@ -49,8 +49,8 @@ Chỉ hỏi PO khi cần:
 3. Với mỗi Đề xuất sửa PRD của các team: PO nhận, không nhận, hay đưa ra họp.
 
 ## Generate
-1. Chạy `python3 engine/scripts/po-tools.py check intents/<intent> design-alignment` để lấy phần máy đối chiếu được: US có giao diện chưa có màn, AC chưa có trong kế hoạch test, US chưa có trong thiết kế kỹ thuật, file thiết kế dựng từ bản PRD cũ.
-2. Đọc ba file và đối chiếu: mâu thuẫn giữa các thiết kế; thiết kế trái business rule hoặc tiêu chí chấp nhận; phụ thuộc giữa các team; độ lớn Tech PIC ước lượng so với mốc cứng; Đề xuất sửa và Phản đối của từng team.
+1. Chạy `python3 engine/scripts/po-tools.py check intents/<intent> design-alignment` để lấy phần máy đối chiếu được: US có giao diện chưa có màn, AC chưa có trong kế hoạch test, US chưa có trong thiết kế kỹ thuật, màn của ux-design chưa có ở phần Frontend của tech-design, file thiết kế dựng từ bản PRD cũ.
+2. Đọc ba file và đối chiếu: mâu thuẫn giữa các thiết kế; hợp đồng API của tech-design đủ cho các màn của ux-design, mã lỗi khớp câu thông báo của PRD; phía Backend hoặc Frontend ghi Không đổi mà PRD có thay đổi chạm tới phía đó; thiết kế trái business rule hoặc tiêu chí chấp nhận; phụ thuộc giữa các team; độ lớn Tech PIC ước lượng so với mốc cứng; Đề xuất sửa và Phản đối của từng team.
 3. Viết `decision-brief.md` theo template. Chỉ ghi điểm cần người quyết hoặc cần cả nhóm biết; mỗi điểm có lựa chọn, hệ quả và đề xuất. Ý kiến Phản đối chép nguyên văn kèm tên người nêu. Không chép lại nội dung thiết kế. Phần AI viết, mục 1 đến 9, không quá 1.500 từ, kiểm bằng đếm từ. Văn phong bàn giao: không thẻ nguồn, không từ quy trình, mã kèm nội dung.
 4. Frontmatter `inputs:` ghi version của PRD và ba file thiết kế đã dùng. File thiết kế đổi sau đó thì `po-tools.py status` báo.
 5. Bảng Ký điền tên ba PIC, trạng thái "Chưa xem".

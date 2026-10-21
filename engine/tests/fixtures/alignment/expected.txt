@@ -1,8 +1,9 @@
-# Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt. ux-design có màn cho US1. tech-design thiếu US2, test-design thiếu AC2.2
+# Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt. ux-design có màn cho US1. tech-design thiếu US2 và chưa ghi SCR1 ở phần Frontend, test-design thiếu AC2.2
 # và dựng từ prd@0.9. Decision Brief: QA PIC chưa ký. Story List chỉ ghi được sau khi 2.43 được duyệt.
 [check design-alignment]
 mã thoát: 0
 có: US2 chưa có trong tech-design
+có: SCR1 có trong ux-design nhưng phần Frontend của tech-design chưa có màn này
 có: AC2.2 chưa có trong kế hoạch test
 có: Dựng từ prd@0.9, PRD hiện là 1.0: QA PIC xem lại theo bản mới
 có: QA PIC chưa ký, đang ghi 'Chưa xem'
@@ -21,7 +22,7 @@ có: Chỉ ghi Story List sau khi 2.43 Design Alignment được duyệt
 
 [approve design-alignment --words "Chốt theo Decision Brief"]
 mã thoát: 2
-có: kiểm máy còn 4 cảnh báo
+có: kiểm máy còn 5 cảnh báo
 có: --accept-warnings
 
 [approve design-alignment --words "Chốt theo Decision Brief" --accept-warnings "Chấp nhận thiếu chữ ký QA" --who "Người thử"]
@@ -29,7 +30,7 @@ mã thoát: 0
 có: Đã duyệt 2.43 Design Alignment: decision-brief.md v1.0.
 có: Gợi ý tag git cho bản bàn giao: alignment/decision-brief-v1.0
 tệp state.md có: - [x] 2.43 design-alignment
-tệp decisions.md có: chấp nhận 4 cảnh báo kiểm máy
+tệp decisions.md có: chấp nhận 5 cảnh báo kiểm máy
 
 [dor]
 mã thoát: 0

@@ -33,6 +33,6 @@ inputs: <prd@1.0>
 
 <Lập trường: Đồng ý, Đề xuất sửa, Phản đối. Không có ý kiến thì ghi một dòng "Đồng ý với PRD bản <version>".>
 
-## 6. Rủi ro và câu hỏi cần chốt
+## 6. Rủi ro và câu hỏi cần trả lời
 | # | Nội dung | Cần ai trả lời | Chặn |
 |---|---|---|---|

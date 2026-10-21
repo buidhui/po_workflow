@@ -1,6 +1,6 @@
 # Quy tắc bàn giao liên team
 
-Áp cho đầu ra PO giao cho Design, Tech và QA. Quy ước mã ở `id-conventions.md`, quyết định giao việc trên Jira ở `adr/0002-story-tren-jira.md`, quyết định thiết kế ở file riêng và chốt trên Decision Brief ở `adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
+Áp cho đầu ra PO giao cho Design, Tech và QA. Quy ước mã ở `id-conventions.md`, cách đặt tên và liên kết ở Figma, git, test, API ở `naming-conventions.md`, quyết định giao việc trên Jira ở `adr/0002-story-tren-jira.md`, quyết định thiết kế ở file riêng và chốt trên Decision Brief ở `adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
 
 ## Hai mốc làm việc với các team
 
@@ -37,9 +37,9 @@ Sau khi PRD được duyệt, và với profile M, L sau gate 2.43, `/po-stories
 | Team | Việc |
 |---|---|
 | PO | Import CSV, kiểm Epic, trả lời câu hỏi nghiệp vụ. Đổi nghiệp vụ thì đi change request, sau đó sửa story theo bản CSV mới |
-| Design PIC | Gắn mã màn hình `SCR` và link thiết kế vào story |
-| Tech PIC | Gom story vào Unit of work, chia sub-task, ước lượng story point, ghi nhánh code |
-| QA PIC | Viết test case mã `TC`, mỗi test case ghi mã AC mà nó kiểm |
+| Design PIC | Gắn mã màn hình `SCR` và link thiết kế vào story; frame Figma đặt tên bắt đầu bằng mã màn đầy đủ |
+| Tech PIC | Gom story vào Unit of work, chia sub-task, ước lượng story point, ghi nhánh code; nhánh mang key Jira của story, commit có trailer mã yêu cầu |
+| QA PIC | Viết test case mã `TC`, mỗi test case ghi mã AC mà nó kiểm; test tự động gắn tag mã AC đầy đủ |
 
 Câu hỏi về nghiệp vụ ghi bằng comment trên story, gắn người phải trả lời. Câu trả lời làm đổi PRD thì PO đi qua change request; không sửa nghiệp vụ ngay trên Jira.
 

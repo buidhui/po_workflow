@@ -1,6 +1,6 @@
 # Quy ước mã
 
-Mã dùng chung cho mọi team nhận việc từ PO: Design, Tech, QA. Mã đi từ PRD sang story trên Jira, test case, nhánh code và commit, nên phải duy nhất trong toàn công ty và không bao giờ đánh lại.
+Mã dùng chung cho mọi team nhận việc từ PO: Design, Tech, QA. Mã đi từ PRD sang story trên Jira, test case, nhánh code và commit, nên phải duy nhất trong toàn công ty và không bao giờ đánh lại. Cách mã xuất hiện ở tên file, Figma, nhánh, commit, test, API và file truy vết ở `naming-conventions.md`.
 
 ## Mã sản phẩm
 
@@ -17,9 +17,11 @@ Mã dùng chung cho mọi team nhận việc từ PO: Design, Tech, QA. Mã đi 
 | Business rule dùng chung | `BR-<tính năng>-00.<n>` | `BR-APP-F012-00.1` | PO, ở 2.42, PRD mục 4 | Description của mọi story trỏ tới nó |
 | Câu hỏi mở | `Q-<tính năng>-<NN>.<n>` | `Q-APP-F012-01.3` | Người hỏi, bất kỳ team nào | Comment trên story Jira |
 | Màn hình | `SCR-<tính năng>-<NN>` | `SCR-APP-F012-02` | Design PIC, ở `ux-design.md` tại 2.43 | Story trên Jira, lấy từ bảng Danh sách màn |
-| Test case | `TC-<tính năng>-<NN>` | `TC-APP-F012-01` | QA PIC | Test case trên Jira |
-| Nhánh code | `feat/<tính năng>-<mô tả>` | `feat/APP-F012-quiz-retake` | Dev | Git |
-| Commit | Trailer `Feature: <tính năng>`, thêm `Story: <US>` khi commit thuộc một story | `Feature: APP-F012` | Dev | Git |
+| Yêu cầu phi chức năng | `NFR-<tính năng>-<NN>` | `NFR-APP-F012-03` | PO, ở 2.3, PRD mục 7 | Description của story trên Jira |
+| Yêu cầu chuyển đổi | `TR-<tính năng>-<NN>` | `TR-APP-F012-01` | PO, ở 2.31, PRD mục 8 | PRD; test-design khi kiểm được |
+| Test case | `TC-<tính năng>-<NNN>` | `TC-APP-F012-001` | QA PIC | Test case trên Jira, tag của test tự động |
+| Nhánh code | `<loại>/<key Jira>-<mô tả>` | `feat/LMS-123-lam-lai-bai-kiem-tra` | Dev | Git, theo `naming-conventions.md` mục 7 |
+| Commit | Trailer `Refs`, `Feature`, `Story`, `Implements` | `Implements: AC-APP-F012-01.1` | Dev | Git, theo `naming-conventions.md` mục 7 |
 
 `<NNN>` ba chữ số, `<NN>` hai chữ số, đều có số 0 ở đầu. `<n>` là số thứ tự trong story, bắt đầu từ 1.
 
@@ -34,6 +36,8 @@ Artifact nội bộ và PRD dùng mã ngắn cho dễ đọc: `US1`, `AC1.1`, `B
 | `BR1.2`, hoặc `BR-1.2` ở PRD cũ | `BR-APP-F012-01.2` |
 | `BR0.1` | `BR-APP-F012-00.1` |
 | `SCR2` | `SCR-APP-F012-02` |
+| `NFR3` | `NFR-APP-F012-03` |
+| `TR1` | `TR-APP-F012-01` |
 
 `po-tools.py stories` đổi mã khi sinh Story List. Không đổi tay. Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ.
 
@@ -67,6 +71,6 @@ FR (nội bộ PO) → US → AC → TC
 
 Mọi BR có ít nhất một AC. Mọi AC có ít nhất một TC; QA viết TC sau khi story lên Jira và theo dõi độ phủ trên Jira, điều kiện giao Dev không chờ TC. Nhánh và commit truy về tính năng và story qua trailer.
 
-## Khi Dev dùng AWS AI-DLC
+## Khi team dùng AWS AI-DLC hoặc công cụ spec khác
 
-AI-DLC sinh mã riêng ở Construction, ví dụ `BR1.1` trong `rules.md` của stage 3.1, cùng dạng với mã ngắn trong PRD nhưng khác nghĩa. Nếu team Dev dùng AI-DLC, mọi tài liệu và story phía Dev trỏ tới yêu cầu của PO bằng mã đầy đủ như `BR-APP-F012-01.1`, không dùng mã ngắn của PRD. Chưa xác định team Dev có dùng AI-DLC hay không; khi đã rõ thì thêm bảng quy đổi vào mục này.
+AI-DLC, Spec Kit, Kiro, OpenSpec đánh mã riêng trong từng intent hoặc spec, ví dụ `BR1.1` trong `rules.md` của AI-DLC, cùng dạng với mã ngắn trong PRD nhưng khác nghĩa, và không đọc được mã đầy đủ. Dòng nào có mã riêng của công cụ mà bắt nguồn từ yêu cầu của PO thì ghi mã đầy đủ trong ngoặc ngay sau, như `AC1.1.1 (AC-APP-F012-01.1)`. Bảng đối chiếu từng công cụ ở `naming-conventions.md` mục 12.

@@ -290,7 +290,7 @@ PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào fi
 
 1. Pull, đọc `intents/<intent>/inception/prd/prd.md`. Mở file của mình: Design PIC `inception/ux-design/ux-design.md`, Tech PIC `inception/tech-design/tech-design.md`, QA PIC `inception/test-design/test-design.md`. Template ở `engine/templates/`.
 2. Chỉ sửa file của mình. Mọi phần trỏ về mã trong PRD: `US<n>`, `AC<n>.<m>`, `BR<n>.<m>`. Ghi `inputs: prd@<version>` đúng bản PRD đã đọc.
-3. Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US nó phục vụ; Story List lấy mã màn từ bảng này. Tech PIC ghi service hoặc repo bị chạm bằng đúng tên Dev dùng, và ghi story nào quá lớn để làm trong một sprint. QA PIC ghi cách kiểm cho từng AC.
+3. Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US nó phục vụ; Story List lấy mã màn từ bảng này. Tech PIC viết cùng người phụ trách Backend và Frontend: service, ứng dụng hoặc repo bị chạm ghi đúng tên Dev dùng; hợp đồng API giữa hai phía; mỗi màn `SCR` của ux-design có route và component ở phần Frontend; story nào quá lớn để làm trong một sprint. QA PIC ghi cách kiểm cho từng AC.
 4. Ý kiến về PRD ghi ở mục Ý kiến về PRD trong file của mình: Đồng ý, Đề xuất sửa hoặc Phản đối, kèm mã và lý do. Không sửa PRD. Câu hỏi cho PO hoặc team khác ghi ở mục Rủi ro và câu hỏi cần chốt.
 5. Commit với message `design(<intent>): ux`, `tech` hoặc `test`, sau đó push.
 6. Sau khi AI viết Decision Brief, dự họp và ký ở bảng Ký của `inception/decision-brief/decision-brief.md`: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Nếu chọn Yêu cầu sửa, ghi rõ nội dung cần sửa.
@@ -315,7 +315,7 @@ Quy tắc:
 
 ### 8.3 Mã và cách trỏ
 
-Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ. Design cấp `SCR-<tính năng>-<NN>`; QA cấp `TC-<tính năng>-<NN>`, mỗi test case ghi tiêu chí chấp nhận `AC-<tính năng>-<NN>.<n>` mà nó kiểm. Mã đã cấp không đổi, không dùng lại. Chi tiết ở `engine/standards/id-conventions.md`; quy tắc bàn giao ở `engine/standards/handoff-rules.md`.
+Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ. Design cấp `SCR-<tính năng>-<NN>`; QA cấp `TC-<tính năng>-<NNN>`, mỗi test case ghi tiêu chí chấp nhận `AC-<tính năng>-<NN>.<n>` mà nó kiểm, test tự động gắn tag mã AC. Mã đã cấp không đổi, không dùng lại. Chi tiết ở `engine/standards/id-conventions.md`; tên frame Figma, nhánh, commit, tag test, đặc tả API ở `engine/standards/naming-conventions.md`; quy tắc bàn giao ở `engine/standards/handoff-rules.md`.
 
 ## 9. Dành cho Dev
 
