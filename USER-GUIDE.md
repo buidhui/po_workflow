@@ -190,7 +190,7 @@ Stage 2.32 Solution Options chỉ chạy khi có nhiều hướng giải. PO đ�
 Stage 2.43 Design Alignment chạy với profile M và L, theo bốn bước:
 
 1. Sau khi PRD được duyệt, AI tạo ba file thiết kế từ template và chỉ điền phần đầu file. PO gửi ba PIC đường dẫn PRD và file của họ, kèm hạn; cách viết của PIC ở mục 8.
-2. Khi các team viết xong, PO gọi lại `/po`. AI đối chiếu ba file với PRD, báo phần còn thiếu, viết Decision Brief chỉ gồm điểm cần quyết, sau đó chạy `po-tools.py sign-start` để ghi lại bản gửi ký.
+2. Khi các team viết xong, PO gọi lại `/po`. AI đối chiếu ba file với PRD, báo phần còn thiếu, viết Decision Brief chỉ gồm điểm cần quyết định, sau đó chạy `po-tools.py sign-start` để ghi lại bản gửi ký.
 3. Các bên họp trên Decision Brief. Quyết định làm đổi yêu cầu được xử lý qua change request.
 4. Gate duyệt khi cả ba PIC ghi Đồng ý hoặc Có ý kiến ở bảng Ký, đúng tên ở `intent.md` và đúng bản đã gửi. PIC quá hạn chưa ký thì PO được chọn Accept as-is kèm lý do. Story List chỉ sinh sau khi gate này được duyệt.
 
@@ -240,7 +240,7 @@ AI không tự duyệt được. Lệnh duyệt chỉ ghi khi lời duyệt có 
 | Trường hợp | PO làm gì |
 |---|---|
 | Bước kiểm bằng máy còn cảnh báo thông thường | Yêu cầu sửa, hoặc trả lời chấp nhận kèm lý do |
-| Còn câu chặn chưa trả lời, GAP hoặc ORPHAN của truy vết, hoặc mã có ở bản duyệt trước mà bản này không còn | AI liệt kê từng mục kèm mã. PO yêu cầu sửa, hoặc quyết riêng từng mục bằng một câu có nêu đúng mã, ví dụ "Hoãn Q3 sang đợt sau, FR4 làm ở intent khác" |
+| Còn câu chặn chưa trả lời, GAP hoặc ORPHAN của truy vết, hoặc mã có ở bản duyệt trước mà bản này không còn | AI liệt kê từng mục kèm mã. PO yêu cầu sửa, hoặc quyết định riêng từng mục bằng một câu có nêu đúng mã, ví dụ "Hoãn Q3 sang đợt sau, FR4 làm ở intent khác" |
 | Artifact đổi sau lần AI Reviewer xem | Chạy review lại, hoặc xác nhận duyệt mà không review lại |
 | Dùng công cụ AI không có hook | Tự chạy lệnh duyệt trong terminal theo lệnh AI đưa |
 
@@ -270,7 +270,7 @@ Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate
 
 1. AI ghi `CR<n>` vào bảng Change requests của `decisions.md` với trạng thái Chờ quyết.
 2. AI đánh giá: mã bị chạm, story đã lên Jira hay chưa, mục tiêu bị ảnh hưởng, công sức, độ khẩn, rủi ro mới. AI đề xuất stage phải quay lại.
-3. PO quyết Nhận, Hoãn hoặc Bác. AI ghi quyết định bằng `po-tools.py cr`; với Nhận, lệnh mở lại các stage đã duyệt bị chạm.
+3. PO quyết định Nhận, Hoãn hoặc Bác. AI ghi quyết định bằng `po-tools.py cr`; với Nhận, lệnh mở lại các stage đã duyệt bị chạm.
 4. AI chụp artifact bị chạm vào `archive/` với nhãn pre-CR, chạy xuôi từ stage đó và chỉ sửa phần bị chạm.
 5. Mỗi artifact sửa xong được trình lại gate. Khi mọi stage mở lại đã được duyệt lại, AI đóng CR bằng `po-tools.py cr` với lời PO.
 
@@ -387,7 +387,7 @@ Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev 
 | `/po-review <file>` | Review độc lập bằng AI Reviewer; thêm `--shadow` cho tài liệu người khác viết |
 | `/po-replay <intent>` | Tóm lược diễn biến của intent theo dòng thời gian: quyết định, review, việc còn chặn. Dùng khi chuyển intent cho PO khác |
 | `/po-stories <intent>` | Sinh Story List để import lên Jira từ PRD đã duyệt; profile M, L chạy sau gate 2.43 |
-| `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt; PO quyết Nhận, Hoãn hoặc Bác trước khi sửa |
+| `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt; PO quyết định Nhận, Hoãn hoặc Bác trước khi sửa |
 | `/po-evaluate <intent>` | Đánh giá giải pháp sau phát hành theo tiêu chí thành công của PRD |
 | `/generate-user-guide <intent>` | Viết User Guide sau khi Dev hoàn thành |
 | `/new-domain <sản phẩm>` | Dựng khung domain pack trong repo của sản phẩm mới |
@@ -402,7 +402,7 @@ Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI ch�
 | `po-tools.py check <intent> <stage>` | Kiểm bằng máy trước gate |
 | `po-tools.py trace <intent>` | Truy vết FR, US, BR, AC |
 | `po-tools.py review-start <intent> <stage>` | Ghi dấu artifact trước khi gọi AI Reviewer |
-| `po-tools.py approve <intent> <stage> --words "<lời PO>"` | Ghi kết quả duyệt. Câu chặn, GAP, ORPHAN, mã biến mất phải được sửa, hoặc PO quyết từng mục qua `--accept-items` và `--item-words` |
+| `po-tools.py approve <intent> <stage> --words "<lời PO>"` | Ghi kết quả duyệt. Câu chặn, GAP, ORPHAN, mã biến mất phải được sửa, hoặc PO quyết định từng mục qua `--accept-items` và `--item-words` |
 | `po-tools.py skip`, `profile`, `switch`, `cr`, `reopen` | Ghi quyết định của PO ngoài gate, theo mục 5.4 |
 | `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC ký |
 | `po-tools.py replay <intent>` | Tóm lược diễn biến của intent cho người tiếp nhận |
@@ -460,7 +460,7 @@ Ký hiệu chung trong artifact:
 | Vô tình sửa tay artifact đã duyệt | `/po-status` báo lệch. Thay đổi có chủ đích thì chạy `/change-request`; nếu không, lấy lại bản trong `archive/` |
 | Chọn nhầm tại gate | Báo ngay. Ghi nhầm Request Changes thì AI trình lại gate; ghi nhầm Approve thì AI chạy `po-tools.py reopen` với lời PO |
 | Reviewer báo NOT-READY nhưng PO chấp nhận | Nêu finding nào được chấp nhận; AI ghi Accepted risk vào `decisions.md` |
-| PIC chưa viết file thiết kế hoặc chưa ký Decision Brief | Chờ tới hạn. Quá hạn mà thiếu file: PO quyết viết Decision Brief với phần đã có, ghi DEC. Quá hạn mà thiếu chữ ký: PO chọn Accept as-is tại gate, lý do ghi DEC |
+| PIC chưa viết file thiết kế hoặc chưa ký Decision Brief | Chờ tới hạn. Quá hạn mà thiếu file: PO quyết định viết Decision Brief với phần đã có, ghi DEC. Quá hạn mà thiếu chữ ký: PO chọn Accept as-is tại gate, lý do ghi DEC |
 | Chữ ký của PIC không được tính | Xem lý do trong kết quả `po-tools.py check`: sai tên so với `intent.md`, cột Bản khác bản đã gửi, hoặc Decision Brief đã đổi sau khi gửi |
 | Story không đạt điều kiện sẵn sàng | Chạy `po-tools.py dor`, xử lý theo lý do script in ra |
 | Không chụp được màn hình | Gõ `skip-screenshot`; AI để trống vị trí ảnh và liệt kê ảnh còn thiếu |

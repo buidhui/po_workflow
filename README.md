@@ -60,7 +60,7 @@ Mỗi giá trị dưới đây gắn với một cơ chế cụ thể. Cột cu�
 | PO tập trung vào phân tích và ra quyết định | AI đọc tài liệu, đặt câu hỏi và soạn artifact theo template; PO trả lời và duyệt tại gate. Lời duyệt phải có trong lượt nhập của PO, nên AI không tự duyệt được | Đợt áp dụng đầu tiên: 3 intent, 2 PRD được duyệt |
 | AI đảm nhận phần việc phân tích nghiệp vụ | AI tra knowledge base của sản phẩm trước khi hỏi, rà ảnh hưởng theo 12 vùng, đối chiếu corner checklist; AI Reviewer đánh giá độc lập và không thấy nội dung hội thoại | Mục 11 liệt kê lỗi gặp khi áp dụng và quy tắc được bổ sung để ngăn từng lỗi |
 | Nhất quán từ yêu cầu tới kiểm thử | Mã định danh ổn định cho FR, US, BR, AC; mỗi US có tiêu chí chấp nhận cho nhánh lỗi; QA lập kế hoạch kiểm thử theo từng AC; story trên Jira, test case, commit trỏ về mã đầy đủ | Script `trace` và `dor` kiểm được; chưa có test case nào của QA áp dụng chuẩn này |
-| Quyết định có người chịu trách nhiệm | Lời duyệt và quyết định ghi nguyên văn kèm người quyết và thời điểm; bỏ qua stage, đổi profile, nhận change request chỉ ghi được bằng lệnh có lời PO | Hook và 124 ca kiểm thử của script |
+| Quyết định có người chịu trách nhiệm | Lời duyệt và quyết định ghi nguyên văn kèm người quyết định và thời điểm; bỏ qua stage, đổi profile, nhận change request chỉ ghi được bằng lệnh có lời PO | Hook và 124 ca kiểm thử của script |
 | Đánh giá ảnh hưởng lên hệ thống hiện hành trước khi đặc tả | Phân tích ảnh hưởng chạy trước khi chọn giải pháp; nguồn sống như schema và đặc tả API được đọc lại khi intent chạm tới vùng liên quan | Một intent phát hiện 4 rule trong knowledge base không khớp với hệ thống |
 | Các team rà soát và thống nhất trong một vòng | Mỗi team thiết kế từ PRD trong một file riêng; AI tổng hợp điểm cần quyết định vào Decision Brief cho một buổi họp | Luồng có từ 20/10/2026, chưa có intent nào đi hết |
 | Thay đổi yêu cầu được kiểm soát | Change request quay về đúng stage bị ảnh hưởng, lưu bản đã duyệt trong `archive/`; Story List mới được so với bản trước và liệt kê story thay đổi | Một intent ghi nhận 14 change request, mỗi change request có trạng thái và quyết định |
@@ -107,19 +107,19 @@ BABOK v3 chia công việc phân tích thành sáu nhóm nghiệp vụ. Bảng s
 
 | Nhóm nghiệp vụ theo BABOK v3 | Việc chính | Trong PO-Workflow | Mức đáp ứng |
 |---|---|---|---|
-| Lập kế hoạch và giám sát | Chọn cách tiếp cận, cách làm việc với các bên liên quan, quản trị quyết định, quản lý thông tin, cải tiến cách làm | Profile S, M, L chọn độ sâu cho từng yêu cầu; gate và `decisions.md` là khung quản trị quyết định; cấu trúc intent quản lý thông tin; bài học ghi tại gate | Một phần. Có phân tích các bên liên quan với mức ảnh hưởng và thái độ (3.2). Người quyết cuối ở 1.7 ghi ở `intent.md`, nhưng PO vẫn là người duyệt gate (3.3). Cải tiến qua bài học, chưa có số đo (3.5) |
+| Lập kế hoạch và giám sát | Chọn cách tiếp cận, cách làm việc với các bên liên quan, quản trị quyết định, quản lý thông tin, cải tiến cách làm | Profile S, M, L chọn độ sâu cho từng yêu cầu; gate và `decisions.md` là khung quản trị quyết định; cấu trúc intent quản lý thông tin; bài học ghi tại gate | Một phần. Có phân tích các bên liên quan với mức ảnh hưởng và thái độ (3.2). Người quyết định cuối cùng ở 1.7 ghi ở `intent.md`, nhưng PO vẫn là người duyệt gate (3.3). Cải tiến qua bài học, chưa có số đo (3.5) |
 | Khơi gợi và cộng tác | Chuẩn bị và tiến hành khơi gợi, xác nhận kết quả, truyền đạt, cộng tác với các bên | Tra knowledge base trước khi hỏi; questions file gắn người trả lời; bước tóm tắt để PO xác nhận; buổi họp với các team trên Decision Brief | Có |
 | Phân tích chiến lược | Phân tích hiện trạng, xác định trạng thái mong muốn, đánh giá rủi ro, xác định chiến lược thay đổi | 1.1 vấn đề, hiện trạng, mục tiêu SMART; 1.2 so sánh với sản phẩm khác; 1.4 phạm vi và Unit; sổ rủi ro mã `RK`; 1.7 Initiative Brief kèm khuyến nghị đi tiếp hay dừng | Có; 1.2 chạy khi cần |
 | Phân tích yêu cầu và định nghĩa thiết kế | Đặc tả và mô hình hoá yêu cầu, kiểm chứng và xác nhận, xác định phương án, đề xuất giải pháp | 2.3 yêu cầu chức năng theo mẫu EARS và phi chức năng; 2.31 phân tích ảnh hưởng; 2.32 so sánh phương án có trọng số, luôn có phương án giữ nguyên; 2.4 user story; 2.42 PRD với business rule theo BABOK 10.9, ma trận quyền, tiêu chí chấp nhận Given/When/Then, sơ đồ trạng thái | Có; 2.32 chạy khi có nhiều hướng giải |
-| Quản lý vòng đời yêu cầu | Truy vết, duy trì, sắp ưu tiên, đánh giá thay đổi, phê duyệt | Mã ổn định và bảng truy vết; dòng Ưu tiên của từng user story; change request được đánh giá và PO quyết Nhận, Hoãn hoặc Bác trước khi sửa; bản duyệt lưu trong `archive/` và gắn tag | Có |
-| Đánh giá giải pháp | Đo hiệu quả sau khi đưa vào sử dụng, phân tích hạn chế, đề xuất hành động | Tiêu chí thành công có giá trị hiện tại, mục tiêu, thời điểm đo; `/po-evaluate` đo lại sau phát hành và PO quyết hành động | Có từ 20/10/2026, chưa chạy thật |
+| Quản lý vòng đời yêu cầu | Truy vết, duy trì, sắp ưu tiên, đánh giá thay đổi, phê duyệt | Mã ổn định và bảng truy vết; dòng Ưu tiên của từng user story; change request được đánh giá và PO quyết định Nhận, Hoãn hoặc Bác trước khi sửa; bản duyệt lưu trong `archive/` và gắn tag | Có |
+| Đánh giá giải pháp | Đo hiệu quả sau khi đưa vào sử dụng, phân tích hạn chế, đề xuất hành động | Tiêu chí thành công có giá trị hiện tại, mục tiêu, thời điểm đo; `/po-evaluate` đo lại sau phát hành và PO quyết định hành động | Có từ 20/10/2026, chưa chạy thật |
 
 BABOK v3 nêu thêm sáu nhóm năng lực nền. Quy trình hỗ trợ PO thể hiện các năng lực này nhất quán; phần đánh giá và quyết định vẫn thuộc về PO.
 
 | Năng lực nền theo BABOK v3 | Quy trình hỗ trợ bằng |
 |---|---|
 | Tư duy phân tích và giải quyết vấn đề | Tách vấn đề khỏi giải pháp ở 1.1; phân tích ảnh hưởng theo 12 vùng ở 2.31; so sánh phương án theo bảy tiêu chí ở 2.32; corner checklist của sản phẩm |
-| Phẩm chất cá nhân | Quyết định ghi nguyên văn kèm người quyết và thời điểm; AI không tự duyệt; `state.md` ghi việc kế tiếp và người thực hiện |
+| Phẩm chất cá nhân | Quyết định ghi nguyên văn kèm người quyết định và thời điểm; AI không tự duyệt; `state.md` ghi việc kế tiếp và người thực hiện |
 | Kiến thức nghiệp vụ | Knowledge base của sản phẩm trong domain pack; đọc lại nguồn sống khi yêu cầu chạm tới |
 | Kỹ năng giao tiếp | Template thống nhất; Decision Brief tối đa 1.500 từ; văn phong bàn giao có mã kèm nội dung |
 | Kỹ năng tương tác | Questions file gắn người trả lời; buổi họp trên Decision Brief; ý kiến phản đối chép nguyên văn |
@@ -200,7 +200,7 @@ Depth quyết định mức chi tiết của artifact. Template đánh dấu m�
 
 | Depth | Mục bắt buộc | Mục tuỳ chọn |
 |---|---|---|
-| Minimal | Viết ngắn, chỉ điều đã quyết | Bỏ |
+| Minimal | Viết ngắn, chỉ điều đã quyết định | Bỏ |
 | Standard | Viết đủ | Viết khi có nội dung |
 | Comprehensive | Viết đủ | Viết toàn bộ; mục không áp dụng ghi lý do |
 
@@ -267,8 +267,8 @@ AI hiểu lời duyệt viết bằng câu tự nhiên. Câu "Ok nhưng đổi t
 Quyết định chỉ đến từ PO. AWS giữ bước kiểm có người thật ở mọi mức cấu hình, và PO-Workflow làm theo cùng nguyên tắc bằng ba lớp:
 
 1. Hook của Claude Code ghi mỗi lượt PO gõ hoặc chọn vào `.po/turns.jsonl`. Lệnh `po-tools.py approve` chỉ ghi khi lời duyệt có nguyên văn trong một lượt của PO sau lần sửa artifact cuối.
-2. Một lời chấp nhận chung chỉ áp cho cảnh báo thông thường của bước kiểm bằng máy. Câu chặn chưa trả lời, GAP hoặc ORPHAN của truy vết, và mã có ở bản đã duyệt trước mà bản mới không còn thì phải được sửa, hoặc PO quyết riêng từng mục bằng một câu có nêu đúng mã đó.
-3. Năm quyết định ngoài gate, gồm bỏ qua stage, đổi profile, bật tắt AI Reviewer hay nghi thức khác, quyết change request, mở lại stage đã duyệt, chỉ ghi được bằng lệnh `skip`, `profile`, `switch`, `cr`, `reopen` của `po-tools.py`. Mỗi lệnh đòi lời PO trong ba lượt gần nhất và thêm một dòng vào `decisions.md`. Hook chặn AI sửa tay các dòng tương ứng trong `state.md`.
+2. Một lời chấp nhận chung chỉ áp cho cảnh báo thông thường của bước kiểm bằng máy. Câu chặn chưa trả lời, GAP hoặc ORPHAN của truy vết, và mã có ở bản đã duyệt trước mà bản mới không còn thì phải được sửa, hoặc PO quyết định riêng từng mục bằng một câu có nêu đúng mã đó.
+3. Năm quyết định ngoài gate, gồm bỏ qua stage, đổi profile, bật tắt AI Reviewer hoặc nghi thức khác, quyết định change request, mở lại stage đã duyệt, chỉ ghi được bằng lệnh `skip`, `profile`, `switch`, `cr`, `reopen` của `po-tools.py`. Mỗi lệnh đòi lời PO trong ba lượt gần nhất và thêm một dòng vào `decisions.md`. Hook chặn AI sửa tay các dòng tương ứng trong `state.md`.
 
 Dùng công cụ AI không có hook thì PO tự chạy các lệnh này trong terminal; script coi người gõ lệnh trong terminal là PO.
 
@@ -330,11 +330,11 @@ PRD theo template chuẩn `engine/templates/prd.md`, dùng chung cho mọi sản
 10. Câu hỏi mở
 11. Truy vết
 
-Mục 1 tới 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: user story kèm ưu tiên, tiền điều kiện, luồng chính, business rule, tiêu chí chấp nhận, giao diện và validate, dữ liệu, yêu cầu phi chức năng riêng nếu có, trường hợp ngoại lệ lấy từ Impact Matrix, ngoài phạm vi của US. Business rule mã `BR<US>.<n>` viết theo BABOK 10.9, ghi loại định nghĩa hay hành vi; rule dùng chung cho nhiều US mang mã `BR0.<n>`. Tiêu chí chấp nhận mã `AC<US>.<n>` viết theo Given/When/Then, xem mục 6.5. Mỗi dữ kiện chỉ ghi ở một nơi: câu thông báo ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó.
+Mục 1 tới 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: user story kèm ưu tiên, tiền điều kiện, luồng chính, business rule, tiêu chí chấp nhận, giao diện và validate, dữ liệu, yêu cầu phi chức năng riêng nếu có, trường hợp ngoại lệ lấy từ Impact Matrix, ngoài phạm vi của US. Business rule mã `BR<US>.<n>` viết theo BABOK 10.9, ghi loại định nghĩa hoặc hành vi; rule dùng chung cho nhiều US mang mã `BR0.<n>`. Tiêu chí chấp nhận mã `AC<US>.<n>` viết theo Given/When/Then, xem mục 6.5. Mỗi dữ kiện chỉ ghi ở một nơi: câu thông báo ở bảng giao diện, luật ở business rule, tiêu chí chấp nhận trỏ về hai nơi đó.
 
 Sơ đồ theo `engine/standards/diagrams.md`, viết bằng Mermaid ngay trong file. Bảng là nguồn chính, sơ đồ là bản vẽ từ bảng, theo cách AWS làm. Tính năng có đối tượng đổi trạng thái thì PRD bắt buộc có vòng đời trạng thái: bảng chuyển trạng thái và sơ đồ `stateDiagram-v2`; `po-tools.py check` so từng chuyển trạng thái giữa hai bên và báo trạng thái không tới được hoặc không có đường ra. Sơ đồ phụ thuộc Unit vẽ khi có từ ba Unit; sơ đồ luồng vẽ khi luồng chính có từ hai điểm rẽ nhánh.
 
-PRD viết trước khi các team thiết kế. Với điểm phụ thuộc thiết kế hoặc kỹ thuật mà artifact đã duyệt chưa nói tới, AI ghi đề xuất có đánh dấu kèm câu hỏi gắn tên PIC; các team trả lời ở 2.43. PRD không có mục Database và API, không thiết kế bảng hoặc thuật toán; hằng số ghi rõ là giá trị cố định hay cấu hình; field đã có không được mô tả như field mới.
+PRD viết trước khi các team thiết kế. Với điểm phụ thuộc thiết kế hoặc kỹ thuật mà artifact đã duyệt chưa nói tới, AI ghi đề xuất có đánh dấu kèm câu hỏi gắn tên PIC; các team trả lời ở 2.43. PRD không có mục Database và API, không thiết kế bảng hoặc thuật toán; hằng số ghi rõ là giá trị cố định hoặc cấu hình; field đã có không được mô tả như field mới.
 
 ### 2.43 Design Alignment
 
@@ -361,8 +361,8 @@ Mỗi gate có hai lớp kiểm tra: lớp do máy làm và lớp cần phán đ
 | Máy | `po-tools.py check` | Heading bắt buộc theo template; thẻ nguồn; `[Qn]` và `[DECn]` có thật; thẻ US đủ chín mục; chữ mẫu còn sót; mục không được có trong PRD; mã AC không trùng; tiêu chí chấp nhận theo Given/When/Then; vòng đời trạng thái khớp sơ đồ; US thiếu dòng Ưu tiên hoặc thiếu AC cho nhánh lỗi; mã có ở bản duyệt trước mà bản này không còn; US giữ mã nhưng đổi tên hẳn. Ở 2.43 thêm độ phủ của ba file thiết kế, giới hạn từ và chữ ký của Decision Brief |
 | Máy | `po-tools.py trace` | Yêu cầu sang US, US sang yêu cầu, BR sang AC, US trong PRD; báo GAP và ORPHAN; dừng với lỗi khi không đọc được mã nào |
 | Phán đoán | Checklist trong `engine/verification/` | Phần cần đọc hiểu; mục có nhãn BLOCK chưa đạt thì gate không mở |
-| Phán đoán | AI Reviewer | Agent độc lập, không thấy hội thoại, dùng tiêu chí của Product Lead bên AWS; kết luận READY hoặc NOT-READY với finding Critical, Major, Minor |
-| Chặn | Hook `engine/scripts/po-hook.py` | AI không tự ghi duyệt, không sửa artifact đã duyệt, không sửa dòng quyết định cũ, không tự bỏ qua stage, đổi profile, tắt nghi thức, đổi trạng thái change request hay mở lại stage; AI Reviewer chỉ ghi file review của mình |
+| Phán đoán | AI Reviewer | Agent độc lập, không thấy hội thoại, dùng tiêu chí của Product Lead của AWS; kết luận READY hoặc NOT-READY với finding Critical, Major, Minor |
+| Chặn | Hook `engine/scripts/po-hook.py` | AI không tự ghi duyệt, không sửa artifact đã duyệt, không sửa dòng quyết định cũ, không tự bỏ qua stage, đổi profile, tắt nghi thức, đổi trạng thái change request hoặc mở lại stage; AI Reviewer chỉ ghi file review của mình |
 
 AI Reviewer chỉ nhận đường dẫn file và kết quả kiểm bằng máy. Trước khi gọi reviewer, `po-tools.py review-start` ghi dấu artifact; artifact đổi sau mốc đó thì approve đòi review lại hoặc lời chấp nhận của PO. Từ lần review thứ hai, reviewer nhận sổ finding của stage; finding PO đã chấp nhận rủi ro hoặc bác bỏ không bị chấm lại. Kết luận READY khi không có Critical và có tối đa hai Major đã có cách xử lý. Finding dựa trên sở thích chủ quan chỉ được xếp tối đa ở mức Minor. AI không tự sửa theo finding; PO quyết định sửa hoặc ghi Accepted risk.
 
@@ -503,7 +503,7 @@ File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bả
 
 ## 7. Sau PRD
 
-`/change-request` phân loại thay đổi trước. Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate. Thay đổi chạm stage đã duyệt thì AI ghi `CR<n>` với trạng thái Chờ quyết, đánh giá mã bị chạm, mục tiêu bị ảnh hưởng, công sức và độ khẩn; PO quyết Nhận, Hoãn hoặc Bác. Khi PO nhận, lệnh `po-tools.py cr` mở lại stage thấp nhất bị sai lệch; AI chụp artifact bị chạm với nhãn pre-CR, sửa phần bị chạm và trình lại gate.
+`/change-request` phân loại thay đổi trước. Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate. Thay đổi chạm stage đã duyệt thì AI ghi `CR<n>` với trạng thái Chờ quyết, đánh giá mã bị chạm, mục tiêu bị ảnh hưởng, công sức và độ khẩn; PO quyết định Nhận, Hoãn hoặc Bác. Khi PO nhận, lệnh `po-tools.py cr` mở lại stage thấp nhất bị sai lệch; AI chụp artifact bị chạm với nhãn pre-CR, sửa phần bị chạm và trình lại gate.
 
 | Loại thay đổi | Quay về stage |
 |---|---|
@@ -518,9 +518,9 @@ File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bả
 
 `/generate-user-guide` viết hướng dẫn cho người dùng cuối từ PRD đã duyệt, sau khi Dev hoàn thành, theo `engine/templates/user-guide.md` và đích ghi trong domain pack. Sau đó AI cập nhật knowledge base với rule mới và field đã đổi, để lần phân tích ảnh hưởng sau không dựa trên dữ liệu cũ.
 
-`/po-evaluate` chạy sau khi tính năng phát hành, theo thời điểm đo ghi ở PRD mục 2. AI hỏi số liệu thực tế của từng tiêu chí thành công, so với giá trị hiện tại và mục tiêu, tìm hạn chế của giải pháp và của tổ chức; PO quyết giữ nguyên, cải tiến, điều chỉnh vận hành hoặc quay lui. Đây là nhóm Đánh giá giải pháp của BABOK v3, chương 8.
+`/po-evaluate` chạy sau khi tính năng phát hành, theo thời điểm đo ghi ở PRD mục 2. AI hỏi số liệu thực tế của từng tiêu chí thành công, so với giá trị hiện tại và mục tiêu, tìm hạn chế của giải pháp và của tổ chức; PO quyết định giữ nguyên, cải tiến, điều chỉnh vận hành hoặc quay lui. Đây là nhóm Đánh giá giải pháp của BABOK v3, chương 8.
 
-Bản chính thức của mọi artifact là file trong repo: bản đã duyệt có tag git và bản chụp trong `archive/`. Engine không kèm công cụ đăng tài liệu ra wiki hay công cụ khác. Repo sản phẩm cần đăng bản đọc ra ngoài thì tự thêm lệnh riêng và ghi nơi đăng ở khoá `published` của frontmatter; `po-tools.py status` báo khi bản đăng lệch phiên bản với file.
+Bản chính thức của mọi artifact là file trong repo: bản đã duyệt có tag git và bản chụp trong `archive/`. Engine không kèm công cụ đăng tài liệu ra wiki hoặc công cụ khác. Repo sản phẩm cần đăng bản đọc ra ngoài thì tự thêm lệnh riêng và ghi nơi đăng ở khoá `published` của frontmatter; `po-tools.py status` báo khi bản đăng lệch phiên bản với file.
 
 ## 8. Cấu trúc repo và nâng cấp
 

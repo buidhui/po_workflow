@@ -19,7 +19,7 @@ domain/
 ├── events.md            sự kiện, thông báo, job
 ├── nfr-baseline.md      số liệu phi chức năng hiện có
 ├── product-direction.md định hướng, tenant, sản phẩm so sánh
-└── corner-checklist.md  góc hay bị bỏ sót của sản phẩm
+└── corner-checklist.md  góc thường bị bỏ sót của sản phẩm
 ```
 
 Hai phần nằm ngoài `domain/` nhưng thuộc về sản phẩm: `memory/project.md` chứa bài học riêng của sản phẩm, và `intents/` chứa các yêu cầu của sản phẩm. `memory/team.md` chứa bài học dùng chung cho mọi sản phẩm, như cách đánh phiên bản, cách đặt câu hỏi, cách viết PRD; file này đi theo engine.
@@ -58,7 +58,7 @@ Knowledge base là bản chắt lọc từ nguồn. Mỗi file trả lời ba c�
 AI dựng từng file theo năm bước:
 
 1. Người phụ trách đưa AI một nguồn và chỉ định file knowledge base cần viết. AI chắt lọc nội dung, mỗi rule một mã.
-2. Rule có trong tài liệu chính thức hoặc đã được PO duyệt mang mã `BR-<MODULE>-NN`; rule AI trích từ văn xuôi và chưa được duyệt mang mã `KB-<MODULE>-NN`. Mỗi rule ghi loại định nghĩa hay hành vi, theo `engine/standards/domain-kb.md` mục 4.
+2. Rule có trong tài liệu chính thức hoặc đã được PO duyệt mang mã `BR-<MODULE>-NN`; rule AI trích từ văn xuôi và chưa được duyệt mang mã `KB-<MODULE>-NN`. Mỗi rule ghi loại định nghĩa hoặc hành vi, theo `engine/standards/domain-kb.md` mục 4.
 3. Điểm nguồn không đề cập thì ghi `❓PO`; AI không tự điền.
 4. PO duyệt từng file; duyệt xong thì ghi ngày đối chiếu vào `domain.md` mục 2.
 5. Vùng chưa phủ ghi ở `00-index.md`, vùng API chưa phủ ghi ở `integrations.md`, để Impact Analysis không kết luận "không ảnh hưởng" ở vùng chưa có thông tin.
