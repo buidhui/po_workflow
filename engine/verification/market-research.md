@@ -6,3 +6,7 @@
 - [ ] Bảng so sánh dùng cùng bộ khía cạnh cho mọi sản phẩm
 - [ ] Có mục thuật ngữ nên dùng, và điểm không áp dụng kèm lý do
 - [ ] Đối chiếu với yêu cầu hiện tại: chỉ rõ khác biệt nào làm đổi phạm vi hay rule
+
+## Câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp

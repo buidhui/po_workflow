@@ -30,6 +30,8 @@ So sánh các hướng giải trước khi chọn, trên nền Impact Matrix đ�
 3. Điều PO lo nhất.
 Luôn có Option 0 Giữ nguyên hiện trạng làm mốc so sánh, theo BABOK 7.5 và 7.6. Ép option từ góc khác nhau để tránh "hai option là một": đổi quy trình không cần code; cấu hình; mở rộng cái có sẵn; làm mới; mua hoặc tích hợp; cắt phạm vi.
 
+Mỗi mục trên là một chủ đề của bảng Độ phủ trong questions file, theo `engine/protocol/question-format.md`.
+
 ## Generate
 `solution-options.md` theo template: tình huống; bảng option kèm nguồn gốc (PO, AI, cách hệ đang làm); so sánh cùng bộ bảy tiêu chí, có trọng số do PO quyết theo BABOK 10.16: đóng góp cho từng mục tiêu, mỗi mục tiêu một dòng, tác động người dùng và quy trình, tác động hệ thống và dữ liệu lấy từ Impact Matrix, effort tương đối, risk, dependency, nợ đóng cứng tenant; pros và cons; Recommendation gồm option, điều kiện, risk phải chấp nhận, yếu tố nào sẽ làm đổi kết luận. Effort và risk ghi Cao, Trung bình, Thấp kèm lý do, không ước lượng số giờ.
 

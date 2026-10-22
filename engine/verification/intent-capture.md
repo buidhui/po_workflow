@@ -15,6 +15,8 @@
 - [ ] Không nâng assumption thành fact
 
 ## Câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp
 - [ ] Không hỏi câu đã có đáp án trong inputs hoặc decisions
 - [ ] Câu chặn đã trả lời hết
 - [ ] Câu trả lời ghi nguyên văn

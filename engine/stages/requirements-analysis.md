@@ -32,7 +32,7 @@ Biến phạm vi thành yêu cầu có mã ổn định: FR, NFR, ràng buộc, 
 - Chạm dữ liệu: đọc lại nguồn sống nếu quá một tháng kể từ ngày đối chiếu của file data model.
 
 ## Ask
-Chỉ hỏi lỗ hổng còn lại sau khi đã tra KB. Quét sáu chiều của AWS để tìm lỗ hổng: hành vi chức năng; phi chức năng đo được; kịch bản người dùng và góc; bối cảnh nghiệp vụ; tích hợp và dữ liệu; chất lượng.
+Chỉ hỏi lỗ hổng còn lại sau khi đã tra KB. Sáu chiều của AWS là sáu chủ đề của bảng Độ phủ; luôn đặt câu hỏi trừ khi đầu vào đã rõ trên cả sáu chiều: hành vi chức năng; phi chức năng đo được; kịch bản người dùng và góc; bối cảnh nghiệp vụ; tích hợp và dữ liệu; chất lượng.
 Góc hay sót: quét từng thành phần theo `domain/corner-checklist.md`, phần Điều kiện theo bề mặt. Mỗi góc áp dụng thành FR, assumption có lý do, hoặc out of scope; không thành câu hỏi nếu một mặc định hợp lý giải quyết được.
 Gợi ý câu hỏi: hành vi nào phải giữ nguyên; dữ liệu bắt buộc và dữ liệu phải lưu lại; vai nào làm gì; hằng số nào cứng, nào cấu hình; ngoại lệ xử lý ra sao; yêu cầu trùng thứ đã có thì mở rộng hay làm mới.
 Không hỏi kỹ thuật cho Dev. Depth Minimal ở S: chỉ câu chặn.

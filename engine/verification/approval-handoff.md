@@ -6,3 +6,7 @@
 - [ ] Rủi ro và giả định lớn có mức và cách giảm hoặc người xác nhận
 - [ ] Khuyến nghị go, no-go có điều kiện và nêu yếu tố nào sẽ làm đổi kết luận
 - [ ] Gate có đủ ba lựa chọn: Approve, Request Changes, Reject Initiative
+
+## Câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp

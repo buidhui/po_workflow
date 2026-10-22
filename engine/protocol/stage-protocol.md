@@ -54,12 +54,12 @@ File stage bắt đầu bằng tiêu đề `# <mã> <tên>`, tiếp theo là m�
 - Đánh dấu stage `[-]` trong `state.md`. Stage đang `[-]` hoặc `[R]` từ phiên trước: đọc questions file, tiếp từ câu còn trống hoặc bước đang dở. Stage `[?]`: trình lại gate, không làm lại.
 
 ### 2. Ask
-- Tạo `<slug>-questions.md` theo `question-format.md`, trong thư mục của stage.
+- Tạo `<slug>-questions.md` theo `question-format.md`, trong thư mục của stage. Điền bảng Độ phủ trước: mỗi chủ đề trong mục Ask của file stage có nguồn đã trả lời hoặc có câu hỏi. Luôn chủ động hỏi, trừ khi đầu vào đã rõ trên mọi chủ đề; số câu theo depth ở `question-format.md` mục Đặt đủ câu hỏi.
 - Lần đầu trong intent: hỏi PO chọn cách trả lời, Guide me, Edit file, hoặc Chat. Ghi vào `state.md`. Stage sau dùng lại và nói một dòng đang dùng cách nào.
 - Ghi câu trả lời nguyên văn vào `[Answer]:` ngay sau mỗi lô. Diễn giải của AI đứng dòng dưới, nếu cần.
-- Có đủ câu trả lời: quét từ mơ hồ, mâu thuẫn giữa các câu, dữ kiện còn thiếu. Có thì hỏi tiếp trong cùng file, đánh số tiếp.
+- Có đủ câu trả lời: chạy Phân tích câu trả lời theo `question-format.md`: câu còn trống, câu trả lời mơ hồ, mâu thuẫn, chi tiết còn thiếu. Có thì hỏi tiếp trong cùng file, đánh số tiếp. Bước này bắt buộc ở mọi depth.
 - PO uỷ quyền ("tuỳ anh"): chọn theo `[đề xuất]`, ghi `[uỷ quyền]` kèm nguyên văn, nói một dòng đã chọn gì. Uỷ quyền chỉ áp cho câu hỏi của stage đang chạy, không mang sang stage sau, và không bao giờ áp cho bước xác nhận tóm tắt, xác nhận giả định hay gate. Nói với PO một lần: "Duyệt vẫn là của anh/chị."
-- Câu có cờ *Chặn* còn trống: dừng ở bước này.
+- Còn câu chưa có câu trả lời, kể cả câu không chặn: không sang bước Confirm và Generate. Câu chặn còn trống thì dừng ở bước này và chờ người trả lời.
 - Trước khi kết thúc mỗi lượt: mọi câu trả lời PO đã nói và mọi câu hỏi đang chờ phải nằm trong questions file, ở cả ba cách trả lời. Điều đã bàn mà chưa ghi file sẽ mất khi phiên bị nén hoặc đổi phiên.
 
 ### 3. Confirm

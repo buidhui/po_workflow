@@ -11,3 +11,7 @@
 - [ ] Recommendation đủ: option, điều kiện, risk phải chấp nhận, yếu tố nào sẽ làm đổi kết luận
 - [ ] **[BLOCK]** Ghi là Recommendation, không ghi là quyết định
 - [ ] Sau Approve: DEC ghi option, lý do, trade-off
+
+## Câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp

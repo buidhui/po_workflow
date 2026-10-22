@@ -3,6 +3,7 @@
 mã thoát: 0
 có: Tên US1 có chữ 'và': xem có phải hai việc người dùng làm riêng được không
 không có: Tên US2 có chữ
+có: Chưa có bảng Độ phủ
 
 [check user-stories --strict]
 mã thoát: 1

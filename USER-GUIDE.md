@@ -213,7 +213,9 @@ Lần đầu, AI hỏi PO muốn trả lời theo cách nào và dùng cách đ�
 | Edit file | PO mở file, điền sau `[Answer]:`, báo đã điền xong |
 | Chat | PO viết tự nhiên trong một lượt, AI tách ra từng câu |
 
-AI ghi câu trả lời nguyên văn. Câu trả lời mơ hồ hoặc mâu thuẫn với câu trước thì AI hỏi lại một câu ngắn. Các câu cùng nhãn đứng cạnh nhau, để PO chuyển cả nhóm cho đúng người hoặc họp theo nhóm, sau đó điền theo cách Edit file.
+AI coi người trả lời là người có đủ thông tin, nên đặt đủ câu hỏi để lấy thông tin đó. Đầu file câu hỏi có bảng Độ phủ: mỗi chủ đề của stage hoặc đã có câu trả lời trong đầu vào, hoặc có câu hỏi. Số câu tăng theo depth và theo mức mơ hồ của đầu vào; mỗi câu có lựa chọn "Chưa xác định" để người trả lời không phải chọn bừa.
+
+AI ghi câu trả lời nguyên văn và phân tích lại toàn bộ trước khi viết artifact. Câu còn trống, câu trả lời mơ hồ như "tuỳ", "chắc là", "như cũ", hoặc hai câu mâu thuẫn nhau thì AI hỏi tiếp; AI không viết artifact khi còn câu chưa trả lời. Các câu cùng nhãn đứng cạnh nhau, để PO chuyển cả nhóm cho đúng người hoặc họp theo nhóm, sau đó điền theo cách Edit file.
 
 PO có thể giao cho AI chọn theo đề xuất ở một câu hỏi. AI ghi `[uỷ quyền]` kèm nguyên văn và báo đã chọn gì. Uỷ quyền chỉ áp cho câu hỏi của stage đang chạy, không áp cho bước xác nhận tóm tắt, xác nhận giả định hoặc gate.
 

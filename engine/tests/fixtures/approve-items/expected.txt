@@ -3,6 +3,8 @@
 [check prd-generation]
 mã thoát: 0
 có: AC2.1, BR2.1, US2 có ở bản v1.0, bản này không còn
+có: Q2 chưa có câu trả lời; không viết artifact khi còn câu trống
+có: Q1 là câu chặn, chưa có câu trả lời
 có: US1 ở bản v1.0 là "Đổi mật khẩu khi đã đăng nhập", bản này là "Xuất báo cáo doanh thu theo tháng"
 
 [@hook hooks/p-duyet.json]
@@ -26,10 +28,10 @@ có: phải nêu từng mã được quyết; thiếu AC2.1, BR2.1, US2
 
 [approve prd-generation --words "duyệt prd bản sửa" --accept-items "Q1,FR2,AC2.1,BR2.1,US2" --item-words "Hoãn Q1 sang đợt sau, FR2 làm đợt sau, US2 bỏ theo CR1 cùng AC2.1 và BR2.1"]
 mã thoát: 2
-có: kiểm máy còn 4 cảnh báo
+có: kiểm máy còn 5 cảnh báo
 
 [approve prd-generation --words "duyệt prd bản sửa" --accept-items "Q1,FR2,AC2.1,BR2.1,US2" --item-words "Hoãn Q1 sang đợt sau, FR2 làm đợt sau, US2 bỏ theo CR1 cùng AC2.1 và BR2.1" --accept-warnings "duyệt prd bản sửa" --who "Người thử"]
 mã thoát: 0
 có: Đã duyệt 2.42 PRD Generation: prd.md v1.1.
-tệp decisions.md có: quyết từng mục: Q1, FR2, AC2.1, BR2.1, US2; chấp nhận 4 cảnh báo kiểm máy
+tệp decisions.md có: quyết từng mục: Q1, FR2, AC2.1, BR2.1, US2; chấp nhận 5 cảnh báo kiểm máy
 tệp state.md có: - [x] 2.42 prd-generation

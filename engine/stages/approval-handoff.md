@@ -30,6 +30,8 @@ Ba câu, không cần tóm tắt xác nhận:
 2. Rủi ro và giả định lớn nhất đã được nêu và chấp nhận chưa.
 3. Có nguồn lực và mốc cho đợt này chưa.
 
+Mỗi mục trên là một chủ đề của bảng Độ phủ trong questions file, theo `engine/protocol/question-format.md`.
+
 ## Generate
 `initiative-brief.md`, một trang: vấn đề và mục tiêu; phạm vi biên; Unit và ưu tiên; rủi ro và giả định lớn; quyết định đã đưa ra từ `decisions.md`; khuyến nghị go hay no-go kèm điều kiện. Tài liệu bàn giao: không thẻ nguồn, mã kèm nội dung, không viết tắt.
 Kiểm ranh giới phase Ideation sang Inception theo `engine/templates/phase-check.md`, ghi `verification/phase-check-ideation.md`: mọi objective có hạng mục phục vụ; mọi Unit truy về objective; Out không mâu thuẫn In; OQ chặn đã đóng. Không đạt thì sửa stage tương ứng trước khi mở gate.

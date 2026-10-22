@@ -30,6 +30,8 @@ Xem sản phẩm khác giải bài toán này thế nào, để đặt tên khá
 2. Xem khía cạnh nào: mô hình khái niệm, thuật ngữ, luồng chính, giới hạn, cách tích hợp.
 3. Quyết định nào phụ thuộc vào kết quả này. Không có thì ghi `[S]` và không chạy.
 
+Mỗi mục trên là một chủ đề của bảng Độ phủ trong questions file, theo `engine/protocol/question-format.md`.
+
 ## Generate
 `competitive-analysis.md`: mỗi sản phẩm một mục ngắn; bảng so sánh theo khía cạnh đã chọn; thuật ngữ nên dùng; điểm nên áp dụng và lý do phù hợp với sản phẩm; điểm không áp dụng và lý do; đối chiếu với yêu cầu hiện tại, điểm làm thay đổi phạm vi hay rule; nguồn kèm link và ngày đọc. Trích đúng, không suy diễn tính năng từ tên menu.
 Thu thập: nguồn nào chặn tải tự động thì dùng cách ghi trong `domain.md` mục 4 phần 1.2. Bài đã lấy lưu nguyên văn vào `inputs/` để tra lại.

@@ -15,6 +15,8 @@
 - [ ] Có mốc cứng thì phạm vi Must làm kịp mốc theo ước lượng thô, hoặc đã nêu rủi ro trễ mốc; AWS gọi là scope-vs-timeline validation
 
 ## Nguồn và câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp
 - [ ] **[BLOCK]** Thẻ nguồn ở mọi khối. Assumptions & Open Questions có
 - [ ] Câu chặn đã trả lời. Câu trả lời nguyên văn
 - [ ] Profile M: gate chung với 1.1, thông điệp gộp hai artifact

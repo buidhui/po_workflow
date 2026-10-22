@@ -14,7 +14,8 @@ Theo dõi và kiểm:
   po-tools.py next    <intent>
       Stage cần làm tiếp, dòng tiến độ, số câu hỏi còn trống và số câu chặn còn trống.
   po-tools.py check   <intent> <stage-slug> [--strict]
-      Kiểm máy artifact của stage: heading bắt buộc, thẻ nguồn, [Qn] và [DECn] có thật,
+      Kiểm máy artifact của stage: heading bắt buộc, thẻ nguồn, [Qn] và [DECn] có thật; questions file có bảng
+      Độ phủ đủ chủ đề và mọi câu đã có câu trả lời;
       chữ mẫu còn sót, thẻ US đủ chín mục, mục cấm trong PRD; ở 2.43 thêm giới hạn từ và chữ ký của
       Decision Brief, độ phủ của ba file thiết kế so với PRD; mã có ở bản đã duyệt mà bản này không còn,
       US đổi tên hẳn so với bản đã duyệt,
@@ -1081,7 +1082,10 @@ class Warns(object):
     KINDS = [("heading", "Mục bắt buộc"), ("tag", "Thẻ nguồn"), ("ref", "Thẻ trỏ sai"),
              ("handoff", "Artifact bàn giao"), ("card", "Thẻ US"), ("split", "Cỡ story"), ("words", "Giới hạn từ"),
              ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký"), ("diagram", "Sơ đồ"),
-             ("idgone", "Mã có ở bản đã duyệt, bản này không còn"), ("id", "Mã đổi nghĩa")]
+             ("idgone", "Mã có ở bản đã duyệt, bản này không còn"), ("id", "Mã đổi nghĩa"),
+             ("question", "Câu hỏi và độ phủ"), ("qblock", "Câu chặn chưa trả lời")]
+    # loại approve xét riêng từng mục, không tính vào số cảnh báo chấp nhận chung
+    GATE_ONLY = ("idgone", "qblock")
 
     def __init__(self):
         self.items, self.info, self.seen = [], [], set()
@@ -1672,6 +1676,47 @@ def ux_screen_map(text):
     return out
 
 
+def question_checks(intent, st, W):
+    """Questions file của stage theo AWS: mọi câu có câu trả lời; bảng Độ phủ có mọi chủ đề, mỗi chủ đề có nguồn
+    đã trả lời hoặc câu hỏi. Câu chặn còn trống là loại qblock, approve xét riêng."""
+    p = Path(intent) / st.dir / st.questions
+    text = read(p)
+    if text is None:
+        return
+    qs, v2 = parse_questions(text)
+    if not v2 or not qs:
+        return
+    f = rel(p, intent)
+    ids = set(q["id"] for q in qs)
+    for q in qs:
+        if not q["answered"]:
+            if q["blocking"]:
+                W.add("qblock", f, q["line"], "%s là câu chặn, chưa có câu trả lời" % q["id"])
+            else:
+                W.add("question", f, q["line"], "%s chưa có câu trả lời; không viết artifact khi còn câu trống" % q["id"])
+    if st.slug == "prd-generation":
+        return  # bảng Field Intake là độ phủ của 2.42
+    lines = text.splitlines()
+    rng = section_lines(lines, lambda t: clean(t).lower().startswith("độ phủ"))
+    if not rng:
+        W.add("question", f, None, "Chưa có bảng Độ phủ: mỗi chủ đề trong mục Ask của stage cần có nguồn đã trả lời hoặc câu hỏi")
+        return
+    for t in parse_tables(lines, rng[0], rng[1]):
+        sc, qc = col(t["header"], "Đã có"), col(t["header"], "Câu hỏi")
+        if sc is None or qc is None:
+            continue
+        for cells, k in t["rows"]:
+            topic = clean(cell(cells, 0))
+            if not topic or "<" in topic:
+                continue
+            src, qref = clean(cell(cells, sc)), clean(cell(cells, qc))
+            if src.lower() in EMPTY and qref.lower() in EMPTY:
+                W.add("question", f, k + 1, "Chủ đề '%s' chưa có nguồn đã trả lời và chưa có câu hỏi" % topic)
+            for qq in re.findall(r"\bQ\d+\b", qref):
+                if qq not in ids:
+                    W.add("question", f, k + 1, "Bảng Độ phủ trỏ tới %s nhưng file không có câu này" % qq)
+
+
 def design_coverage(intent, W):
     """Đối chiếu ba file thiết kế ở 2.43 với PRD: file có chưa, dựng từ bản PRD nào, còn chữ mẫu không,
     US có giao diện có màn chưa, AC có trong kế hoạch test chưa, US có trong tech-design chưa,
@@ -1750,6 +1795,7 @@ def check(intent, slug, strict=False):
         check_artifact(ctx, W, st, p)
     if slug == "design-alignment":
         design_coverage(intent, W)
+    question_checks(intent, st, W)
     print("# Kiểm máy: %s · %s %s\n" % (intent.name, st.code, st.name))
     for x in W.info:
         print("- " + x)
@@ -1974,7 +2020,8 @@ def machine_warnings(intent, st):
         check_artifact(ctx, W, st, p)
     if st.slug == "design-alignment":
         design_coverage(intent, W)
-    return len([w for w in W.items if w[0] != "idgone"])
+    question_checks(intent, st, W)
+    return len([w for w in W.items if w[0] not in Warns.GATE_ONLY])
 
 
 def art_digest(intent, arts):

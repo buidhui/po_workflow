@@ -36,10 +36,11 @@ Khung vấn đề trước khi bàn giải pháp: ai gặp vấn đề gì, vì 
 2. Người dùng đang xoay xở thế nào khi chưa có tính năng: làm gì, theo thứ tự nào, dựa vào tiêu chí gì, mất bao lâu, hay sai ở đâu.
 3. Thành công trông như thế nào, đo bằng chỉ số nào, lấy số ở đâu.
 4. Vì sao làm lúc này: áp lực, cơ hội, hay nợ cũ.
-5. Stakeholder: ai quan tâm điều gì, ai quyết phạm vi và ưu tiên, ai chỉ cần được báo.
+5. Stakeholder: ai quan tâm điều gì, ai quyết định phạm vi và ưu tiên, ai có ảnh hưởng tới quyết định đó, ai chỉ cần được báo.
+5b. Yêu cầu báo cáo và nhịp cập nhật cho các bên liên quan.
 6. Bản đầu tiên không làm gì. Hỏi về sản phẩm, không hỏi lại profile.
 7. Portal nào, theo danh sách portal trong `domain.md` mục 1. Hằng số nào phải cấu hình theo tenant.
-Mỗi câu có lựa chọn "Chưa xác định" khi PO có thể chưa biết. Không tự thêm stakeholder.
+Mỗi mục trên là một chủ đề của bảng Độ phủ trong questions file. Mỗi câu có lựa chọn "Chưa xác định" khi PO có thể chưa biết. Không tự thêm stakeholder.
 
 ## Generate
 `intent-statement.md` theo template. Thẻ nguồn ở mọi khối: `[desc]`, `[Q3]`, `[KB-<file> §<mục>]`, `[assumption]`. Stakeholder map có cột Nguồn. Mục Assumptions & Open Questions bắt buộc.

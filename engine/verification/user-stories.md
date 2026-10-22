@@ -17,3 +17,7 @@
 - [ ] Rule đã biết dẫn mã FR, BR, KB; dữ liệu và vùng chạm khớp Impact Matrix
 - [ ] Thẻ nguồn. Assumptions & Open Questions có
 - [ ] Reviewer ai-reviewer đã chạy
+
+## Câu hỏi
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp

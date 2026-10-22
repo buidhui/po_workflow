@@ -241,7 +241,7 @@ Mọi stage chạy cùng bảy bước, định nghĩa một lần trong `engine
 | Bước | AI làm | PO làm |
 |---|---|---|
 | 1. Load | Đọc trạng thái, quyết định cũ, artifact đầu vào, knowledge base, bài học | |
-| 2. Ask | Viết questions file: mỗi câu gắn người trả lời, tối đa bốn lựa chọn, có đề xuất kèm nguồn và cờ chặn | Trả lời |
+| 2. Ask | Lập bảng độ phủ các chủ đề của stage, đặt câu hỏi cho mọi chủ đề đầu vào chưa trả lời; mỗi câu gắn người trả lời, tối đa bốn lựa chọn, có đề xuất kèm nguồn và cờ chặn; phân tích câu trả lời mơ hồ, mâu thuẫn và hỏi tiếp | Trả lời |
 | 3. Confirm | Tóm tắt câu trả lời | Xác nhận hoặc yêu cầu sửa |
 | 4. Generate | Viết artifact theo template, ghi thẻ nguồn ở mỗi khẳng định; ở 1.1 và 2.3 trình giả định để PO chấp nhận hoặc chuyển thành câu hỏi | Xác nhận giả định |
 | 5. Verify | Chạy script kiểm tra, checklist, gọi AI Reviewer theo profile | |

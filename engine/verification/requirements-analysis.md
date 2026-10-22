@@ -25,6 +25,8 @@
 - [ ] Đã xét ba mục trong Completeness Checklist của AWS: audit log cho thao tác nhạy cảm; lưu giữ và xoá dữ liệu; accessibility và thiết bị. Mức accessibility và thiết bị lấy mặc định ở `domain.md` mục 1, chỉ hỏi khi intent khác mặc định
 
 ## Câu hỏi và nguồn
+- [ ] **[BLOCK]** Bảng Độ phủ của questions file có mọi chủ đề trong mục Ask; mỗi dòng có nguồn đã trả lời hoặc câu hỏi
+- [ ] **[BLOCK]** Mọi câu đã có câu trả lời; câu trả lời mơ hồ, mâu thuẫn đã được hỏi tiếp
 - [ ] Không hỏi kỹ thuật cho Dev. Chỉ hỏi câu đổi phạm vi hoặc rule
 - [ ] Câu chặn đã trả lời. Nguyên văn
 - [ ] **[BLOCK]** Thẻ nguồn ở mọi khối. Assumptions & Open Questions có cờ Chặn và owner
