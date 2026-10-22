@@ -34,7 +34,7 @@ Mọi mã đầy đủ chỉ dùng chữ hoa, chữ số, dấu chấm và gạc
 \b(US|AC|BR|SCR|TC|NFR|TR|SC|Q)-([A-Z][A-Z0-9]*-F\d{3,})-(\d{2,3})(?:\.(\d+))?\b
 ```
 
-Nhóm 1 là loại mã, nhóm 2 là mã tính năng, nhóm 3 là số thứ tự, nhóm 4 là số con nếu có. Mã trong KB của domain, như `BR-EDIT-07`, theo `domain-kb.md` và không khớp biểu thức này. Mã tính năng `<SP>-F<NNN>` có chữ F đứng trước số, nên khác dạng key issue của Jira là key dự án, gạch nối, số, như `LMS-123`.
+Nhóm 1 là loại mã, nhóm 2 là mã tính năng, nhóm 3 là số thứ tự, nhóm 4 là số con nếu có. Mã trong KB của domain, như `BR-EDIT-07`, theo `domain-kb.md` và không khớp biểu thức này. Mã tính năng `<SP>-F<NNN>` có chữ F đứng trước số, nên khác dạng key issue của Jira là key dự án, gạch nối, số, như `APP-123`.
 
 ## 4. Thư mục và tên file trong repo PO
 
@@ -77,7 +77,7 @@ Figma không có chuẩn đặt tên frame chính thức; quy ước này là c�
 Nhánh: `<loại>/<JIRA-KEY>-<mô-tả>`. Loại theo Conventional Branch: `feat`, `fix`, `hotfix`, `release`, `chore`. Key Jira là key của story, viết hoa vì Jira chỉ nhận key viết hoa; đây là chỗ khác Conventional Branch, vốn yêu cầu chữ thường.
 
 ```
-feat/LMS-123-lam-lai-bai-kiem-tra
+feat/APP-123-lam-lai-bai-kiem-tra
 ```
 
 Commit theo Conventional Commits; phạm vi là vùng code, không phải mã yêu cầu. Mã yêu cầu ghi ở trailer cuối thông điệp, cách thân bằng một dòng trống:
@@ -87,7 +87,7 @@ feat(quiz): cho phép làm lại bài kiểm tra
 
 Giới hạn số lần làm lại theo cấu hình của khoá học.
 
-Refs: LMS-123
+Refs: APP-123
 Feature: APP-F012
 Story: US-APP-F012-01
 Implements: AC-APP-F012-01.1, AC-APP-F012-01.2, BR-APP-F012-01.2
@@ -115,7 +115,7 @@ Mỗi test tự động gắn tag mã AC đầy đủ mà nó kiểm. Test của
 | JUnit 5 | `@Tag("AC-APP-F012-01.1")` |
 | pytest | `@pytest.mark.req("AC-APP-F012-01.1")`, khai báo marker `req` và chạy với `--strict-markers` |
 
-Mã test case theo `id-conventions.md`: `TC-<tính năng>-<NNN>`, ba chữ số như `TC-NNN` trong `testing-guide.md` của AWS. Nếu QA dùng Xray hoặc Zephyr Scale, hai công cụ này liên kết theo key Jira; gắn thêm tag của công cụ, như `@REQ_LMS-123` của Xray hay `@TestCaseKey=LMS-T12` của Zephyr Scale, bên cạnh tag mã AC.
+Mã test case theo `id-conventions.md`: `TC-<tính năng>-<NNN>`, ba chữ số như `TC-NNN` trong `testing-guide.md` của AWS. Nếu QA dùng Xray hoặc Zephyr Scale, hai công cụ này liên kết theo key Jira; gắn thêm tag của công cụ, như `@REQ_APP-123` của Xray hay `@TestCaseKey=APP-T12` của Zephyr Scale, bên cạnh tag mã AC.
 
 ## 9. API, Frontend, ghi chú trong code
 

@@ -20,7 +20,7 @@ Mã dùng chung cho mọi team nhận việc từ PO: Design, Tech, QA. Mã đi 
 | Yêu cầu phi chức năng | `NFR-<tính năng>-<NN>` | `NFR-APP-F012-03` | PO, ở 2.3, PRD mục 7 | Description của story trên Jira |
 | Yêu cầu chuyển đổi | `TR-<tính năng>-<NN>` | `TR-APP-F012-01` | PO, ở 2.31, PRD mục 8 | PRD; test-design khi kiểm được |
 | Test case | `TC-<tính năng>-<NNN>` | `TC-APP-F012-001` | QA PIC | Test case trên Jira, tag của test tự động |
-| Nhánh code | `<loại>/<key Jira>-<mô tả>` | `feat/LMS-123-lam-lai-bai-kiem-tra` | Dev | Git, theo `naming-conventions.md` mục 7 |
+| Nhánh code | `<loại>/<key Jira>-<mô tả>` | `feat/APP-123-lam-lai-bai-kiem-tra` | Dev | Git, theo `naming-conventions.md` mục 7 |
 | Commit | Trailer `Refs`, `Feature`, `Story`, `Implements` | `Implements: AC-APP-F012-01.1` | Dev | Git, theo `naming-conventions.md` mục 7 |
 
 `<NNN>` ba chữ số, `<NN>` hai chữ số, đều có số 0 ở đầu. `<n>` là số thứ tự trong story, bắt đầu từ 1.
@@ -69,7 +69,7 @@ FR (nội bộ PO) → US → AC → TC
                       SCR → AC
 ```
 
-Mọi BR có ít nhất một AC. Mọi AC có ít nhất một TC; QA viết TC sau khi story lên Jira và theo dõi độ phủ trên Jira, điều kiện giao Dev không chờ TC. Nhánh và commit truy về tính năng và story qua trailer.
+Mọi BR có ít nhất một AC. Mọi AC có ít nhất một TC; QA viết TC sau khi story lên Jira và theo dõi độ phủ trên Jira, điều kiện sẵn sàng không chờ TC. Nhánh và commit truy về tính năng và story qua trailer.
 
 ## Khi team dùng AWS AI-DLC hoặc công cụ spec khác
 

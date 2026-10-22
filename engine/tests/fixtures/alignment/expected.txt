@@ -41,7 +41,7 @@ tệp decisions.md có: chấp nhận 5 cảnh báo kiểm máy
 
 [dor]
 mã thoát: 0
-có: Kết luận: 2/2 story đạt điều kiện giao Dev.
+có: Kết luận: 2/2 story đạt điều kiện sẵn sàng.
 
 [stories --write]
 mã thoát: 0

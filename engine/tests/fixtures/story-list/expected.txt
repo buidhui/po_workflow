@@ -1,5 +1,5 @@
 # PRD v1.0 đã duyệt, 3 US. Không có state.md nên không xét 2.43. ux-design.md có màn SCR1 cho US1, chưa có màn cho US2.
-# US1 đủ điều kiện giao Dev; US2 chưa có AC, câu chặn #1 còn mở, giao diện chưa có màn trong ux-design, BR dạng cũ BR-2.1;
+# US1 đủ điều kiện sẵn sàng; US2 chưa có AC, câu chặn #1 còn mở, giao diện chưa có màn trong ux-design, BR dạng cũ BR-2.1;
 # US3 có AC đủ nhưng phụ thuộc US2 ở Pre-Condition. intent.md có 2 Epic: mặc định APP-8, U2 gán APP-9.
 # Bản CSV v0.9 dạng 11 cột cũ, chưa có cột Priority: so story đổi theo tên cột.
 [stories]
@@ -35,8 +35,8 @@ tệp stories/story-list-prd-v1.0.csv có: PRD Chứng chỉ PDF v1.0, duyệt n
 tệp stories/story-list-prd-v1.0.csv có: · tag story-list/prd-v1.0 · US1 trong PRD · Màn: SCR-LMS-F903-01 Trang khoá học · Figma: https://www.figma.com/design/abc/Cert
 tệp stories/story-list-prd-v1.0.csv có: APP-8,LMS-F903,US-LMS-F903-01,LMS-F903-U1,
 tệp stories/story-list-prd-v1.0.csv có: APP-9,LMS-F903,US-LMS-F903-02,LMS-F903-U2,
-tệp stories/story-list-prd-v1.0.csv có: Điều kiện giao Dev: đạt.
-tệp stories/story-list-prd-v1.0.csv có: Điều kiện giao Dev: chưa đạt, chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design.
+tệp stories/story-list-prd-v1.0.csv có: Điều kiện sẵn sàng: đạt.
+tệp stories/story-list-prd-v1.0.csv có: Điều kiện sẵn sàng: chưa đạt, chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design.
 tệp stories/story-list-prd-v1.0.csv có: - Chứng chỉ hết hạn có hiện mờ trong danh sách của US-LMS-F903-02 không
 tệp stories/story-list-prd-v1.0.csv không có: Kho lưu tệp PDF
 tệp stories/story-list-prd-v1.0.csv không có: Conner case
@@ -52,8 +52,8 @@ mã thoát: 1
 có: | US-LMS-F903-01 | Đạt | - |
 có: | US-LMS-F903-02 | Chưa đạt | chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design |
 có: | US-LMS-F903-03 | Chưa đạt | phụ thuộc US-LMS-F903-02 chưa đạt |
-có: Kết luận: 1/3 story đạt điều kiện giao Dev.
+có: Kết luận: 1/3 story đạt điều kiện sẵn sàng.
 
 [dor --story US-LMS-F903-01]
 mã thoát: 0
-có: Kết luận: 1/1 story đạt điều kiện giao Dev.
+có: Kết luận: 1/1 story đạt điều kiện sẵn sàng.

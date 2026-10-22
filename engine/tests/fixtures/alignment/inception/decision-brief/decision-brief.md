@@ -14,7 +14,7 @@ Nhắc lịch học trong ứng dụng, PRD bản 1.0, ba bản thiết kế đ�
 ## 2. Điểm cần quyết
 | # | Vấn đề | Ai nêu | Lựa chọn và hệ quả | Đề xuất |
 |---|---|---|---|---|
-| 1 | Kế hoạch test chưa phủ AC2.2 | Hệ thống kiểm | Bổ sung trước khi giao Dev, hoặc để QA viết trên Jira | Để QA viết trên Jira |
+| 1 | Kế hoạch test chưa phủ AC2.2 | Hệ thống kiểm | Bổ sung trước khi bàn giao cho Dev, hoặc để QA viết trên Jira | Để QA viết trên Jira |
 
 ## 3. Đề xuất sửa PRD
 Không có.

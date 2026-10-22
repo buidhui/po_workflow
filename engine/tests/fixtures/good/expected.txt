@@ -52,7 +52,7 @@ có: Chỉ duyệt được stage đang [?]
 [dor]
 mã thoát: 1
 có: | US-LMS-F901-01 | Chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
-có: Kết luận: 0/2 story đạt điều kiện giao Dev.
+có: Kết luận: 0/2 story đạt điều kiện sẵn sàng.
 không có: chưa có AC
 
 [stories]
@@ -69,7 +69,7 @@ tệp stories/story-list-prd-v0.1.csv không có: Project key
 
 [replay]
 mã thoát: 0
-có: 2 story trong PRD v0.1, 0 đạt điều kiện giao Dev. Story List: chưa sinh.
+có: 2 story trong PRD v0.1, 0 đạt điều kiện sẵn sàng. Story List: chưa sinh.
 
 [review-start user-stories]
 mã thoát: 0

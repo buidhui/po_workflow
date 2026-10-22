@@ -81,7 +81,7 @@ Template PRD chuẩn đặt ở `engine/templates/prd.md`, dùng chung cho mọi
 | Traceability | 11. Truy vết |
 | Comments | Góp ý qua review trong repo |
 
-Mã `US1`, `AC1.1`, `BR1.1` không đổi, nên `po-tools.py` truy vết, kiểm điều kiện giao Dev và sinh Story List như cũ. Script nhận thêm tên mục mới và bỏ qua kiểm tên mục với PRD viết theo template cũ.
+Mã `US1`, `AC1.1`, `BR1.1` không đổi, nên `po-tools.py` truy vết, kiểm điều kiện sẵn sàng và sinh Story List như cũ. Script nhận thêm tên mục mới và bỏ qua kiểm tên mục với PRD viết theo template cũ.
 
 ## Mức tin cậy của bằng chứng
 

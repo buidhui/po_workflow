@@ -35,7 +35,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Trailer của commit | Dòng `Khoá: giá trị` ở cuối thông điệp commit, như `Implements: AC-APP-F012-01.1`; git đọc lại được bằng `git log --format='%(trailers:key=Implements,valueonly)'` | Conventional Commits 1.0.0; `git interpret-trailers` |
 | Story List | `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`, mỗi US trong PRD một dòng theo mẫu import CSV của Jira. Sinh bằng `/po-stories` sau gate 2.43, profile S thì sau gate 2.42; các team làm việc trên story Jira | Quy ước chung các team, `engine/standards/handoff-rules.md`, ADR 0002 |
 | Checkpoint | Buổi PO họp với Design PIC, Tech PIC, QA PIC trên Decision Brief ở 2.43, sau khi các team thiết kế từ PRD | Quy ước chung các team |
-| Điều kiện giao Dev, DoR | Điều kiện để giao một story cho Dev: PRD đã duyệt, với profile M, L thì 2.43 đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn, giao diện có màn trong `ux-design.md`, story phụ thuộc đã đạt. Kiểm bằng `po-tools.py dor` | Quy ước chung các team. Bản hẹp phía PO của Definition of Ready của AWS; hai mục thiết kế đã xem và đã ước lượng do Design, Dev làm trên Jira |
+| Điều kiện sẵn sàng, DoR | Điều kiện để giao một story cho Dev: PRD đã duyệt, với profile M, L thì 2.43 đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn, giao diện có màn trong `ux-design.md`, story phụ thuộc đã đạt. Kiểm bằng `po-tools.py dor` | Quy ước chung các team. Bản hẹp phía PO của Definition of Ready của AWS; hai mục thiết kế đã xem và đã ước lượng do Design, Dev làm trên Jira |
 | Nguyên tắc chia story | Định nghĩa story, tiêu chí INVEST, dấu hiệu quá lớn, 8 cách tách, các cách không chia, ở `engine/standards/story-splitting.md` | PO-Workflow, theo AWS user-story-patterns |
 | Tiêu chí chấp nhận, AC | Điều kiện kiểm được, đạt hoặc không đạt, theo cấu trúc Given/When/Then: tiền điều kiện, hành động, kết quả quan sát được; ghi rõ BR mà nó kiểm. Viết trong PRD ở 2.42, trước khi các team thiết kế | BABOK v3 10.1 Acceptance and Evaluation Criteria; AWS `user-story-patterns.md` |
 | Template PRD chuẩn | `engine/templates/prd.md`, dùng chung cho mọi sản phẩm: 11 mục, mỗi US mười mục con. Cơ sở của từng mục ở ADR 0004 | PO-Workflow |
@@ -59,7 +59,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Quyết từng mục | Ở gate, câu chặn chưa trả lời, GAP, ORPHAN, mã biến mất chỉ qua khi PO quyết riêng từng mã; lời PO phải nêu mã đó | AWS: sensor chặn có Fix hoặc Override ghi lại; không đi tiếp khi câu hỏi chưa trả lời đủ |
 | Gửi ký | `po-tools.py sign-start` ghi dấu bản Decision Brief gửi PIC. Chữ ký chỉ tính với đúng bản đó, đúng tên PIC ở `intent.md` | AWS `aidlc-review-freeze`: receipt gắn với bản artifact |
 | Review digest | `reviews/review-<slug>-<NN>.digest`, dấu của artifact lúc gọi reviewer, ghi bằng `po-tools.py review-start`. `approve` so dấu này để biết review còn ứng với bản hiện tại | AWS gắn biên nhận review với đúng bản đã review |
-| Bản chỉ mục cho Dev | `intents/INDEX.md` do `po-tools.py index` sinh: mã tính năng, bản PRD đã duyệt, service bị chạm, tag, số story đạt điều kiện giao Dev | PO-Workflow |
+| Bản chỉ mục cho Dev | `intents/INDEX.md` do `po-tools.py index` sinh: mã tính năng, bản PRD đã duyệt, service bị chạm, tag, số story đạt điều kiện sẵn sàng | PO-Workflow |
 | Tag bản duyệt | `<intent>/prd-v<X.Y>` hoặc `<intent>/decision-brief-v<X.Y>`, gắn mỗi lần PRD hoặc Decision Brief được duyệt; agent của Dev đọc theo tag | PO-Workflow |
 | Phiên bản artifact | 0.x là bản nháp; lần duyệt đầu là 1.0; mỗi lần duyệt lại sau change request tăng số phụ | PO-Workflow |
 | Mức độ sẵn sàng áp dụng | Quy trình đã sẵn sàng áp dụng tới đâu, theo 2 trục: phạm vi sử dụng (cá nhân, team, liên team, nhân rộng) và giao tiếp (người với người, người với máy, máy với máy). Đánh giá ở README mục 9 | PO-Workflow |
@@ -94,11 +94,11 @@ Tiện ích:
 - `/po-status`: trạng thái mọi intent, kiểm lệch
 - `/po-review`: review độc lập bằng AI Reviewer
 - `/po-replay`: tóm lược diễn biến của một intent khi bàn giao giữa các PO
-- `/po-stories`: sinh Story List để import lên Jira từ PRD đã duyệt, sau gate 2.43 với profile M, L; kiểm điều kiện giao Dev
+- `/po-stories`: sinh Story List để import lên Jira từ PRD đã duyệt, sau gate 2.43 với profile M, L; kiểm điều kiện sẵn sàng
 - `/change-request`: đổi yêu cầu sau khi đã duyệt
 - `/generate-user-guide`: viết User Guide sau khi Dev làm xong
 - `/new-domain`: dựng khung domain pack cho sản phẩm mới
-- Script `engine/scripts/po-tools.py`: `next` stage kế tiếp; `check` kiểm bằng máy; `approve` ghi chép sau khi duyệt, chỉ khi lời PO có trong sổ lượt người; `review-start` ghi dấu artifact trước khi gọi reviewer; `trace` truy vết FR, US, BR, AC; `archive` chụp bản duyệt; `status` kiểm lệch giữa state và file; `feature-id` cấp mã tính năng; `stories` sinh Story List cho Jira; `dor` kiểm điều kiện giao Dev; `index` sinh chỉ mục; `replay` tóm lược diễn biến của intent; `migrate` chuyển intent từ bản engine cũ; `doctor` kiểm môi trường
+- Script `engine/scripts/po-tools.py`: `next` stage kế tiếp; `check` kiểm bằng máy; `approve` ghi chép sau khi duyệt, chỉ khi lời PO có trong sổ lượt người; `review-start` ghi dấu artifact trước khi gọi reviewer; `trace` truy vết FR, US, BR, AC; `archive` chụp bản duyệt; `status` kiểm lệch giữa state và file; `feature-id` cấp mã tính năng; `stories` sinh Story List cho Jira; `dor` kiểm điều kiện sẵn sàng; `index` sinh chỉ mục; `replay` tóm lược diễn biến của intent; `migrate` chuyển intent từ bản engine cũ; `doctor` kiểm môi trường
 
 ## Họ mã
 | Họ | Dạng | Phạm vi | Ví dụ | Thay cho |

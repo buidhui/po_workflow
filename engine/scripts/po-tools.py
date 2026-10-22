@@ -27,7 +27,7 @@ Theo dõi và kiểm:
       2 là không đọc được. --write ghi inception/prd/traceability.md và
       verification/phase-check-inception.md.
   po-tools.py dor     <intent> [--story US-<feature>-<NN>]
-      Điều kiện giao Dev của từng US trong prd.md: PRD đã duyệt, US có AC, mọi BR có AC trỏ tới, không còn
+      Điều kiện sẵn sàng của từng US trong prd.md: PRD đã duyệt, US có AC, mọi BR có AC trỏ tới, không còn
       ❓PO, không còn câu chặn ở mục Câu hỏi mở. Mã thoát 0 khi mọi story đạt, 1 khi có story chưa đạt,
       2 khi chưa có PRD hoặc mã tính năng.
   po-tools.py replay  <intent>
@@ -84,7 +84,7 @@ Ghi chép:
       <tên>-<nhãn>-<YYYYMMDD>.md khi có --label. Từ chối ghi đè.
   po-tools.py index   [--write]
       Bảng spec cho Dev, mỗi intent có PRD một dòng, có mã tính năng, số story và số story
-      đạt điều kiện giao Dev. --write ghi intents/INDEX.md.
+      đạt điều kiện sẵn sàng. --write ghi intents/INDEX.md.
 
 Engine:
   po-tools.py doctor
@@ -3034,9 +3034,9 @@ def replay(intent):
     if stage_file(intent, "prd-generation").exists():
         meta, sts = us_handoff(intent)
         if meta is not None:
-            out += ["", "## Story giao Dev"]
+            out += ["", "## Story sẵn sàng"]
             csvs = sorted((intent / "stories").glob("story-list-prd-v*.csv"), key=csv_version) if (intent / "stories").is_dir() else []
-            out.append("%d story trong PRD v%s, %d đạt điều kiện giao Dev. Story List: %s. Chi tiết: po-tools.py dor %s"
+            out.append("%d story trong PRD v%s, %d đạt điều kiện sẵn sàng. Story List: %s. Chi tiết: po-tools.py dor %s"
                        % (len(sts), meta["ver"], sum(1 for x in sts if not x["reasons"]), ", ".join(p.name for p in csvs) or "chưa sinh", intent.name))
     out += ["", "## Câu chặn còn mở"]
     qlines = []
@@ -3113,7 +3113,7 @@ def index(write_out=False):
            "",
            "Repo này là nguồn chuẩn của spec cho agent và Dev: đọc PRD theo đường dẫn archive (bản đã duyệt, không bao giờ sửa) hoặc theo tag git ở bảng dưới. Bản đăng ra ngoài repo, nếu có, chép từ repo, có thể chậm hơn repo.",
            ""]
-    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện giao Dev", "Bản duyệt mới nhất", "Tag git gợi ý", "Bản đăng"], rows)
+    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện sẵn sàng", "Bản duyệt mới nhất", "Tag git gợi ý", "Bản đăng"], rows)
                if rows else "_Chưa có intent nào có PRD._")
     text = "\n".join(out) + "\n"
     for n in notes:
@@ -3784,7 +3784,7 @@ def jira_rows(meta, stories):
     rows = []
     for st in stories:
         com = ["Nguồn: PRD v%s%s, tag %s." % (meta["ver"], (" duyệt ngày " + meta["approved_at"]) if meta["approved_at"] else "", meta["tag"]),
-               "Điều kiện giao Dev: " + ("đạt." if not st["reasons"] else "chưa đạt, " + "; ".join(st["reasons"]) + ".")]
+               "Điều kiện sẵn sàng: " + ("đạt." if not st["reasons"] else "chưa đạt, " + "; ".join(st["reasons"]) + ".")]
         if st["issues"]:
             com.append("Câu hỏi còn mở trong PRD:")
             com += ["- %s" % clean(to_full(it["text"], meta["feat"])) for it in st["issues"]]
@@ -3840,7 +3840,7 @@ def stories_cmd(intent, write_out=False, only=None):
         print("Lưu ý: " + x)
     if notes:
         print()
-    print(md_table(["Story", "Tên", "Ưu tiên", "Unit", "Epic", "Giao Dev", "Lý do"],
+    print(md_table(["Story", "Tên", "Ưu tiên", "Unit", "Epic", "Bàn giao cho Dev", "Lý do"],
                    [(s["sid"], s["title"], s["prio"] or "-", s["unit"] or "-", s["epic"] or "-", "đạt" if not s["reasons"] else "chưa đạt",
                      "; ".join(s["reasons"]) or "-") for s in stories]))
     noprio = [s["sid"] for s in stories if not s["prio"]]
@@ -3894,9 +3894,9 @@ def dor(intent, story=None):
             print("prd.md không có khối của %s." % story)
             return 2
     npass = sum(1 for s in stories if not s["reasons"])
-    print("# Điều kiện giao Dev: %s · PRD v%s\n" % (meta["intent"].name, meta["ver"]))
+    print("# Điều kiện sẵn sàng: %s · PRD v%s\n" % (meta["intent"].name, meta["ver"]))
     print(md_table(["Story", "Đạt?", "Lý do"], [(s["sid"], "Đạt" if not s["reasons"] else "Chưa đạt", "; ".join(s["reasons"]) or "-") for s in stories]))
-    print("\nKết luận: %d/%d story đạt điều kiện giao Dev." % (npass, len(stories)))
+    print("\nKết luận: %d/%d story đạt điều kiện sẵn sàng." % (npass, len(stories)))
     return 0 if npass == len(stories) else 1
 
 
@@ -4461,7 +4461,7 @@ def mig_live_part(text, name):
 
 def mig_alignment(intent, text):
     """Luồng 2.43: bỏ dòng 2.41 hld-brief và dòng hld-brief ở Versions; profile M, L thêm 2.43 design-alignment ngay sau 2.42.
-    Intent đã có Epic trên Jira và PRD đã duyệt thì 2.43 ghi [S], vì đã giao Dev trước khi có stage này.
+    Intent đã có Epic trên Jira và PRD đã duyệt thì 2.43 ghi [S], vì đã bàn giao cho Dev trước khi có stage này.
     2.41 đang dở thì Current chuyển sang 2.43. Trả (text mới, việc, [(file HLD Brief, đích trong archive)])."""
     lines = (text or "").splitlines()
     plan, moves = [], []
@@ -4478,10 +4478,10 @@ def mig_alignment(intent, text):
         k = next((i for i, ln in enumerate(lines) if re.match(r"^- \[.\] 2\.42 prd-generation\b", ln)), None)
         if k is not None:
             handed = lines[k].startswith("- [x]") and bool(JIRA_KEY.search(intent_row(read(Path(intent) / "intent.md") or "", "Jira Epic")))
-            new = ("- [S] 2.43 design-alignment · intent đã có Epic trên Jira và đã giao Dev trước khi có stage này" if handed
+            new = ("- [S] 2.43 design-alignment · intent đã có Epic trên Jira và đã bàn giao cho Dev trước khi có stage này" if handed
                    else "- [ ] 2.43 design-alignment")
             lines.insert(k + 1, new)
-            plan.append(("thêm stage 2.43 design-alignment", "state.md", "bỏ qua, đã giao Dev" if handed else "chưa làm"))
+            plan.append(("thêm stage 2.43 design-alignment", "state.md", "bỏ qua, đã bàn giao cho Dev" if handed else "chưa làm"))
     if was_open:
         set_current(lines, "Stage", "2.43 design-alignment: chờ Design PIC, Tech PIC, QA PIC viết file thiết kế từ PRD đã duyệt")
         set_current(lines, "Next action", "Tạo ux-design.md, tech-design.md, test-design.md từ template theo engine/stages/design-alignment.md; "

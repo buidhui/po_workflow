@@ -30,5 +30,5 @@ Sau khi PRD được duyệt, `/po-stories` sinh một file CSV theo mẫu impor
 
 - Không còn thư mục file story Markdown; `intents/<intent>/stories/` chỉ chứa các bản CSV theo phiên bản PRD.
 - Các PIC vẫn cần quyền ghi repo cho HLD Brief, không cần cho phần giao việc.
-- Điều kiện giao Dev chỉ kiểm phía PO: PRD đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn. Độ phủ test case do QA theo dõi trên Jira.
+- Điều kiện sẵn sàng chỉ kiểm phía PO: PRD đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn. Độ phủ test case do QA theo dõi trên Jira.
 - Khi PRD đổi, script in story nào đổi so với bản CSV trước để PO sửa trên Jira.

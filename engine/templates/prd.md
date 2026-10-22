@@ -175,7 +175,7 @@ stateDiagram-v2
 
 ### Tiền điều kiện
 
-*Trạng thái dữ liệu, quyền, cấu hình phải có trước. US khác phải xong trước thì ghi mã `US<n>`: story này chỉ đủ điều kiện giao Dev khi US đó đạt.*
+*Trạng thái dữ liệu, quyền, cấu hình phải có trước. US khác phải xong trước thì ghi mã `US<n>`: story này chỉ đủ điều kiện sẵn sàng khi US đó đạt.*
 
 ### Luồng chính
 

@@ -7,7 +7,7 @@
 | Mốc | Khi nào | Đầu vào | Kết quả |
 |---|---|---|---|
 | Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba team viết `ux-design.md`, `tech-design.md`, `test-design.md` từ PRD | Họp trên Decision Brief, 3 PIC ký; cỡ story và thay đổi PRD được thống nhất |
-| Giao Dev | Sau gate 2.43; profile S sau gate 2.42 | Story List import lên Jira | Story đạt điều kiện giao Dev |
+| Bàn giao cho Dev | Sau gate 2.43; profile S sau gate 2.42 | Story List import lên Jira | Story đạt điều kiện sẵn sàng |
 
 ## Story và chia việc
 
@@ -26,7 +26,7 @@ Sau khi PRD được duyệt, và với profile M, L sau gate 2.43, `/po-stories
 | Description | Mô tả, điều kiện trước, kịch bản, tiêu chí chấp nhận, giao diện và validate, business rule, dữ liệu, NFR, ngoài phạm vi, tham chiếu tới PRD, tag và mã màn lấy từ `ux-design.md`. Viết theo cú pháp Jira, mã đầy đủ | Khối US trong PRD |
 | Epic Link | Mã Epic | Dòng Jira Epic của `intent.md`. Intent có nhiều Epic thì ghi thêm `U2: <mã Epic>` để gán theo Unit |
 | Labels, 3 cột | Mã tính năng, mã story, mã tính năng kèm Unit | PRD, bảng Units |
-| Comment | Nguồn PRD và tag, kết quả điều kiện giao Dev, câu hỏi còn mở của story, nhắc Dev điền story point và thứ tự | PRD |
+| Comment | Nguồn PRD và tag, kết quả điều kiện sẵn sàng, câu hỏi còn mở của story, nhắc Dev điền story point và thứ tự | PRD |
 
 - PRD là nguồn duy nhất của nội dung nghiệp vụ. Không sửa phần mô tả trên Jira ngoài change request.
 - Chỉ ghi CSV từ PRD đã duyệt, và với profile M, L thì sau khi 2.43 được duyệt. Chưa đủ thì lệnh chỉ in bản xem trước.
@@ -43,7 +43,7 @@ Sau khi PRD được duyệt, và với profile M, L sau gate 2.43, `/po-stories
 
 Câu hỏi về nghiệp vụ ghi bằng comment trên story, gắn người phải trả lời. Câu trả lời làm đổi PRD thì PO đi qua change request; không sửa nghiệp vụ ngay trên Jira.
 
-## Điều kiện giao Dev, DoR
+## Điều kiện sẵn sàng, DoR
 
 Checkpoint là buổi họp trên Decision Brief ở 2.43. Story được giao cho Dev khi:
 1. PRD đã duyệt.
