@@ -16,7 +16,8 @@ Theo dõi và kiểm:
   po-tools.py check   <intent> <stage-slug> [--strict]
       Kiểm máy artifact của stage: heading bắt buộc, thẻ nguồn, [Qn] và [DECn] có thật,
       chữ mẫu còn sót, thẻ US đủ chín mục, mục cấm trong PRD; ở 2.43 thêm giới hạn từ và chữ ký của
-      Decision Brief, độ phủ của ba file thiết kế so với PRD,
+      Decision Brief, độ phủ của ba file thiết kế so với PRD; mã có ở bản đã duyệt mà bản này không còn,
+      US đổi tên hẳn so với bản đã duyệt,
       cột ưu tiên của FR. Với PRD còn kiểm: mã AC trùng, BR chưa có AC trỏ tới, frontmatter
       thiếu feature, AC thiếu Given, When, Then, sơ đồ trạng thái lệch bảng chuyển trạng thái;
       từ khó kiểm chứng chỉ là gợi ý. Mã thoát 0; --strict trả 1 khi có cảnh báo.
@@ -51,14 +52,33 @@ Ghi chép:
       review còn ứng với bản hiện tại không.
   po-tools.py approve <intent> <stage-slug> --words "<lời PO>" [--who <tên>] [--version X.Y] [--dry-run]
                       [--accept-warnings "<lời PO>"] [--accept-review-gap "<lời PO>"]
+                      [--accept-items "<mã>,<mã>" --item-words "<lời PO nêu từng mã>"]
       Ghi một lần duyệt: version, status, approved_at ở frontmatter; chụp archive; thêm DEC;
       cập nhật state.md; in dòng tiến độ. Chỉ chạy khi stage đang [?], và khi:
       - lời PO có nguyên văn trong sổ lượt người .po/turns.jsonl, ghi sau lần sửa artifact cuối;
         PO tự gõ lệnh trong terminal thì không cần sổ;
+      - không còn câu chặn chưa trả lời; ở 2.4 và 2.42 trace không còn GAP, ORPHAN; mã có ở bản đã duyệt
+        trước không biến mất. Từng mục còn lại chỉ qua khi PO quyết riêng: --accept-items liệt kê mã,
+        --item-words là lời PO có nêu từng mã;
       - kiểm máy không còn cảnh báo, hoặc PO chấp nhận bằng --accept-warnings;
       - stage bật AI Reviewer thì lần review mới nhất ứng với đúng bản hiện tại, hoặc PO chấp nhận
         bằng --accept-review-gap. Lời chấp nhận cũng phải có trong sổ và được ghi vào DEC.
       --dry-run kiểm như thật, chỉ in, không ghi.
+  po-tools.py skip <intent> <stage-slug> --words "<lời PO>" --reason "<lý do>"
+      Bỏ qua stage chưa làm hoặc đang làm: [S] kèm lý do, thêm DEC. Lời PO phải nằm trong 3 lượt gần nhất.
+      Stage có Execution conditional mà điều kiện không xảy ra: bỏ --words, AI ghi kèm lý do.
+  po-tools.py profile <intent> <S|M|L> --words "<lời PO>" --reason "<lý do>"
+      Đổi profile: stage của profile mới chưa có thì thêm [ ], stage ngoài profile chưa làm thì thành [S].
+  po-tools.py switch <intent> <reviewer|summary|learnings> <on|off> --words "<lời PO>"
+      Bật, tắt nghi thức cho intent này, ghi ở dòng Switches của state.md.
+  po-tools.py cr <intent> <CRn> <nhan|hoan|bac|dong> --words "<lời PO>" [--reopen <stage>[,<stage>]]
+      Quyết định của PO về change request. nhan: mở lại stage đã duyệt thành [R], ghi Open CR. dong: chỉ khi
+      các stage mở lại đã duyệt lại. Hook không cho AI tự đổi trạng thái CR, Open CR hay mở lại stage.
+  po-tools.py reopen <intent> <stage-slug> --words "<lời PO>" --reason "<lý do>"
+      Ghi nhầm Approve: đưa stage [x] về [?], thêm DEC; bản chụp archive giữ nguyên.
+  po-tools.py sign-start <intent>
+      Ghi dấu bản Decision Brief gửi PIC ký: reviews/sign-decision-brief-v<version>.digest. Chữ ký chỉ tính khi
+      đúng tên PIC ở intent.md, đúng bản đã gửi, và Decision Brief không đổi sau đó.
   po-tools.py archive <intent> <stage-slug> <artifact> [--label <nhãn>]
       Chép artifact vào archive/<slug>/<tên>-v<version>-<YYYYMMDD>.md, hoặc
       <tên>-<nhãn>-<YYYYMMDD>.md khi có --label. Từ chối ghi đè.
@@ -84,6 +104,7 @@ Engine:
       file câu hỏi luồng v1 sang dạng ## Q<n>, chụp lại bản duyệt kèm DEC. Không đụng archive, reviews.
 """
 import datetime
+import difflib
 import hashlib
 import json
 import os
@@ -819,7 +840,7 @@ def open_crs(intent, so):
             continue
         for cells, _ in t["rows"]:
             st = clean(cell(cells, sc)).lower()
-            if clean(cell(cells, 0)) and not st.startswith(("đóng", "closed", "huỷ", "hủy", "bác", "rejected", "done", "xong")):
+            if clean(cell(cells, 0)) and not st.startswith(("đóng", "closed", "huỷ", "hủy", "bác", "hoãn", "rejected", "done", "xong", "chờ")):
                 out.append("decisions.md: %s %s" % (clean(cell(cells, 0)), clean(cell(cells, sc))))
     return out
 
@@ -859,6 +880,19 @@ def stage_file(intent, slug, which="main"):
 
 def us_key(us):
     return int(us[2:])
+
+
+TRACE_LAST = {}
+
+
+def trace_findings(intent):
+    """GAP và ORPHAN của trace, không in gì. None khi trace không chạy được."""
+    import contextlib
+    import io
+    TRACE_LAST.clear()
+    with contextlib.redirect_stdout(io.StringIO()):
+        code = trace(intent)
+    return dict(TRACE_LAST) if code in (0, 1) else None
 
 
 def trace(intent, write_out=False):
@@ -997,6 +1031,7 @@ def trace(intent, write_out=False):
         orphans += ac_orph
         ac_note = "prd.md chưa có dòng AC nào"
 
+    TRACE_LAST.update(gaps=list(gaps), orphans=list(orphans))
     day0 = today().isoformat()
     result = "Đạt" if not gaps and not orphans else "Không đạt"
     body = [
@@ -1045,7 +1080,8 @@ def trace(intent, write_out=False):
 class Warns(object):
     KINDS = [("heading", "Mục bắt buộc"), ("tag", "Thẻ nguồn"), ("ref", "Thẻ trỏ sai"),
              ("handoff", "Artifact bàn giao"), ("card", "Thẻ US"), ("split", "Cỡ story"), ("words", "Giới hạn từ"),
-             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký"), ("diagram", "Sơ đồ")]
+             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký"), ("diagram", "Sơ đồ"),
+             ("idgone", "Mã có ở bản đã duyệt, bản này không còn"), ("id", "Mã đổi nghĩa")]
 
     def __init__(self):
         self.items, self.info, self.seen = [], [], set()
@@ -1367,6 +1403,16 @@ def check_artifact(ctx, W, st, path):
 
     # sơ đồ: vòng đời trạng thái khớp bảng, theo engine/standards/diagrams.md
     check_lifecycle(W, f, lines, b0)
+    # mã ổn định so với bản duyệt gần nhất: BABOK 3.4, ISO 29148 mục 5.2.8.2, permanent traceability keys của AWS
+    chg = id_changes(intent, st.slug, path)
+    if chg:
+        over, gone, renamed = chg
+        if gone:
+            W.add("idgone", f, None, "%s có ở bản v%s, bản này không còn. Mã đã cấp không xoá: giữ dòng và ghi 'bỏ', 'chuyển sang', "
+                  "'gộp vào' theo id-conventions.md; approve chặn cho tới khi xử lý hoặc PO quyết từng mã" % (", ".join(gone), over))
+        for n, a, b_, moved in renamed:
+            W.add("id", f, None, "US%d ở bản v%s là %s, bản này là %s%s. Story khác thì nhận mã mới, không dùng lại mã cũ"
+                  % (n, over, snippet(a, 40), snippet(b_, 40), (": tên cũ nay nằm ở " + ", ".join("US%d" % m for m in moved) + ", có dấu hiệu đánh lại mã") if moved else ""))
     # BABOK 7.2: từ khó kiểm ở dòng yêu cầu, chỉ gợi ý
     if stem in ("requirements", "prd"):
         for i in range(b0, len(lines)):
@@ -1489,13 +1535,7 @@ def check_artifact(ctx, W, st, path):
         W.info.append("%s: mục 1 đến 9 có %d từ, giới hạn %d (%s)" % (f, total, BRIEF_WORD_LIMIT, ", ".join(parts)))
         if total > BRIEF_WORD_LIMIT:
             W.add("words", f, None, "Phần AI viết (mục 1 đến 9) có %d từ, quá giới hạn %d" % (total, BRIEF_WORD_LIMIT))
-        signs = sign_status(lines)
-        for who in SIGNERS:
-            st_ = signs.get(who)
-            if st_ is None:
-                W.add("sign", f, None, "Bảng Ký thiếu dòng %s" % who)
-            elif st_.lower() not in SIGNED:
-                W.add("sign", f, None, "%s chưa ký, đang ghi '%s'%s" % (who, st_ or "trống", ": gate là Request Changes" if st_.lower() == "yêu cầu sửa" else ""))
+        check_signatures(intent, W, f, text, lines)
     if stem == "prd":
         legacy = prd_is_legacy(lines)
         per_us = {}
@@ -1606,20 +1646,6 @@ def count_words(lines):
             continue
         n += sum(1 for tok in s.split() if re.search(r"\w", tok))
     return n
-
-
-def sign_status(lines):
-    """{vai: trạng thái} từ bảng Ký của Decision Brief: cột Vai và cột Trạng thái."""
-    out = {}
-    for t in parse_tables(lines):
-        vc, sc = col(t["header"], "Vai"), col(t["header"], "Trạng thái")
-        if vc is None or sc is None:
-            continue
-        for cells, _ in t["rows"]:
-            who = clean(cell(cells, vc))
-            if who in SIGNERS:
-                out[who] = clean(cell(cells, sc))
-    return out
 
 
 def exact_col(header, name):
@@ -1908,6 +1934,11 @@ def said(w, t):
     return False
 
 
+NO_TURNS = ("không thấy sổ lượt người %s. Lời %s phải do PO nói. Hook ghi sổ chỉ chạy khi Claude Code mở đúng thư mục gốc "
+            "của repo này: VS Code mở folder repo, hoặc chạy claude trong thư mục repo; mở ở thư mục cha hay thêm repo như "
+            "thư mục phụ thì hook trong .claude/settings.json không chạy. Không mở lại được thì PO tự chạy lệnh này trong terminal.")
+
+
 def presence(words, since, label):
     """Lời PO phải có nguyên văn trong một lượt người ghi sau mốc since, như HUMAN_TURN của AWS AI-DLC.
     Trả None khi đạt, câu lý do khi không. PO tự gõ lệnh trong terminal thì coi là có mặt."""
@@ -1915,11 +1946,11 @@ def presence(words, since, label):
         return None
     turns = human_turns()
     if turns is None:
-        return ("không thấy sổ lượt người %s. Lời %s phải do PO nói: mở phiên Claude Code ở gốc repo để hook trong "
-                ".claude/settings.json ghi sổ, hoặc PO tự chạy lệnh này trong terminal." % (show(TURNS), label))
+        return NO_TURNS % (show(TURNS), label)
     w = norm_words(words)
     if len(w) < 2:
         return "lời %s quá ngắn để đối chiếu với lời PO." % label
+    since = since.replace(microsecond=0)  # sổ ghi tới giây
     for ts, text in turns:
         if ts >= since and said(w, norm_words(text)):
             return None
@@ -1934,7 +1965,7 @@ def stage_artifacts(intent, st, fallback=None):
 
 
 def machine_warnings(intent, st):
-    """Số cảnh báo của po-tools.py check cho stage; 0 khi stage chưa có artifact theo template mới."""
+    """Số cảnh báo của po-tools.py check cho stage, trừ mã biến mất vì approve xét riêng; 0 khi chưa có artifact."""
     files = [p for p in stage_artifacts(intent, st)]
     if not files:
         return 0
@@ -1943,7 +1974,7 @@ def machine_warnings(intent, st):
         check_artifact(ctx, W, st, p)
     if st.slug == "design-alignment":
         design_coverage(intent, W)
-    return len(W.items)
+    return len([w for w in W.items if w[0] != "idgone"])
 
 
 def art_digest(intent, arts):
@@ -1966,7 +1997,7 @@ def review_files(intent, slug):
 
 def reviewer_needed(so, st):
     """Stage có bật AI Reviewer với profile của intent, và state.md không tắt reviewer."""
-    if re.search(r"reviewer:\s*off", so.text or "", re.I):
+    if switch_value(so.text, "reviewer") == "off":
         return False
     prof = clean(so.fm.get("profile", "")).upper()[:1]
     return st.code in stages().reviewers.get(prof, [])
@@ -2012,7 +2043,34 @@ def review_start(intent, slug):
     return 0
 
 
-def approve(intent, slug, words, who=None, version=None, dry=False, accept_warnings=None, accept_review_gap=None):
+def gate_items(intent, st, path):
+    """Mục approve không cho qua bằng một lời chấp nhận chung: (mã, loại, nội dung).
+    Câu chặn chưa trả lời, theo bước 4 của stage protocol AWS; GAP và ORPHAN của trace ở 2.4 và 2.42; mã có ở bản đã
+    duyệt mà bản này không còn."""
+    out = []
+    qs, v2 = parse_questions(read(Path(intent) / st.dir / st.questions))
+    for q in qs:
+        if q["blocking"] and not q["answered"]:
+            out.append((q["id"], "câu chặn chưa trả lời", snippet(q["title"], 60)))
+    if st.slug in ("user-stories", "prd-generation"):
+        tr = trace_findings(intent)
+        if tr is not None:
+            for kind in ("gaps", "orphans"):
+                for x in tr[kind]:
+                    if st.slug == "user-stories" and ("prd.md" in x or x.startswith(("AC", "BR"))):
+                        continue
+                    m = re.match(r"(N?FR\d+(?:\.\d+)*|US\d+|AC\d+\.\d+|BR\d+\.\d+[a-z]?)", x)
+                    if m:
+                        out.append((m.group(1), "GAP" if kind == "gaps" else "ORPHAN", x))
+    chg = id_changes(intent, st.slug, path)
+    if chg:
+        for g in chg[1]:
+            out.append((g, "mã biến mất", "có ở bản v%s, bản này không còn" % chg[0]))
+    return out
+
+
+def approve(intent, slug, words, who=None, version=None, dry=False, accept_warnings=None, accept_review_gap=None,
+            accept_items=None, item_words=None):
     intent = resolve_intent(intent)
     S = stages()
     st = S.by_slug.get(slug)
@@ -2049,6 +2107,36 @@ def approve(intent, slug, words, who=None, version=None, dry=False, accept_warni
         print("Không ghi duyệt: " + msg)
         return 2
     notes, said = [], [words.strip()]
+    items = gate_items(intent, st, path)
+    acc = set(x.strip().upper() for x in re.split(r"[,\s]+", accept_items or "") if x.strip())
+    left = [it for it in items if it[0].upper() not in acc]
+    if left:
+        ids = []
+        for it in left:
+            if it[0] not in ids:
+                ids.append(it[0])
+        print("Không ghi duyệt: còn %d mục phải sửa, hoặc PO quyết từng mục:" % len(left))
+        for i_, kind, txt in left:
+            print("- %s, %s: %s" % (i_, kind, txt))
+        print("Sửa artifact hoặc trả lời câu hỏi. PO quyết giữ nguyên từng mục, như hoãn câu chặn hay nhận GAP, thì thêm "
+              "--accept-items \"%s\" --item-words \"<lời PO có nêu từng mã>\"." % ",".join(ids))
+        return 2
+    used = []
+    for it in items:
+        if it[0] not in used:
+            used.append(it[0])
+    if used:
+        msg = presence(item_words, since, "quyết từng mục") if (item_words or "").strip() else "thiếu --item-words, lời PO quyết từng mục."
+        if msg:
+            print("Không ghi duyệt: " + msg)
+            return 2
+        nw = norm_words(item_words)
+        miss = [x for x in used if not re.search(r"(?<!\w)%s(?!\w)" % re.escape(x.lower()), nw)]
+        if miss:
+            print("Không ghi duyệt: lời PO ở --item-words phải nêu từng mã được quyết; thiếu %s." % ", ".join(miss))
+            return 2
+        notes.append("quyết từng mục: %s" % ", ".join(used))
+        said.append(item_words.strip())
     nwarn = machine_warnings(intent, st)
     if nwarn:
         if not (accept_warnings or "").strip():
@@ -2141,6 +2229,565 @@ def approve(intent, slug, words, who=None, version=None, dry=False, accept_warni
         print("Gợi ý tag git cho bản bàn giao: %s" % tag)
         print('Sau khi commit: git tag -a %s -m "%s v%s đã duyệt" && git push origin %s' % (tag, stem, newv, tag))
     return 0
+
+
+# ================================================================ quyết định của PO ngoài gate
+# Theo ENGINE_OWNED_STATE_TRANSITIONS của AWS AI-DLC: bỏ qua stage, đổi profile, tắt nghi thức, nhận change request,
+# mở lại stage đã duyệt là chuyển trạng thái do engine làm, cần lượt người thật. Hook chặn AI sửa tay các dòng này.
+RECENT_TURNS = 3
+SWITCH_KEYS = {"reviewer": "reviewer", "summary": "summary confirmation", "learnings": "learnings"}
+CR_ACTIONS = {"nhan": "Nhận", "hoan": "Hoãn", "bac": "Bác", "dong": "Đóng"}
+GUARD_ROWS = ("Profile", "Switches", "Open CR")
+
+
+def presence_recent(words, label):
+    """Lời PO cho một quyết định ngoài gate: có nguyên văn trong một trong RECENT_TURNS lượt người gần nhất."""
+    if sys.stdin.isatty() and sys.stdout.isatty():
+        return None
+    turns = human_turns()
+    if turns is None:
+        return NO_TURNS % (show(TURNS), label)
+    w = norm_words(words)
+    if len(w) < 2:
+        return "lời %s quá ngắn để đối chiếu với lời PO." % label
+    for _, text in turns[-RECENT_TURNS:]:
+        if said(w, norm_words(text)):
+            return None
+    return ("không thấy lời %s \"%s\" trong %d lượt gần nhất của PO. Hỏi PO, chờ PO trả lời, sau đó chép đúng lời PO vào --words."
+            % (label, (words or "").strip(), RECENT_TURNS))
+
+
+def state_view(text):
+    """Phần state.md do engine giữ: dấu của từng stage, profile, các dòng Profile, Switches, Open CR."""
+    lines = (text or "").splitlines()
+    marks, rows = {}, {}
+    for ln in lines:
+        m = STAGE_LINE.match(ln)
+        if m:
+            marks[m.group(3)] = m.group(1)
+        r = re.match(r"^\|\s*(%s)\s*\|(.*)\|\s*$" % "|".join(re.escape(x) for x in GUARD_ROWS), ln)
+        if r:
+            rows[r.group(1)] = clean(r.group(2))
+    return {"marks": marks, "profile": clean(frontmatter(text).get("profile", "")), "rows": rows}
+
+
+def state_guard(old, new):
+    """Câu lý do khi lần sửa tay state.md đổi phần do engine giữ; None khi được phép."""
+    a, b = state_view(old), state_view(new)
+    for slug, m in a["marks"].items():
+        n = b["marks"].get(slug)
+        if n == m:
+            continue
+        if n is None:
+            return ("Không xoá dòng stage %s khỏi state.md. Bỏ qua stage thì PO quyết và chạy po-tools.py skip; "
+                    "đổi profile thì chạy po-tools.py profile." % slug)
+        if n == "x":
+            return ("Chỉ python3 engine/scripts/po-tools.py approve được đánh dấu stage đã duyệt [x], sau khi PO duyệt ở gate. "
+                    "Đánh [?] khi trình gate, chờ PO trả lời, sau đó chạy approve với lời PO.")
+        if m == "x":
+            return ("Stage %s đã duyệt. Mở lại phải do PO quyết: change request thì chạy po-tools.py cr <intent> CR<n> nhan "
+                    "--reopen %s --words \"<lời PO>\"; ghi nhầm Approve thì chạy po-tools.py reopen." % (slug, slug))
+        if n == "S":
+            return ("Bỏ qua stage %s phải do PO quyết: hỏi PO, sau đó chạy python3 engine/scripts/po-tools.py skip <intent> %s "
+                    "--words \"<lời PO>\" --reason \"<lý do>\"." % (slug, slug))
+    for slug, n in b["marks"].items():
+        if slug not in a["marks"] and n not in " -":
+            return "Dòng stage mới %s chỉ thêm ở trạng thái [ ]; các trạng thái khác do lệnh của po-tools.py ghi." % slug
+    if a["profile"] != b["profile"] or a["rows"].get("Profile") != b["rows"].get("Profile"):
+        return ("Đổi profile phải do PO quyết: hỏi PO, sau đó chạy python3 engine/scripts/po-tools.py profile <intent> <S|M|L> "
+                "--words \"<lời PO>\" --reason \"<lý do>\".")
+    if a["rows"].get("Switches") != b["rows"].get("Switches"):
+        return ("Bật, tắt nghi thức phải do PO quyết: chạy python3 engine/scripts/po-tools.py switch <intent> "
+                "<reviewer|summary|learnings> <on|off> --words \"<lời PO>\".")
+    if a["rows"].get("Open CR") != b["rows"].get("Open CR"):
+        return ("Dòng Open CR do po-tools.py cr ghi khi PO quyết Nhận hoặc Đóng một change request. "
+                "Ghi CR mới vào decisions.md với trạng thái Chờ quyết, trình PO, sau đó chạy lệnh cr.")
+    return None
+
+
+def cr_rows(text):
+    """{mã CR: trạng thái} từ bảng Change requests của decisions.md."""
+    out = {}
+    for t in parse_tables((text or "").splitlines()):
+        sc = col(t["header"], "Trạng thái")
+        if not t["header"] or clean(cell(t["header"], 0)).upper() != "CR" or sc is None:
+            continue
+        for cells, k in t["rows"]:
+            cid = clean(cell(cells, 0))
+            if re.fullmatch(r"CR-?\d+", cid):
+                out[cid] = (clean(cell(cells, sc)), k, sc)
+    return out
+
+
+def cr_guard(old, new):
+    """Câu lý do khi lần sửa tay decisions.md đổi trạng thái CR; None khi được phép."""
+    a, b = cr_rows(old), cr_rows(new)
+    for cid, (s, _, _) in a.items():
+        if cid not in b:
+            return "Không xoá dòng %s khỏi bảng Change requests." % cid
+        if b[cid][0] != s:
+            return ("Trạng thái của %s do PO quyết: chạy python3 engine/scripts/po-tools.py cr <intent> %s <nhan|hoan|bac|dong> "
+                    "--words \"<lời PO>\"." % (cid, cid))
+    for cid, (s, _, _) in b.items():
+        if cid not in a and s.lower() not in EMPTY and not s.lower().startswith(("chờ", "đề xuất")):
+            return "CR mới ghi trạng thái Chờ quyết; Nhận, Hoãn, Bác do lệnh po-tools.py cr ghi sau khi PO quyết."
+    return None
+
+
+def switch_value(text, key):
+    row = state_view(text)["rows"].get("Switches", "")
+    m = re.search(r"%s:\s*(on|off)" % re.escape(SWITCH_KEYS.get(key, key)), row, re.I)
+    return m.group(1).lower() if m else None
+
+
+def profile_stages():
+    """{profile: [mã stage]} từ cột Stage của bảng Ba profile trong profiles.md."""
+    out = {}
+    for t in parse_tables((read(PROFILES_MD) or "").splitlines()):
+        pc, sc = col(t["header"], "Profile"), col(t["header"], "Stage")
+        if pc is None or sc is None:
+            continue
+        for cells, _ in t["rows"]:
+            p = clean(cell(cells, pc)).strip("*")
+            if p:
+                out[p] = re.findall(r"\d+\.\d+", cell(cells, sc))
+    return out
+
+
+def po_decision(intent, so, lines, code, slug, what, words, who, log):
+    """Ghi state.md đã sửa và một DEC cho quyết định ngoài gate. Trả mã DEC."""
+    t_now = now()
+    stamp = t_now.strftime("%Y-%m-%d %H:%M")
+    dec_text = read(intent / "decisions.md") or "# Decisions: %s\n" % intent.name
+    dec_id = next_dec(dec_text)
+    new_dec, _ = add_decision(dec_text, {"DEC": dec_id, "Ngày": stamp, "Stage": code, "Quyết định": what,
+                                         "Nguyên văn": "-" if words == "-" else '"%s"' % words.strip().strip('"“”'),
+                                         "Người quyết": who, "Read when": slug})
+    append_log(lines, "- %s %s bởi %s, %s" % (stamp, log, who, dec_id))
+    write(so.path, "\n".join(lines) + "\n")
+    write(intent / "decisions.md", new_dec)
+    return dec_id
+
+
+def decision_prelude(intent, words, label):
+    intent = resolve_intent(intent)
+    so = load_state(intent)
+    if so is None:
+        print("Không thấy state.md trong", intent)
+        return None, None
+    if not (words or "").strip():
+        print("Thiếu --words: cần lời của PO, nguyên văn.")
+        return None, None
+    msg = presence_recent(words, label)
+    if msg:
+        print("Không ghi: " + msg)
+        return None, None
+    return intent, so
+
+
+def find_entry(so, slug):
+    S = stages()
+    st = S.by_slug.get(slug)
+    if st is None:
+        print("Không có stage '%s'. Stage hợp lệ: %s" % (slug, ", ".join(s.slug for s in S.list)))
+        return None, None
+    idx = next((k for k, e in enumerate(so.stages) if e["slug"] == slug), None)
+    if idx is None:
+        print("state.md không có dòng của stage %s." % slug)
+        return None, None
+    return st, idx
+
+
+def skip_cmd(intent, slug, words, reason, who=None):
+    """Bỏ qua một stage chưa làm hoặc đang làm, khi PO quyết. Stage có Execution conditional mà điều kiện không xảy ra
+    thì AI ghi được không cần lời PO, theo stage-protocol.md; vẫn có DEC và Log."""
+    if not (reason or "").strip():
+        print("Thiếu --reason: lý do bỏ qua, ghi vào state.md.")
+        return 2
+    st0 = stages().by_slug.get(slug)
+    cond = st0 is not None and clean(st0.meta.get("Execution", "")).lower().startswith("conditional")
+    if cond and not (words or "").strip():
+        intent = resolve_intent(intent)
+        so = load_state(intent)
+        if so is None:
+            print("Không thấy state.md trong", intent)
+            return 2
+        words, who = "-", "AI, theo điều kiện của stage"
+    else:
+        if not (words or "").strip() and st0 is not None:
+            print("Thiếu --words. %s %s luôn chạy với profile này; bỏ qua phải do PO quyết." % (st0.code, st0.name))
+            return 2
+        intent, so = decision_prelude(intent, words, "bỏ qua stage")
+        if so is None:
+            return 2
+    st, idx = find_entry(so, slug)
+    if st is None:
+        return 2
+    e = so.stages[idx]
+    if e["mark"] not in " -":
+        print("Không bỏ qua được: %s %s đang [%s]. Chỉ bỏ qua stage chưa làm [ ] hoặc đang làm [-]." % (e["code"], st.name, e["mark"]))
+        return 2
+    lines = so.text.splitlines()
+    lines[e["line"]] = "- [S] %s %s · %s" % (e["code"], e["slug"], reason.strip())
+    entries = [dict(x) for x in so.stages]
+    entries[idx]["mark"] = "S"
+    cur = clean(so.current.get("Stage", ("", None))[0])
+    if cur.startswith(e["code"] + " ") or cur == e["code"]:
+        nxt = next_entry(entries, idx)
+        set_current(lines, "Stage", "%s %s" % (nxt["code"], nxt["slug"]) if nxt else "Mọi stage của profile đã xong")
+        set_current(lines, "Next action", ("Bắt đầu %s" % entry_label(nxt)) if nxt else "Không còn stage nào")
+    who = (who or git_user() or "PO").strip()
+    dec = po_decision(intent, so, lines, e["code"], slug, "Bỏ qua %s %s: %s%s" % (e["code"], st.name, reason.strip(),
+                      ", điều kiện chạy không xảy ra" if words == "-" else ""), words, who, "%s skipped" % e["code"])
+    print("Đã bỏ qua %s %s, ghi %s." % (e["code"], st.name, dec))
+    print(progress_line(entries, entries[idx], next_entry(entries, idx)))
+    return 0
+
+
+def profile_cmd(intent, prof, words, reason, who=None):
+    """Đổi profile khi PO quyết: stage của profile mới chưa có thì thêm [ ], stage ngoài profile chưa làm thì thành [S]."""
+    prof = (prof or "").strip().upper()
+    plist = profile_stages()
+    if prof not in plist:
+        print("Profile phải là một trong %s." % ", ".join(sorted(plist)))
+        return 2
+    if not (reason or "").strip():
+        print("Thiếu --reason: lý do đổi profile.")
+        return 2
+    intent, so = decision_prelude(intent, words, "đổi profile")
+    if so is None:
+        return 2
+    old = clean(so.fm.get("profile", "")).upper()[:1]
+    if old == prof:
+        print("Intent đang ở profile %s, không đổi gì." % prof)
+        return 2
+    want = plist[prof]
+    S = stages()
+    order = [x.code for x in S.list]
+    lines = so.text.splitlines()
+    changes = []
+    have = set(e["code"] for e in so.stages)
+    for e in so.stages:
+        if e["code"] not in want and e["mark"] in " -":
+            lines[e["line"]] = "- [S] %s %s · ngoài profile %s" % (e["code"], e["slug"], prof)
+            changes.append("%s thành [S]" % e["code"])
+        elif e["code"] in want and e["mark"] == "S" and "ngoài profile" in e["rest"]:
+            lines[e["line"]] = "- [ ] %s %s" % (e["code"], e["slug"])
+            changes.append("%s thành [ ]" % e["code"])
+    for c in [x for x in order if x in want and x not in have]:
+        st = S.by_code.get(c)
+        if st is None:
+            continue
+        same = []
+        for i, ln in enumerate(lines):
+            m = STAGE_LINE.match(ln)
+            if m and m.group(2) in order and order.index(m.group(2)) < order.index(c) and S.by_code[m.group(2)].phase == st.phase:
+                same.append(i)
+        if same:
+            at = max(same) + 1
+        else:
+            hd = next((i for i, ln in enumerate(lines) if re.match(r"^###\s+%s\b" % re.escape(st.phase.upper()), ln)), None)
+            if hd is None:
+                hd = next((i for i, ln in enumerate(lines) if re.match(r"^##\s+Current\b", ln)), len(lines))
+                lines[hd:hd] = ["### %s" % st.phase.upper()]
+            at = hd + 1
+        lines.insert(at, "- [ ] %s %s" % (st.code, st.slug))
+        changes.append("thêm %s" % c)
+    lines = set_frontmatter("\n".join(lines), [("profile", prof)]).splitlines()
+    for i, ln in enumerate(lines):
+        if re.match(r"^\|\s*Profile\s*\|", ln):
+            lines[i] = table_line(["Profile", "%s, lý do: %s" % (prof, reason.strip())])
+    who = (who or git_user() or "PO").strip()
+    dec = po_decision(intent, so, lines, "-", "profile", "Đổi profile %s thành %s: %s. %s" % (old or "?", prof, reason.strip(),
+                      "; ".join(changes) or "không đổi stage"), words, who, "profile %s thành %s" % (old or "?", prof))
+    print("Đã đổi profile %s thành %s, ghi %s. %s." % (old or "?", prof, dec, "; ".join(changes) or "Không đổi stage nào"))
+    return 0
+
+
+def switch_cmd(intent, key, val, words, who=None):
+    """Bật, tắt summary confirmation, reviewer, learnings cho intent này khi PO quyết."""
+    key, val = (key or "").strip().lower(), (val or "").strip().lower()
+    if key not in SWITCH_KEYS or val not in ("on", "off"):
+        print("Cú pháp: switch <intent> <%s> <on|off> --words \"<lời PO>\"." % "|".join(SWITCH_KEYS))
+        return 2
+    intent, so = decision_prelude(intent, words, "đổi nghi thức")
+    if so is None:
+        return 2
+    name = SWITCH_KEYS[key]
+    lines = so.text.splitlines()
+    k = next((i for i, ln in enumerate(lines) if re.match(r"^\|\s*Switches\s*\|", ln)), None)
+    if k is None:
+        at = next((i + 1 for i, ln in enumerate(lines) if re.match(r"^\|\s*Profile\s*\|", ln)), None)
+        if at is None:
+            print("state.md không có bảng đầu với dòng Profile để thêm dòng Switches.")
+            return 2
+        lines.insert(at, table_line(["Switches", "%s: %s" % (name, val)]))
+    else:
+        cells = split_cells(lines[k])
+        v = cell(cells, 1)
+        if re.search(r"%s:\s*(on|off)" % re.escape(name), v, re.I):
+            if re.search(r"%s:\s*%s\b" % (re.escape(name), val), v, re.I):
+                print("%s đang %s, không đổi gì." % (name, val))
+                return 2
+            v = re.sub(r"(%s:\s*)(on|off)" % re.escape(name), r"\g<1>" + val, v, flags=re.I)
+        else:
+            v = (v.strip() + " · " if v.strip() else "") + "%s: %s" % (name, val)
+        lines[k] = table_line(["Switches", v.strip()] + cells[2:])
+    who = (who or git_user() or "PO").strip()
+    dec = po_decision(intent, so, lines, "-", "switch", "Đặt %s: %s cho intent này" % (name, val), words, who, "%s %s" % (name, val))
+    print("Đã đặt %s: %s, ghi %s." % (name, val, dec))
+    return 0
+
+
+def cr_cmd(intent, cid, action, words, reopen=None, who=None):
+    """Ghi quyết định của PO về một change request: Nhận kèm mở lại stage, Hoãn, Bác, Đóng."""
+    action = (action or "").strip().lower()
+    if action not in CR_ACTIONS:
+        print("Quyết định phải là một trong: %s." % ", ".join(CR_ACTIONS))
+        return 2
+    intent, so = decision_prelude(intent, words, "quyết change request")
+    if so is None:
+        return 2
+    dtext = read(intent / "decisions.md") or ""
+    rows = cr_rows(dtext)
+    cid = (cid or "").strip().upper()
+    if cid not in rows:
+        print("decisions.md chưa có %s trong bảng Change requests. Thêm dòng CR với trạng thái Chờ quyết trước." % cid)
+        return 2
+    status, k, sc = rows[cid]
+    lines = so.text.splitlines()
+    open_now = [x for x in re.split(r"[,\s]+", clean(so.current.get("Open CR", ("", None))[0])) if re.fullmatch(r"CR-?\d+", x, re.I)]
+    reopened = []
+    if action == "nhan":
+        slugs = [x for x in re.split(r"[,\s]+", reopen or "") if x]
+        if not slugs:
+            print("Nhận CR phải kèm --reopen <stage-slug>[,<stage-slug>]: các stage mở lại để sửa, theo change-request.md mục 2.")
+            return 2
+        for slug in slugs:
+            st, idx = find_entry(so, slug)
+            if st is None:
+                return 2
+            e = so.stages[idx]
+            if e["mark"] != "x":
+                print("%s %s đang [%s], chưa duyệt nên sửa được không cần mở lại." % (e["code"], st.name, e["mark"]))
+                return 2
+            lines[e["line"]] = "- [R] %s %s%s · mở lại theo %s" % (e["code"], e["slug"], e["rest"], cid)
+            reopened.append(e)
+        first = min(reopened, key=lambda e: code_key(e["code"]))
+        set_current(lines, "Stage", "%s %s" % (first["code"], first["slug"]))
+        set_current(lines, "Next action", "Sửa %s theo %s, trình lại gate" % (entry_label(first), cid))
+        set_current(lines, "Open CR", ", ".join(open_now + [cid]) if cid not in open_now else ", ".join(open_now))
+    elif action == "dong":
+        if not status.lower().startswith("nhận"):
+            print("Chỉ đóng CR đã Nhận; %s đang '%s'." % (cid, status or "trống"))
+            return 2
+        left = [e for e in so.stages if e["mark"] in "R?-" and cid in e["rest"]]
+        if left:
+            print("Không đóng được %s: stage mở lại theo CR này chưa duyệt lại: %s." % (cid, ", ".join(entry_label(e) for e in left)))
+            return 2
+        rest = [x for x in open_now if x.upper() != cid]
+        set_current(lines, "Open CR", ", ".join(rest) if rest else "none")
+    elif status and not status.lower().startswith("chờ"):
+        print("%s đang '%s'; Hoãn, Bác chỉ ghi cho CR đang Chờ quyết." % (cid, status))
+        return 2
+    label = CR_ACTIONS[action]
+    dl = dtext.splitlines()
+    cells = split_cells(dl[k])
+    cells = cells + [""] * (sc + 1 - len(cells))
+    cells[sc] = label
+    dl[k] = table_line(cells)
+    write(intent / "decisions.md", "\n".join(dl) + "\n")
+    who = (who or git_user() or "PO").strip()
+    what = "%s %s%s" % (cid, label, (", mở lại " + ", ".join(entry_label(e) for e in reopened)) if reopened else "")
+    dec = po_decision(intent, so, lines, reopened[0]["code"] if reopened else "-", "change-request", what, words, who, what)
+    print("Đã ghi %s, %s." % (what, dec))
+    if reopened:
+        print("Chụp bản trước khi sửa: python3 engine/scripts/po-tools.py archive intents/%s <stage-slug> <artifact> --label pre-%s" % (intent.name, cid))
+    return 0
+
+
+def reopen_cmd(intent, slug, words, reason, who=None):
+    """Đưa stage đã duyệt về [?] khi PO nói đã ghi nhầm Approve; bản chụp archive giữ nguyên."""
+    if not (reason or "").strip():
+        print("Thiếu --reason.")
+        return 2
+    intent, so = decision_prelude(intent, words, "mở lại gate")
+    if so is None:
+        return 2
+    st, idx = find_entry(so, slug)
+    if st is None:
+        return 2
+    e = so.stages[idx]
+    if e["mark"] != "x":
+        print("%s %s đang [%s], không phải stage đã duyệt." % (e["code"], st.name, e["mark"]))
+        return 2
+    lines = so.text.splitlines()
+    lines[e["line"]] = "- [?] %s %s%s" % (e["code"], e["slug"], e["rest"])
+    set_current(lines, "Stage", "%s %s" % (e["code"], e["slug"]))
+    set_current(lines, "Next action", "Trình lại gate %s" % entry_label(e))
+    who = (who or git_user() or "PO").strip()
+    dec = po_decision(intent, so, lines, e["code"], slug, "Mở lại gate %s: %s" % (entry_label(e), reason.strip()), words, who,
+                      "%s reopened" % e["code"])
+    print("Đã đưa %s về [?], ghi %s. Bản chụp trong archive/ giữ nguyên; lần duyệt sau lên số phụ mới." % (entry_label(e), dec))
+    return 0
+
+
+# ================================================================ chữ ký Decision Brief
+def brief_digest(text):
+    """sha256 phần thân Decision Brief, bỏ mục Ký vì PIC ghi vào đó sau khi nhận bản."""
+    out, skip = [], False
+    for ln in norm_body(text).splitlines():
+        if re.match(r"^##\s", ln):
+            skip = bool(re.match(r"^##\s+(?:\d+\.\s*)?Ký\b", ln))
+        if not skip:
+            out.append(ln)
+    return hashlib.sha256("\n".join(out).encode("utf-8")).hexdigest()
+
+
+def sign_digests(intent):
+    """[(version, sha)] của các lần gửi ký, theo version tăng dần."""
+    d = Path(intent) / "reviews"
+    out = []
+    if d.is_dir():
+        for p in d.glob("sign-decision-brief-v*.digest"):
+            m = re.match(r"sign-decision-brief-v(\d+(?:\.\d+)*)\.digest$", p.name)
+            s = re.search(r"sha256 ([0-9a-f]{64})", read(p) or "")
+            if m and s:
+                out.append((m.group(1), s.group(1)))
+    return sorted(out, key=lambda x: ver_tuple(x[0]))
+
+
+def sign_start(intent):
+    """Ghi dấu bản Decision Brief gửi PIC ký: reviews/sign-decision-brief-v<version>.digest."""
+    intent = resolve_intent(intent)
+    p = stage_file(intent, "design-alignment")
+    text = read(p)
+    if text is None:
+        print("Chưa có %s." % rel(p, intent))
+        return 2
+    ver = clean(frontmatter(text).get("version", ""))
+    if not ver_tuple(ver):
+        print("Frontmatter của Decision Brief chưa có version.")
+        return 2
+    dg = brief_digest(text)
+    dst = intent / "reviews" / ("sign-decision-brief-v%s.digest" % ver)
+    if dst.exists():
+        if re.search(r"sha256 %s" % dg, read(dst) or ""):
+            print("Bản %s đã ghi dấu gửi ký, nội dung không đổi." % ver)
+            return 0
+        print("Decision Brief đã đổi nhưng version vẫn là %s: tăng version trước khi gửi ký lại." % ver)
+        return 2
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    write(dst, "sha256 %s\nversion: %s\ncreated: %s\n" % (dg, ver, now().strftime("%Y-%m-%d %H:%M")))
+    print("Đã ghi dấu bản %s gửi ký: %s." % (ver, rel(dst, intent)))
+    print("Mỗi PIC ghi ở bảng Ký: tên như ở intent.md, cột Bản là %s, trạng thái. Decision Brief đổi sau mốc này thì chữ ký cũ không còn tính." % ver)
+    return 0
+
+
+def pic_names(intent):
+    out = {}
+    for t in parse_tables((read(Path(intent) / "intent.md") or "").splitlines()):
+        for cells, _ in [(t["header"], None)] + t["rows"]:
+            r = clean(cell(cells, 0))
+            if r in SIGNERS and clean(cell(cells, 1)) and "<" not in cell(cells, 1):
+                out[r] = clean(cell(cells, 1))
+    return out
+
+
+def sign_rows(lines):
+    """{vai: {name, ver, status}} từ bảng Ký; ver là None khi bảng chưa có cột Bản."""
+    out = {}
+    for t in parse_tables(lines):
+        vc, sc = col(t["header"], "Vai"), col(t["header"], "Trạng thái")
+        if vc is None or sc is None:
+            continue
+        nc, bc = col(t["header"], "Người", "Tên"), exact_col(t["header"], "Bản")
+        for cells, _ in t["rows"]:
+            who = clean(cell(cells, vc))
+            if who in SIGNERS:
+                out[who] = {"name": clean(cell(cells, nc)) if nc is not None else "", "status": clean(cell(cells, sc)),
+                            "ver": clean(cell(cells, bc)) if bc is not None else None}
+    return out
+
+
+def check_signatures(intent, W, f, text, lines):
+    """Chữ ký ở 2.43 chỉ tính khi đúng người ghi ở intent.md, đúng bản đã gửi ký, và Decision Brief không đổi sau đó."""
+    digs = sign_digests(intent)
+    sver = None
+    if not digs:
+        W.add("sign", f, None, "Chưa ghi dấu bản gửi ký: chạy po-tools.py sign-start trước khi gửi Decision Brief cho PIC")
+    else:
+        sver, ssha = digs[-1]
+        if ssha != brief_digest(text):
+            W.add("sign", f, None, "Decision Brief đổi sau khi gửi ký bản %s: tăng version, chạy sign-start, lấy lại chữ ký" % sver)
+    names = pic_names(intent)
+    rows = sign_rows(lines)
+    for who in SIGNERS:
+        r = rows.get(who)
+        if r is None:
+            W.add("sign", f, None, "Bảng Ký thiếu dòng %s" % who)
+            continue
+        st_ = r["status"]
+        if st_.lower() not in SIGNED:
+            W.add("sign", f, None, "%s chưa ký, đang ghi '%s'%s" % (who, st_ or "trống", ": gate là Request Changes" if st_.lower() == "yêu cầu sửa" else ""))
+            continue
+        if r["ver"] is None:
+            W.add("sign", f, None, "Bảng Ký chưa có cột Bản: không biết PIC ký bản nào", once=True)
+        elif sver and ver_tuple(r["ver"]) != ver_tuple(sver):
+            W.add("sign", f, None, "%s ký bản %s, bản đang gửi ký là %s: PIC ký lại" % (who, r["ver"] or "trống", sver))
+        want = names.get(who)
+        if not want:
+            W.add("sign", f, None, "intent.md chưa ghi tên %s: không đối chiếu được người ký" % who)
+        elif norm_words(r["name"]) != norm_words(want):
+            W.add("sign", f, None, "%s ký tên '%s', intent.md ghi '%s'" % (who, r["name"] or "trống", want))
+
+
+# ================================================================ mã ổn định
+STABLE_ID = re.compile(r"(?<![\w-])(US\d+|AC-?\d+\.\d+|BR-?\d+\.\d+[a-z]?|N?FR\d+(?:\.\d+)*|TR\d+|SC\d+|SCR\d+)\b")
+US_TITLE = re.compile(r"^#{2,3}\s+`?US(\d+)`?\s*[:.\-–]\s*(.+?)\s*$")
+
+
+def id_set(text):
+    lines = (text or "").splitlines()
+    out = set()
+    for ln in lines[body_start(lines):]:
+        for m in STABLE_ID.finditer(ln):
+            out.add(m.group(1).replace("-", ""))
+    return out
+
+
+def us_titles(text):
+    out = {}
+    for ln in (text or "").splitlines():
+        m = US_TITLE.match(ln)
+        if m and int(m.group(1)) not in out:
+            out[int(m.group(1))] = clean(m.group(2))
+    return out
+
+
+def similar(a, b):
+    return difflib.SequenceMatcher(None, norm_words(a), norm_words(b)).ratio()
+
+
+def id_key(x):
+    m = re.match(r"([A-Z]+)(\d+)(?:\.(\d+))?", x)
+    return (m.group(1), int(m.group(2)), int(m.group(3) or 0)) if m else (x, 0, 0)
+
+
+def id_changes(intent, slug, path):
+    """So mã với bản duyệt gần nhất trong archive/: (version cũ, mã biến mất, US đổi tên). None khi chưa có bản duyệt."""
+    arc, ver = latest_archive(intent, slug, Path(path).stem)
+    if arc is None:
+        return None
+    old, new = read(arc), read(path)
+    gone = sorted(id_set(old) - id_set(new), key=id_key)
+    renamed = []
+    ot, nt = us_titles(old), us_titles(new)
+    for n in sorted(set(ot) & set(nt)):
+        if similar(ot[n], nt[n]) < 0.5:
+            moved = [m for m in sorted(nt) if m != n and similar(ot[n], nt[m]) >= 0.8]
+            renamed.append((n, ot[n], nt[n], moved))
+    return ver, gone, renamed
 
 
 # ================================================================ next
@@ -3228,7 +3875,7 @@ def stories_cmd(intent, write_out=False, only=None):
         print("\nChỉ ghi Story List từ PRD đã duyệt. PRD đang %s." % (meta["status"] or "chưa ghi status"))
         return 2
     if not meta["aligned"]:
-        print("\nChỉ ghi Story List sau khi 2.43 Design Alignment được duyệt: các team đã thiết kế từ PRD và đã chốt trên Decision Brief.")
+        print("\nChỉ ghi Story List sau khi 2.43 Design Alignment được duyệt: các team đã thiết kế từ PRD và đã thống nhất trên Decision Brief.")
         return 2
     write(path, jira_csv_text(rows))
     print("\nĐã ghi %s, %d story. Import lên Jira bằng chức năng import CSV." % (rel(path, meta["intent"]), len(rows)))
@@ -3255,7 +3902,8 @@ def dor(intent, story=None):
 
 # ================================================================ manifest
 MANIFEST_DIRS = ("engine", ".claude/commands", ".claude/agents")
-MANIFEST_FILES = ("AGENTS.md", "CLAUDE.md", "GLOSSARY.md", "README.md", "USER-GUIDE.md", "DOMAIN-SETUP.md", "VERSION", "CHANGELOG.md")
+MANIFEST_FILES = ("AGENTS.md", "CLAUDE.md", "GLOSSARY.md", "README.md", "USER-GUIDE.md", "DOMAIN-SETUP.md", "VERSION", "CHANGELOG.md",
+                  ".claude/settings.json")
 
 
 def engine_files():
@@ -3359,9 +4007,16 @@ def doctor():
     sj = read(REPO / ".claude" / "settings.json") or ""
     if "po-hook.py" in sj:
         hb = ROOT / ".po" / "hooks" / "UserPromptSubmit.last"
-        add("Hook ghi lượt PO", "Đạt" if hb.exists() else "Cảnh báo",
-            ("chạy lần cuối %s" % (read(hb) or "").strip()) if hb.exists() else "chưa chạy lần nào trên máy này, approve sẽ từ chối",
-            "-" if hb.exists() else "Mở Claude Code ở gốc repo và gõ một câu; kiểm python3 chạy được, xem .claude/settings.json")
+        cpd = os.environ.get("CLAUDE_PROJECT_DIR", "")
+        elsewhere = bool(cpd) and Path(cpd).resolve() != ROOT.resolve()
+        fix = ("Mở Claude Code đúng thư mục gốc repo: VS Code chọn File, Open Folder, mở thư mục repo, sau đó mở phiên mới; "
+               "ở terminal thì cd vào repo, sau đó chạy claude. Kiểm python3 chạy được, xem .claude/settings.json")
+        if elsewhere:
+            add("Hook ghi lượt PO", "Cảnh báo", "phiên Claude Code đang mở ở %s, không phải gốc repo, nên hook của repo không chạy" % cpd, fix)
+        else:
+            add("Hook ghi lượt PO", "Đạt" if hb.exists() else "Cảnh báo",
+                ("chạy lần cuối %s" % (read(hb) or "").strip()) if hb.exists() else
+                "chưa chạy lần nào trên máy này, approve và các lệnh quyết định sẽ từ chối", "-" if hb.exists() else fix)
     rc, out = git("status", "--porcelain", "--", "intents", "memory")
     if rc != 0:
         add("Thay đổi chưa commit ở intents/, memory/", "Cảnh báo", "không chạy được git status", "Kiểm lại git")
@@ -3472,7 +4127,8 @@ def doctor():
 
 # ================================================================ selftest
 COMMANDS = ("status", "next", "check", "trace", "approve", "review-start", "archive", "replay", "feature-id",
-            "stories", "dor", "index", "migrate", "doctor", "manifest", "engine-check", "selftest")
+            "stories", "dor", "index", "migrate", "doctor", "manifest", "engine-check", "selftest",
+            "skip", "profile", "switch", "cr", "reopen", "sign-start")
 # Lệnh không có ca fixture, kèm lý do. Mọi lệnh khác phải có ít nhất một ca trong engine/tests/fixtures.
 UNTESTED = {"selftest": "chính là bộ chạy các ca",
             "manifest": "đọc file engine của repo; CI chạy engine-check --strict trên repo thật ở mỗi lần push",
@@ -4092,12 +4748,30 @@ def main(argv):
             pos, kv = parse_opts(args, flags=("--strict",))
             return check(pos[0], pos[1], strict=kv.get("--strict", False))
         if cmd == "approve" and len(args) >= 2:
-            pos, kv = parse_opts(args, flags=("--dry-run",), opts=("--words", "--who", "--version", "--accept-warnings", "--accept-review-gap"))
+            pos, kv = parse_opts(args, flags=("--dry-run",), opts=("--words", "--who", "--version", "--accept-warnings", "--accept-review-gap",
+                                                                    "--accept-items", "--item-words"))
             if "--words" not in kv:
                 print("Thiếu --words \"<lời duyệt nguyên văn của PO>\".")
                 return 2
             return approve(pos[0], pos[1], kv["--words"], kv.get("--who"), kv.get("--version"), kv.get("--dry-run", False),
-                           kv.get("--accept-warnings"), kv.get("--accept-review-gap"))
+                           kv.get("--accept-warnings"), kv.get("--accept-review-gap"), kv.get("--accept-items"), kv.get("--item-words"))
+        if cmd == "skip" and len(args) >= 2:
+            pos, kv = parse_opts(args, opts=("--words", "--reason", "--who"))
+            return skip_cmd(pos[0], pos[1], kv.get("--words"), kv.get("--reason"), kv.get("--who"))
+        if cmd == "profile" and len(args) >= 2:
+            pos, kv = parse_opts(args, opts=("--words", "--reason", "--who"))
+            return profile_cmd(pos[0], pos[1], kv.get("--words"), kv.get("--reason"), kv.get("--who"))
+        if cmd == "switch" and len(args) >= 3:
+            pos, kv = parse_opts(args, opts=("--words", "--who"))
+            return switch_cmd(pos[0], pos[1], pos[2] if len(pos) > 2 else "", kv.get("--words"), kv.get("--who"))
+        if cmd == "cr" and len(args) >= 3:
+            pos, kv = parse_opts(args, opts=("--words", "--reopen", "--who"))
+            return cr_cmd(pos[0], pos[1], pos[2] if len(pos) > 2 else "", kv.get("--words"), kv.get("--reopen"), kv.get("--who"))
+        if cmd == "reopen" and len(args) >= 2:
+            pos, kv = parse_opts(args, opts=("--words", "--reason", "--who"))
+            return reopen_cmd(pos[0], pos[1], kv.get("--words"), kv.get("--reason"), kv.get("--who"))
+        if cmd == "sign-start" and args:
+            return sign_start(args[0])
         if cmd == "review-start" and len(args) >= 2:
             return review_start(args[0], args[1])
         if cmd == "replay" and args:

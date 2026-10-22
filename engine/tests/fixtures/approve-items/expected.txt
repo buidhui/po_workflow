@@ -1,0 +1,35 @@
+# Profile M, PRD sửa theo CR1 chờ duyệt lại bản 1.1. Câu Q1 chặn chưa trả lời, FR2 chưa có US, bản 1.0 có US2, AC2.1,
+# BR2.1 mà bản này không còn, US1 đổi tên hẳn. Một lời chấp nhận chung không cho qua các mục này; PO phải nêu từng mã.
+[check prd-generation]
+mã thoát: 0
+có: AC2.1, BR2.1, US2 có ở bản v1.0, bản này không còn
+có: US1 ở bản v1.0 là "Đổi mật khẩu khi đã đăng nhập", bản này là "Xuất báo cáo doanh thu theo tháng"
+
+[@hook hooks/p-duyet.json]
+mã thoát: 0
+
+[approve prd-generation --words "duyệt prd bản sửa" --accept-warnings "duyệt prd bản sửa"]
+mã thoát: 2
+có: còn 5 mục phải sửa, hoặc PO quyết từng mục
+có: - Q1, câu chặn chưa trả lời
+có: - FR2, GAP: FR2 chưa có US
+có: - US2, mã biến mất: có ở bản v1.0
+có: --accept-items "Q1,FR2,AC2.1,BR2.1,US2"
+không có: Q2
+
+[@hook hooks/prompt.json]
+mã thoát: 0
+
+[approve prd-generation --words "duyệt prd bản sửa" --accept-items "Q1,FR2,AC2.1,BR2.1,US2" --item-words "hoãn Q1 sang đợt sau, FR2 làm đợt sau"]
+mã thoát: 2
+có: phải nêu từng mã được quyết; thiếu AC2.1, BR2.1, US2
+
+[approve prd-generation --words "duyệt prd bản sửa" --accept-items "Q1,FR2,AC2.1,BR2.1,US2" --item-words "Hoãn Q1 sang đợt sau, FR2 làm đợt sau, US2 bỏ theo CR1 cùng AC2.1 và BR2.1"]
+mã thoát: 2
+có: kiểm máy còn 4 cảnh báo
+
+[approve prd-generation --words "duyệt prd bản sửa" --accept-items "Q1,FR2,AC2.1,BR2.1,US2" --item-words "Hoãn Q1 sang đợt sau, FR2 làm đợt sau, US2 bỏ theo CR1 cùng AC2.1 và BR2.1" --accept-warnings "duyệt prd bản sửa" --who "Người thử"]
+mã thoát: 0
+có: Đã duyệt 2.42 PRD Generation: prd.md v1.1.
+tệp decisions.md có: quyết từng mục: Q1, FR2, AC2.1, BR2.1, US2; chấp nhận 4 cảnh báo kiểm máy
+tệp state.md có: - [x] 2.42 prd-generation

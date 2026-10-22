@@ -41,7 +41,7 @@ Không hỏi kỹ thuật cho Dev. Depth Minimal ở S: chỉ câu chặn.
 `requirements.md` theo template:
 1. Intent summary.
 2. Functional requirements, nhóm theo khả năng. `FR1`, `FR1.1`. Mỗi FR một hành vi, viết theo một trong năm mẫu EARS của template, kiểm chứng được; ưu tiên MoSCoW; cột Phục vụ ghi mục tiêu `O<n>` hoặc Unit `U<n>`; cờ Existing, New hay Changed kèm mã KB; thẻ nguồn. FR Changed dẫn mã rule KB mà nó đổi.
-3. Non-functional requirements có chỉ số đo được. Yêu cầu phi chức năng PO nêu mà chưa có chỉ số thì ghi OQ để chốt chỉ số, không bỏ, theo AWS: NFR mơ hồ là việc cần sửa.
+3. Non-functional requirements có chỉ số đo được. Yêu cầu phi chức năng PO nêu mà chưa có chỉ số thì ghi OQ để PO xác định chỉ số, không bỏ, theo AWS: NFR mơ hồ là việc cần sửa.
 4. Constraints: nghiệp vụ, tenant và hằng số, tích hợp, dữ liệu cũ.
 5. Assumptions & Open Questions: `OQ1`... có cờ Chặn và owner.
 6. Out of scope.

@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/decisions.md",
+  "old_string": "| CR1 | 2026-10-02 | Thêm rule khoá tài khoản | FR3 | Chờ quyết |",
+  "new_string": "| CR1 | 2026-10-02 | Thêm rule khoá tài khoản | FR3 | Chờ quyết |\n| CR2 | 2026-10-03 | Bỏ email nhắc | FR1 | Nhận |"
+ }
+}

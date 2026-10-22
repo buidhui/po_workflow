@@ -1,6 +1,6 @@
 # /new-intent
 
-Tương đương ba stage Initialization của AWS: Workspace Scaffold, Workspace Detection, State Init. Chạy một mạch, chỉ hỏi PO ở cuối để chốt profile.
+Tương đương ba stage Initialization của AWS: Workspace Scaffold, Workspace Detection, State Init. Chạy một mạch, chỉ hỏi PO ở cuối để xác nhận profile.
 
 ## Đầu vào
 Tham số lệnh: tên do PO đặt, tự do, có thể kèm mô tả yêu cầu. Không ép định dạng, không hỏi năm hay bộ phận. Thiếu tên thì hỏi một câu.

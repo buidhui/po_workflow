@@ -35,7 +35,7 @@ AI điều phối giữ một sổ cho mỗi stage, `reviews/findings-<slug>.md`
 
 - Sau mỗi review: cấp ID tiếp theo cho finding mới, `R-NN`; cập nhật trạng thái finding cũ theo review: Fixed, Open.
 - Tại gate: PO chấp nhận rủi ro thì *Accepted risk* kèm lý do; PO bác thì *Rejected* kèm lý do nguyên văn; PO nói đã sửa mà chưa sửa thì *Reopened*.
-- Finding Accepted risk hoặc Rejected là quyết định đã chốt. Review sau không được chấm lại hay diễn đạt lại. Thông điệp hoàn thành chỉ trình finding Open và Reopened.
+- Finding Accepted risk hoặc Rejected là quyết định đã đưa ra. Review sau không được chấm lại hay diễn đạt lại. Thông điệp hoàn thành chỉ trình finding Open và Reopened.
 
 ## Review không hoàn tất
 Reviewer dừng mà không có file review, hoặc file không có dòng Verdict: gọi lại đúng một lần với cùng đầu vào. Lần hai vẫn hỏng thì chạy `review-start` để lấy số lần kế tiếp, ghi file review của lần đó với Verdict NOT-READY và một dòng "Review chưa hoàn tất", sau đó đưa ra gate để PO quyết chạy lại hay chấp nhận rủi ro. Không sửa file review reviewer đã ghi, hook chặn việc này.

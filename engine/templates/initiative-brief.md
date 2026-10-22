@@ -35,7 +35,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 |---|---|---|---|
 <Rủi ro dùng mã `RK<n>` của sổ rủi ro trong `decisions.md`; giả định dùng mã của artifact gốc.>
 
-## 5. Quyết định đã chốt
+## 5. Quyết định đã đưa ra
 | DEC | Nội dung | Ngày |
 |---|---|---|
 

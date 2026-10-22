@@ -1,0 +1,4 @@
+{
+ "hook_event_name": "UserPromptSubmit",
+ "prompt": "Duyệt PRD bản sửa. Hoãn Q1 sang đợt sau, FR2 làm đợt sau, US2 bỏ theo CR1 cùng AC2.1 và BR2.1"
+}

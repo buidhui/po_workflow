@@ -16,7 +16,7 @@
 | Requires | requirements-analysis |
 | Profiles | M, L |
 | Reviewer | none |
-| Summary confirmation | required, dưới dạng PO chốt Related Features Map |
+| Summary confirmation | required, dưới dạng PO xác nhận Related Features Map |
 | Template | `engine/templates/related-features-map.md` · `engine/templates/impact-matrix.md` |
 | Checklist | `engine/verification/impact-analysis.md` |
 
@@ -27,7 +27,7 @@ Biết tính năng mới chạm gì trên hệ đang chạy trước khi chọn 
 
 ## Bước A, Related Features Map, thay cho bước Ask
 Chủ động quét requirements, KB, schema và API spec theo `domain.md`, dựng bảng: Hệ · Tính năng, Module, Entity, Endpoint · New hay Existing · Nguồn · Ghi chú. Bao quát module, màn, entity, API và job, role, rule hiện tại, NFR, mail event, tính năng Hidden. Chưa chắc thì `❓PO`.
-Bảng này là Consolidated Summary của stage. Trình bảng, hỏi PO: đủ chưa, sót gì, dòng nào không liên quan, `❓PO` nào chốt được. Chỉ sang bước B khi PO xác nhận. Nhận ra dễ hơn nhớ ra: PO soát một bản nháp thay vì kể từ đầu.
+Bảng này là Consolidated Summary của stage. Trình bảng, hỏi PO: đủ chưa, sót gì, dòng nào không liên quan, `❓PO` nào trả lời được. Chỉ sang bước B khi PO xác nhận. Nhận ra dễ hơn nhớ ra: PO soát một bản nháp thay vì kể từ đầu.
 KB mỏng ở vùng này thì hỏi PO seed danh sách hệ liên quan trước, AI mở rộng sau. Câu hỏi khác chỉ khi cần giả định về hệ cũ hay dữ liệu cũ.
 
 ## Bước B, Impact Matrix

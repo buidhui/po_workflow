@@ -100,7 +100,7 @@ File stage bắt đầu bằng tiêu đề `# <mã> <tên>`, tiếp theo là m�
 Theo `gate-protocol.md`: đánh dấu `[?]`, thông điệp hoàn thành, câu hỏi bài học, câu hỏi duyệt, kết thúc lượt và chờ PO trả lời. Chỉ sau khi PO trả lời mới ghi quyết định nguyên văn bằng `po-tools.py approve`, in dòng tiến độ và tên stage kế. AI không tự đánh `[x]`: hook chặn, và approve chỉ ghi khi lời duyệt có trong lượt PO thật.
 
 ## Stage có điều kiện không áp dụng
-Execution `conditional` và điều kiện không xảy ra: ghi `[S]` kèm lý do vào `state.md`, nói một dòng, sang stage kế. Không mở gate.
+Execution `conditional` và điều kiện không xảy ra: chạy `po-tools.py skip <intent> <stage> --reason "<lý do>"`, nói một dòng, sang stage kế. Không mở gate. Stage luôn chạy với profile đang dùng thì chỉ bỏ qua khi PO quyết, theo `gate-protocol.md` mục Quyết định của PO ngoài gate.
 
 ## Vượt profile giữa chừng
 Phát hiện dấu hiệu vượt profile theo `profiles.md`: nói ngay, và tại gate gần nhất đưa lựa chọn Add [stage]. Không tự chạy tiếp đường cũ.
@@ -108,7 +108,7 @@ Phát hiện dấu hiệu vượt profile theo `profiles.md`: nói ngay, và t�
 ## Luôn đúng
 - Tách `Fact`, `Assumption`, `Open Question`, `Recommendation`. Không tự điền dữ kiện. Thiếu nhẹ ghi Assumption. Thiếu làm đổi phạm vi, rule, dữ liệu, luồng thì ghi Open Question và dừng.
 - Ô không suy được: `❓PO`. Suy luận: `[suy ra]`.
-- Không chốt thay PO. Không thiết kế kỹ thuật chi tiết. Không hỏi kỹ thuật cho Dev. Chỉ hỏi câu mà đáp án làm đổi phạm vi hoặc business rule.
+- Không quyết thay PO. Không thiết kế kỹ thuật chi tiết. Không hỏi kỹ thuật cho Dev. Chỉ hỏi câu mà đáp án làm đổi phạm vi hoặc business rule.
 - KB là bản chụp. Chạm vùng nào thì đọc lại nguồn vùng đó. Quá một tháng kể từ ngày đối chiếu cuối thì đọc lại trước. Vùng KB chưa phủ: `❓PO`, không kết luận.
 - Có endpoint không có nghĩa là có tính năng. Hidden vẫn phải xét.
 - Một stage một lượt. Mỗi stage kết thúc ở gate.

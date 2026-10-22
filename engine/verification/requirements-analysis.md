@@ -11,7 +11,7 @@
 - [ ] Mỗi FR viết theo một mẫu EARS; FR Changed dẫn mã rule KB mà nó đổi
 - [ ] Mọi mục tiêu `O<n>` có ít nhất một FR phục vụ, theo BABOK 7.3
 - [ ] **[BLOCK]** Không có FR mô tả bảng, endpoint, thuật toán. FR mô tả điều phải đúng
-- [ ] NFR có chỉ số đo được. NFR chưa có chỉ số không bị bỏ: ghi OQ để PO chốt chỉ số
+- [ ] NFR có chỉ số đo được. NFR chưa có chỉ số không bị bỏ: ghi OQ để PO xác định chỉ số
 - [ ] Constraints ghi hằng số cứng hay cấu hình
 
 ## Chất lượng theo BABOK 7.2

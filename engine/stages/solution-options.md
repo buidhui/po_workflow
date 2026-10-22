@@ -22,7 +22,7 @@
 Chạy theo `engine/protocol/stage-protocol.md`.
 
 ## Mục đích
-So sánh các hướng giải trước khi chốt, trên nền Impact Matrix đã duyệt. Recommendation có điều kiện, PO quyết tại gate. Plugin stage; AWS chỉ có ADR ở tầng kiến trúc.
+So sánh các hướng giải trước khi chọn, trên nền Impact Matrix đã duyệt. Recommendation có điều kiện, PO quyết tại gate. Plugin stage; AWS chỉ có ADR ở tầng kiến trúc.
 
 ## Ask
 1. PO đã có định hướng chưa. Có thì mô tả ngắn: AI nhận xét alignment với objective, điểm mạnh, gap theo Impact Matrix, gợi ý thêm một hai option. Định hướng của PO vẫn vào bảng như mọi option, quyết định dựa trên đánh đổi, không dựa trên thứ tự đề xuất.

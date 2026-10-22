@@ -12,3 +12,11 @@ Fixture cho selftest: PRD đã duyệt, ba team đã viết file thiết kế, D
 | Mục | Giá trị |
 |---|---|
 | Jira Epic / Story | chưa có |
+
+## Người phụ trách
+| Vai | Tên |
+|---|---|
+| PO | Người thử |
+| Design PIC | An |
+| Tech PIC | Bình |
+| QA PIC | Chi |

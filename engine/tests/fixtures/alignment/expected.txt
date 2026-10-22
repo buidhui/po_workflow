@@ -1,5 +1,10 @@
 # Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt. ux-design có màn cho US1. tech-design thiếu US2 và chưa ghi SCR1 ở phần Frontend, test-design thiếu AC2.2
 # và dựng từ prd@0.9. Decision Brief: QA PIC chưa ký. Story List chỉ ghi được sau khi 2.43 được duyệt.
+[sign-start]
+mã thoát: 0
+có: Đã ghi dấu bản 0.2 gửi ký
+tệp reviews/sign-decision-brief-v0.2.digest có: version: 0.2
+
 [check design-alignment]
 mã thoát: 0
 có: US2 chưa có trong tech-design
@@ -10,6 +15,8 @@ có: QA PIC chưa ký, đang ghi 'Chưa xem'
 không có: ux-design chưa có màn
 không có: Design PIC chưa ký
 không có: Tech PIC chưa ký
+không có: Chưa ghi dấu bản gửi ký
+không có: intent.md chưa ghi tên
 
 [stories]
 mã thoát: 0

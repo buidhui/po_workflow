@@ -27,8 +27,8 @@ Parked: nói "intent đang dừng từ <ngày>", hỏi có tiếp tục không, 
 ## 4. Yêu cầu đặc biệt của PO
 | PO nói | Làm |
 |---|---|
-| "làm lại stage này" | Hỏi xác nhận một lần. Chụp artifact hiện tại vào `archive/` với hậu tố `-redo`. Đặt stage về `[ ]`. Giữ questions file, hỏi PO muốn giữ câu trả lời cũ không |
-| "nhảy tới <stage>" | Nói rõ stage nào sẽ bị bỏ qua và ghi `[S] nhảy qua`. Hỏi xác nhận. Nhảy lùi thì mở lại stage đích và mọi stage sau nó, mỗi stage mở lại hỏi Giữ, Sửa, hay Làm lại |
+| "làm lại stage này" | Stage chưa duyệt: hỏi xác nhận một lần, chụp artifact hiện tại vào `archive/` với hậu tố `-redo`, đặt stage về `[ ]`, giữ questions file, hỏi PO muốn giữ câu trả lời cũ không. Stage đã duyệt: đi `/change-request` |
+| "nhảy tới <stage>" | Nói rõ stage nào sẽ bị bỏ qua, hỏi xác nhận, sau đó chạy `po-tools.py skip` cho từng stage với lời PO và lý do "nhảy qua". Nhảy lùi tới stage đã duyệt là thay đổi sau gate: đi `/change-request` |
 | "thêm stage <X>" | Chuyển `[S] ngoài profile` thành `[ ]`, ghi lý do vào state và một dòng DEC |
 | "dừng hôm nay" | Ghi Parked, nói cách tiếp tục |
 | "tôi đổi yêu cầu", "bổ sung" | Chuyển sang `/change-request` |

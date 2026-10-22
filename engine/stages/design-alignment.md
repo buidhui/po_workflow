@@ -7,7 +7,7 @@
 | Thư mục | `inception/decision-brief` |
 | Phase | inception |
 | Plugin | `po-workflow` |
-| Lệch so với AWS | Stage thêm của PO-Workflow. AWS chia thiết kế theo vai thành nhiều stage do agent làm, mỗi stage một gate: 2.5 Refined Mockups, 2.6 Domain Design, 2.8 Contract Design, 3.1 Functional Design theo Unit, 3.6 Build and Test. Ở đây ba team người viết ba file thiết kế từ PRD đã duyệt, AI đối chiếu và viết Decision Brief, một buổi họp chốt chung. Test Design viết trước khi code là phần thêm; AWS chỉ kiểm tính kiểm thử được của AC ở 2.4 và viết hướng dẫn test ở 3.6. Cách ghi lập trường đồng ý hoặc phản đối và trích nguyên văn bất đồng ở gate theo `stage-protocol-collaborators.md` của AWS; tên Decision Brief theo decision brief của AWS |
+| Lệch so với AWS | Stage thêm của PO-Workflow. AWS chia thiết kế theo vai thành nhiều stage do agent làm, mỗi stage một gate: 2.5 Refined Mockups, 2.6 Domain Design, 2.8 Contract Design, 3.1 Functional Design theo Unit, 3.6 Build and Test. Ở đây ba team người viết ba file thiết kế từ PRD đã duyệt, AI đối chiếu và viết Decision Brief, một buổi họp chung để quyết định. Test Design viết trước khi code là phần thêm; AWS chỉ kiểm tính kiểm thử được của AC ở 2.4 và viết hướng dẫn test ở 3.6. Cách ghi lập trường đồng ý hoặc phản đối và trích nguyên văn bất đồng ở gate theo `stage-protocol-collaborators.md` của AWS; tên Decision Brief theo decision brief của AWS |
 | Execution | always ở M và L |
 | Lead | product. Design PIC, Tech PIC, QA PIC viết file thiết kế và ký |
 | Produces | `inception/decision-brief/decision-brief.md` · `design-alignment-questions.md` |
@@ -23,7 +23,7 @@
 Chạy theo `engine/protocol/stage-protocol.md`.
 
 ## Mục đích
-Các team cần PRD chi tiết để thiết kế. Stage này nhận ba bản thiết kế của Design, Tech, QA viết từ PRD đã duyệt, đối chiếu với PRD, và chốt mọi điểm còn vướng trong một buổi họp trên một tài liệu ngắn là Decision Brief. Story List chỉ sinh sau khi stage này được duyệt, lúc yêu cầu và thiết kế đã khớp nhau. Gate là Alignment gate, cần ba PIC ký.
+Các team cần PRD chi tiết để thiết kế. Stage này nhận ba bản thiết kế của Design, Tech, QA viết từ PRD đã duyệt, đối chiếu với PRD, và giải quyết mọi điểm còn vướng trong một buổi họp trên một tài liệu ngắn là Decision Brief. Story List chỉ sinh sau khi stage này được duyệt, lúc yêu cầu và thiết kế đã khớp nhau. Gate là Alignment gate, cần ba PIC ký.
 
 ## Giao cho các team, ngay sau khi PRD được duyệt
 1. Ghi Design PIC, Tech PIC, QA PIC vào `intent.md` nếu còn trống.
@@ -53,19 +53,20 @@ Chỉ hỏi PO khi cần:
 2. Đọc ba file và đối chiếu: mâu thuẫn giữa các thiết kế; hợp đồng API của tech-design đủ cho các màn của ux-design, mã lỗi khớp câu thông báo của PRD; phía Backend hoặc Frontend ghi Không đổi mà PRD có thay đổi chạm tới phía đó; thiết kế trái business rule hoặc tiêu chí chấp nhận; phụ thuộc giữa các team; độ lớn Tech PIC ước lượng so với mốc cứng; Đề xuất sửa và Phản đối của từng team.
 3. Viết `decision-brief.md` theo template. Chỉ ghi điểm cần người quyết hoặc cần cả nhóm biết; mỗi điểm có lựa chọn, hệ quả và đề xuất. Ý kiến Phản đối chép nguyên văn kèm tên người nêu. Không chép lại nội dung thiết kế. Phần AI viết, mục 1 đến 9, không quá 1.500 từ, kiểm bằng đếm từ. Văn phong bàn giao: không thẻ nguồn, không từ quy trình, mã kèm nội dung.
 4. Frontmatter `inputs:` ghi version của PRD và ba file thiết kế đã dùng. File thiết kế đổi sau đó thì `po-tools.py status` báo.
-5. Bảng Ký điền tên ba PIC, trạng thái "Chưa xem".
+5. Bảng Ký điền tên ba PIC đúng như `intent.md`, cột Bản để trống, trạng thái "Chưa xem".
+6. Trước khi gửi cho PIC: chạy `python3 engine/scripts/po-tools.py sign-start intents/<intent>`. Lệnh ghi dấu bản gửi ký. Decision Brief sửa sau đó thì tăng version và chạy lại, chữ ký cũ không còn tính.
 
 ## Verify
 1. Checklist.
 2. `po-tools.py check` của stage không còn cảnh báo, hoặc cảnh báo còn lại đã nằm trong Decision Brief để họp quyết.
 
 ## Họp và sau họp
-- Họp trên Decision Brief. Mỗi quyết định ghi một DEC, người quyết là người chốt trong họp, nguyên văn nếu có.
+- Họp trên Decision Brief. Mỗi quyết định ghi một DEC, người quyết là người quyết trong họp, nguyên văn nếu có.
 - Quyết định làm đổi PRD: đi `/change-request`, mở lại 2.42, sửa và duyệt lại PRD; sau đó cập nhật `inputs:` và mục liên quan của Decision Brief. Quyết định làm đổi thiết kế: team sửa file của mình.
-- PIC ghi trạng thái của mình ở bảng Ký: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Ký trên repo, hoặc PO ghi theo tin nhắn xác nhận và lưu nguyên văn vào `decisions.md`.
+- PIC ghi ở bảng Ký: tên như ở `intent.md`, cột Bản là version đã đọc, trạng thái Chưa xem, Có ý kiến, Đồng ý hoặc Yêu cầu sửa. Ký trên repo, hoặc PO ghi theo tin nhắn xác nhận và lưu nguyên văn vào `decisions.md`. `po-tools.py check` báo chữ ký sai người, sai bản, hoặc ký trên bản đã đổi.
 
 ## Gate, Alignment
-Trình: điểm đã chốt kèm DEC, điểm còn mở, trạng thái ký từng PIC, ý kiến Phản đối nguyên văn, thay đổi PRD đã làm qua change request. Approve khi ba PIC ghi Đồng ý hoặc Có ý kiến. Một PIC ghi Yêu cầu sửa thì gate là Request Changes. Tới hạn mà còn PIC chưa ký thì PO được chọn Accept as-is ngay, không cần chờ lần Request Changes thứ ba; lý do ghi một DEC, lệnh approve chạy với `--accept-warnings` vì script coi thiếu chữ ký là cảnh báo.
+Trình: điểm đã thống nhất kèm DEC, điểm còn mở, trạng thái ký từng PIC, ý kiến Phản đối nguyên văn, thay đổi PRD đã làm qua change request. Approve khi ba PIC ghi Đồng ý hoặc Có ý kiến. Một PIC ghi Yêu cầu sửa thì gate là Request Changes. Tới hạn mà còn PIC chưa ký thì PO được chọn Accept as-is ngay, không cần chờ lần Request Changes thứ ba; lý do ghi một DEC, lệnh approve chạy với `--accept-warnings` vì script coi thiếu chữ ký là cảnh báo.
 Trước khi trình gate: điền dòng 6 của `verification/phase-check-inception.md` và cập nhật Kết luận. Với profile M, L, đây là phase check Inception.
 Sau Approve: decision-brief lên version 1.0 và được chụp archive. Sau đó chạy `/po-stories` để sinh Story List cho Jira. File thiết kế đổi sau khi duyệt thì team sửa file của mình; thay đổi chạm yêu cầu đi change request.
 

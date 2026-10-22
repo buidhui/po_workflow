@@ -8,7 +8,7 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 ---
 # [Decision Brief] <Tên tính năng>
 
-<Tài liệu cho buổi họp chốt ở 2.43. Chỉ ghi điểm cần người quyết hoặc cần cả nhóm biết; không chép lại PRD hay thiết kế. Mục 1 đến 9 do AI viết, không quá 1.500 từ. Xoá dòng hướng dẫn khi viết.>
+<Tài liệu cho buổi họp quyết định ở 2.43. Chỉ ghi điểm cần người quyết hoặc cần cả nhóm biết; không chép lại PRD hay thiết kế. Mục 1 đến 9 do AI viết, không quá 1.500 từ. Xoá dòng hướng dẫn khi viết.>
 
 ## 1. Tóm tắt
 <Ba đến năm dòng: tính năng làm gì, PRD bản nào, ba bản thiết kế bản nào, mốc cứng, số điểm cần quyết.>
@@ -44,10 +44,10 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 <Chép nguyên văn từng ý kiến Phản đối còn lại sau khi xử lý, kèm tên người nêu. Không có thì ghi "Không có".>
 
 ## 10. Ký
-| Vai | Người | Trạng thái | Ngày | Ghi chú |
-|---|---|---|---|---|
-| Design PIC | | Chưa xem | | |
-| Tech PIC | | Chưa xem | | |
-| QA PIC | | Chưa xem | | |
+| Vai | Người | Bản | Trạng thái | Ngày | Ghi chú |
+|---|---|---|---|---|---|
+| Design PIC | | | Chưa xem | | |
+| Tech PIC | | | Chưa xem | | |
+| QA PIC | | | Chưa xem | | |
 
-Trạng thái: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa.
+Trạng thái: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Người ghi đúng tên ở `intent.md`; Bản là version của Decision Brief mà PIC đã đọc. Decision Brief đổi sau khi gửi ký thì chữ ký cũ không còn tính.

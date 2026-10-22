@@ -24,18 +24,18 @@ Năm câu hỏi chung cho mọi artifact, theo `aidlc-product-lead-agent` của 
 5. Biên có rõ không: trong phạm vi, ngoài phạm vi, để sau.
 
 Thêm bốn điều kiểm cho mọi artifact của PO:
-- Góc đã chốt theo `corner-checklist.md` của domain. Mỗi góc phải là rule, giả định có lý do, hoặc ngoài phạm vi.
+- Góc đã xác định theo `corner-checklist.md` của domain. Mỗi góc phải là rule, giả định có lý do, hoặc ngoài phạm vi.
 - Mọi FR truy được về nhu cầu, mọi US truy được về FR. Mồ côi là finding.
 - Thẻ nguồn còn đủ, assumption chưa bị nâng thành fact.
 - Vùng KB chưa phủ có `❓PO`, không kết luận bừa.
 
 Theo loại artifact:
 - Intent statement và Scope: vấn đề viết theo người gặp, không chứa giải pháp; mục tiêu đo được; không có stakeholder hay vai do AI tự thêm; giả định đã được PO xác nhận; Must không kéo theo Could hoặc Won't; MVP vẫn có xử lý lỗi cơ bản và đạt NFR tối thiểu về bảo mật, toàn vẹn dữ liệu.
-- Requirements: mỗi FR kiểm chứng được, có đạt hoặc không đạt; mâu thuẫn giữa các FR; lỗ hổng so với intent; NFR có chỉ số, NFR chưa có chỉ số phải có OQ để chốt chứ không bị bỏ; có xét audit log cho thao tác nhạy cảm, lưu giữ và xoá dữ liệu, accessibility và thiết bị theo `domain.md`.
+- Requirements: mỗi FR kiểm chứng được, có đạt hoặc không đạt; mâu thuẫn giữa các FR; lỗ hổng so với intent; NFR có chỉ số, NFR chưa có chỉ số phải có OQ để xác định chỉ số, không bị bỏ; có xét audit log cho thao tác nhạy cảm, lưu giữ và xoá dữ liệu, accessibility và thiết bị theo `domain.md`.
 - User stories: mỗi US một mục tiêu hoàn chỉnh của một vai; đủ INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable; mọi FR có US; US gắn Unit và ưu tiên; vai thuộc danh sách vai của domain hoặc được khai báo mới; US chưa làm ghi rõ.
 - PRD: Dev biết làm gì từ mỗi US; mỗi AC có đạt hoặc không đạt; mọi BR có AC trỏ tới; luồng chính và nhánh đáng kể có AC; mỗi US có ít nhất một AC cho nhánh lỗi hoặc bị từ chối, ngưỡng số có AC ở giá trị biên; mỗi US có dòng Ưu tiên; bảng UI có cột Màn hình ghi tên màn và đủ cột; business rule có mã, không trùng; field hiện có không bị ghi là mới; không có thiết kế kỹ thuật như bảng, endpoint, thuật toán; không còn chữ mẫu của template; truy vết FR, US, BR không GAP, không ORPHAN; không dấu vết quy trình; không viết tắt.
 - Màn hình trong `ux-design.md` hoặc Figma, khi PO yêu cầu review riêng: mọi US có giao diện đều có màn; điều hướng giữa các màn đủ; có trạng thái lỗi, rỗng, đang tải; thứ bậc thông tin rõ; có xét accessibility.
-- Decision Brief và Initiative Brief: đọc năm phút hiểu được; mục tóm tắt đủ ý; quyết định cần chốt rõ ràng; không chi tiết thừa; mã kèm nội dung.
+- Decision Brief và Initiative Brief: đọc năm phút hiểu được; mục tóm tắt đủ ý; quyết định cần đưa ra rõ ràng; không chi tiết thừa; mã kèm nội dung.
 
 ## Luật nguồn
 - Lựa chọn PO không chọn trong questions file không phải là nguồn. Artifact biến một lựa chọn không được chọn thành yêu cầu hay thành loại trừ là finding.

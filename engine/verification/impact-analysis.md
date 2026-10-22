@@ -1,7 +1,7 @@
 # Checklist: 2.31 Impact Analysis
 
 ## Related Features Map
-- [ ] **[BLOCK]** PO đã chốt bản đồ: đủ, sót, không liên quan. `❓PO` đã xử lý, không trôi vào matrix
+- [ ] **[BLOCK]** PO đã xác nhận bản đồ: đủ, sót, không liên quan. `❓PO` đã xử lý, không trôi vào matrix
 - [ ] Field, màn Existing được nhận diện ở stage này, không bị coi là mới ở stage sau
 
 ## Nguồn

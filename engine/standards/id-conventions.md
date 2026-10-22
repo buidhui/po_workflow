@@ -45,7 +45,7 @@ Mã nội bộ của PO như `FR1`, `OQ3`, `DEC5` không đi ra ngoài. Mã Unit
 
 ## Luật không đánh lại
 
-- Mã đã cấp không đổi, không dùng lại, kể cả khi mục bị xoá.
+- Mã đã cấp không đổi, không dùng lại, kể cả khi mục bị xoá. Bỏ một mục thì giữ dòng và ghi 'bỏ', kèm CR. `po-tools.py check` và `approve` so mã với bản duyệt gần nhất trong `archive/`: mã của bản trước không còn trong bản mới thì approve chặn, trừ khi PO quyết riêng từng mã; US giữ mã mà đổi tên hẳn thì check cảnh báo có thể đã dùng lại mã.
 - Tách một story: story cũ giữ mã; phần tách ra nhận số story mới. AC chuyển sang story mới nhận mã mới; AC cũ ghi "chuyển sang `AC-...`", không xoá dòng. Test case trỏ mã cũ vì vậy vẫn tìm được đường đi.
 - Gộp hai story: story còn lại giữ mã; story bị gộp ghi "gộp vào `US-...`" và giữ file.
 - Cấp số tính năng: script lấy số lớn nhất đã có cộng một. Hai PO cấp cùng lúc trên hai nhánh có thể trùng số; `po-tools.py status` và `doctor` báo trùng ngay sau khi gộp nhánh, PO đến sau đổi số trước khi bàn giao.

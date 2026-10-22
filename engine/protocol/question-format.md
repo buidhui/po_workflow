@@ -21,7 +21,7 @@ Chặn: có | không
 
 ## Quy tắc đặt câu hỏi
 - Chỉ hỏi câu mà đáp án làm đổi phạm vi, business rule, dữ liệu, luồng, hoặc quyền. Không hỏi kỹ thuật cho Dev.
-- Tra KB, API spec, schema và `decisions.md` trước. Đã có đáp án thì không hỏi. Còn mơ hồ thì hỏi hẹp, nêu đáp án cũ: "Trước đã chốt A ở DEC5, giờ có áp cho trường hợp B không?"
+- Tra KB, API spec, schema và `decisions.md` trước. Đã có đáp án thì không hỏi. Còn mơ hồ thì hỏi hẹp, nêu đáp án cũ: "Trước đã quyết A ở DEC5, giờ có áp cho trường hợp B không?"
 - Mỗi câu tự giải thích. Mã nào xuất hiện thì kèm nội dung: "yêu cầu xuất báo cáo theo nhóm (FR3)", không viết "FR3 còn đúng không?".
 - Một dòng *Vì sao hỏi* khi lý do không hiển nhiên.
 - Lựa chọn A đến D, tối đa bốn, để vừa hộp chọn; trong file luôn có thêm dòng X. Khi không chắc có lựa chọn nào hợp, dùng một trong bốn ô cho "Chưa xác định" để PO không bị ép chọn bừa. Câu thật sự cần năm lựa chọn thì không đưa vào hộp chọn: trình dạng chữ, PO gõ chữ cái.
@@ -51,13 +51,13 @@ Hỏi cách trả lời một lần cho cả intent, ghi vào `state.md`. Stage 
 
 ## Soát sau khi có câu trả lời
 - Từ mơ hồ: "tuỳ", "chắc là", "có thể", "cả hai". Hỏi lại cho tới khi rõ.
-- Mâu thuẫn giữa các câu, hoặc với `decisions.md`: trình hai câu cạnh nhau, giải thích vì sao vênh, hỏi một câu chốt. Không tự chọn một bên.
+- Mâu thuẫn giữa các câu, hoặc với `decisions.md`: trình hai câu cạnh nhau, giải thích vì sao vênh, hỏi một câu để PO quyết. Không tự chọn một bên.
 - Thiếu dữ kiện để sinh artifact: hỏi tiếp, đánh số tiếp.
 - Đáp án không khớp lựa chọn nào và không phải "Khác" có lời: hỏi PO muốn chọn gì.
 
 ## Xác nhận tóm tắt
 Khi mọi câu đã trả lời và stage có summary confirmation:
-- Thêm mục `## Consolidated Summary` vào cuối file: gạch đầu dòng, mỗi câu một dòng, nội dung đã chốt.
+- Thêm mục `## Consolidated Summary` vào cuối file: gạch đầu dòng, mỗi câu một dòng, nội dung đã thống nhất.
 - Hỏi bằng hộp chọn: Looks correct, sinh artifact từ những điều này. Request changes, sửa một vài câu trước.
 - Request changes: PO đã nói cần sửa gì thì sửa luôn; chưa nói thì hỏi "sửa gì". Sửa file, xoá tóm tắt cũ, hỏi lại.
 - Chỉ sinh artifact sau Looks correct.

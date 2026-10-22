@@ -16,7 +16,7 @@
 |---|---|---|
 | Git, Markdown, trong repo của PO | Có phiên bản, so được khác biệt, tag cho từng bản duyệt; agent AI của mọi team đọc được; PRD và story cùng một nơi nên sinh story từ PRD không phải đồng bộ | Team khác cần quyền ghi vào repo của PO và thấy được phần làm việc nội bộ của PO |
 | Git, Markdown, repo spec riêng | Tách phần nội bộ của PO | Thêm một bước đẩy sang repo khác; hai repo phải đồng bộ phiên bản |
-| Confluence hoặc Lark | Quen với người không dùng Git | Không so được khác biệt theo dòng; agent khó đọc đúng bản đã chốt; trạng thái và mã khó kiểm bằng máy |
+| Confluence hoặc Lark | Quen với người không dùng Git | Không so được khác biệt theo dòng; agent khó đọc đúng bản đã duyệt; trạng thái và mã khó kiểm bằng máy |
 | Docx | Quen thuộc | Không so được khác biệt, agent khó đọc, dễ có nhiều bản |
 
 ## Quyết định

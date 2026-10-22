@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/state.md",
+  "old_string": "| Open CR | none |",
+  "new_string": "| Open CR | CR1 |"
+ }
+}

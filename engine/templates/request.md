@@ -22,7 +22,7 @@ Mẫu để người yêu cầu điền trước khi PO tạo intent. Đặt và
 |---|---|
 | Mốc cứng | <ngày, vì sao cứng; hoặc "không có"> |
 | Người yêu cầu | <tên, bộ phận> |
-| Người quyết | <ai chốt phạm vi> |
+| Người quyết | <ai quyết phạm vi> |
 | Người dùng chịu ảnh hưởng | <vai> |
 
 ## Câu hỏi mở

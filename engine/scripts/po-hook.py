@@ -3,9 +3,11 @@
 
 - UserPromptSubmit và PostToolUse của AskUserQuestion: ghi lượt người thật vào .po/turns.jsonl. `po-tools.py approve`
   chỉ ghi duyệt khi lời PO có nguyên văn trong sổ này, như HUMAN_TURN của AWS.
-- PreToolUse của Edit, Write, MultiEdit, NotebookEdit: chặn AI tự đánh [x] trong state.md, sửa phần thân artifact đã
-  duyệt khi không có change request mở, sửa dòng DEC cũ trong decisions.md, AI Reviewer ghi ngoài reviews/, phiên
-  chính sửa file review đã có hoặc file digest.
+- PreToolUse của Edit, Write, MultiEdit, NotebookEdit: chặn AI tự đổi phần state.md do engine giữ (đánh [x], bỏ qua
+  stage [S], mở lại stage đã duyệt, đổi profile, Switches, Open CR), đổi trạng thái CR trong decisions.md, sửa phần thân
+  artifact đã duyệt, sửa dòng DEC cũ, AI Reviewer ghi ngoài reviews/, phiên chính sửa file review đã có hoặc file digest.
+  Các chuyển trạng thái này đi qua lệnh skip, profile, switch, cr, reopen, approve của po-tools.py, đòi lời PO, như
+  ENGINE_OWNED_STATE_TRANSITIONS của AWS.
 - PreToolUse của Bash: chặn lệnh đụng sổ lượt người, lệnh sửa state.md, decisions.md, archive/ bằng shell, và subagent
   chạy lệnh ghi của po-tools.py.
 
@@ -26,7 +28,7 @@ _spec.loader.exec_module(T)
 
 KEEP_TURNS = 200
 FILE_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
-WRITE_CMDS = re.compile(r"po-tools\.py\s+(approve|archive|migrate|review-start)\b")
+WRITE_CMDS = re.compile(r"po-tools\.py\s+(approve|archive|migrate|review-start|skip|profile|switch|cr|reopen|sign-start)\b")
 GUARDED = r"(?:(?:state|decisions)\.md\b|/archive/|\.digest\b)"
 SHELL_EDIT = re.compile(r"\bsed\s+-[a-zA-Z]*i|\bperl\s+-[a-zA-Z]*i|\btee\b|\bmv\b|\bcp\b|\brm\b|python3?\s+-c|\btruncate\b")
 GUARDED_SHELL = re.compile(GUARDED)
@@ -147,8 +149,8 @@ def pre_file(payload):
         return 0
     if intent is None:
         return 0
-    if re.fullmatch(r"reviews/review-[a-z0-9-]+-\d+\.digest", inner):
-        return deny("File digest do po-tools.py review-start ghi, không sửa tay.")
+    if re.fullmatch(r"reviews/[a-z0-9.-]+\.digest", inner):
+        return deny("File digest do po-tools.py review-start hoặc sign-start ghi, không sửa tay.")
     if re.fullmatch(r"reviews/review-[a-z0-9-]+-\d+\.md", inner) and path.exists():
         return deny("File review là kết quả của AI Reviewer, phiên chính không sửa. Phản hồi finding ghi ở gate và decisions.md; "
                     "cần review lại thì chạy review-start và gọi reviewer.")
@@ -157,10 +159,9 @@ def pre_file(payload):
     if new is None:
         return 0
     if inner == "state.md" and old is not None:
-        before, after = len(re.findall(r"^- \[x\]", old, re.M)), len(re.findall(r"^- \[x\]", new, re.M))
-        if after > before:
-            return deny("Chỉ python3 engine/scripts/po-tools.py approve được đánh dấu stage đã duyệt [x], sau khi PO duyệt ở gate. "
-                        "Đánh [?] khi trình gate, chờ PO trả lời, sau đó chạy approve với lời PO.")
+        msg = T.state_guard(old, new)
+        if msg:
+            return deny(msg)
     if inner == "decisions.md" and old is not None:
         keep = set(new.splitlines())
         gone = [ln for ln in old.splitlines() if re.match(r"^\|\s*DEC\d+\s*\|", ln) and ln not in keep]
@@ -168,12 +169,15 @@ def pre_file(payload):
             dec = re.match(r"^\|\s*(DEC\d+)", gone[0]).group(1)
             return deny("decisions.md chỉ được thêm dòng, không sửa hay xoá dòng DEC cũ (%s). Quyết định đổi thì thêm dòng DEC "
                         "mới ghi rõ thay %s." % (dec, dec))
+        msg = T.cr_guard(old, new)
+        if msg:
+            return deny(msg)
     hit = approved_artifact(intent, path) if old is not None else None
     if hit and not only_publish_keys(old, new):
         so, e, st = hit
-        if not T.open_crs(intent, so):
-            return deny("%s là artifact của %s %s đã duyệt. Sửa sau khi duyệt phải qua /change-request: mở CR, stage về [R], "
-                        "sau đó mới sửa." % (inner, e["code"], st.name))
+        return deny("%s là artifact của %s %s đã duyệt. Sửa sau khi duyệt phải qua /change-request: ghi CR, PO quyết Nhận, chạy "
+                    "po-tools.py cr <intent> CR<n> nhan --reopen %s --words \"<lời PO>\" để stage về [R], sau đó mới sửa."
+                    % (inner, e["code"], st.name, st.slug))
     return 0
 
 

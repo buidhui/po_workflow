@@ -1,4 +1,4 @@
-# ADR 0003: Thiết kế của các team ở file riêng, chốt trên Decision Brief
+# ADR 0003: Thiết kế của các team ở file riêng, thống nhất trên Decision Brief
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 
 ## Bối cảnh
 
-Luồng trước đó đặt buổi checkpoint trên HLD Brief ở 2.41, trước khi viết PRD: PO viết mục 1 tới 7, Design PIC, Tech PIC, QA PIC ghi định hướng ở mục 8, 9, 10 và ký. Khi chạy thật, các team không đưa ra được Technical Design, Test Design và UI/UX Design từ HLD Brief; họ cần PRD chi tiết. Sau khi có ba bản thiết kế, nếu gộp tất cả vào PRD thì PRD quá dài để mang đi họp và chốt.
+Luồng trước đó đặt buổi checkpoint trên HLD Brief ở 2.41, trước khi viết PRD: PO viết mục 1 tới 7, Design PIC, Tech PIC, QA PIC ghi định hướng ở mục 8, 9, 10 và ký. Khi chạy thật, các team không đưa ra được Technical Design, Test Design và UI/UX Design từ HLD Brief; họ cần PRD chi tiết. Sau khi có ba bản thiết kế, nếu gộp tất cả vào PRD thì PRD quá dài để mang đi họp và quyết.
 
 Ba cách đã xét:
 1. Các team viết thẳng vào các mục thiết kế trong PRD, sau đó AI tổng hợp một file ngắn để họp.

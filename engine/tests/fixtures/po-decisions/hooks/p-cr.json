@@ -1,0 +1,4 @@
+{
+ "hook_event_name": "UserPromptSubmit",
+ "prompt": "Nhận CR1, mở lại requirements"
+}

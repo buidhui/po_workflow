@@ -69,7 +69,7 @@ Về khối lượng: KB của sản phẩm đầu tiên áp dụng quy trình c
 
 `domain.md` có 6 mục; `/new-domain` dựng khung và hỏi PO để điền:
 
-1. Sản phẩm và phạm vi: tên, portal, ràng buộc tenant, vai người dùng, thiết bị hỗ trợ và mức accessibility mặc định để 2.3 không phải hỏi lại mỗi intent. Frontmatter có `product`, `company`, `code`, `names`, và các khoá Jira `jira_project_key`, `jira_project_name`, `jira_project_type`. `code` là mã sản phẩm theo danh mục của công ty, dùng trong mã tính năng `<code>-F<NNN>` cho mọi team; mã này chốt khi dựng domain và không ghi cứng trong engine. `names` là các tên sản phẩm và công ty mà engine không được chứa. `jira_project_key`, `jira_project_name`, `jira_project_type` là dự án Jira nhận Story List, ví dụ:
+1. Sản phẩm và phạm vi: tên, portal, ràng buộc tenant, vai người dùng, thiết bị hỗ trợ và mức accessibility mặc định để 2.3 không phải hỏi lại mỗi intent. Frontmatter có `product`, `company`, `code`, `names`, và các khoá Jira `jira_project_key`, `jira_project_name`, `jira_project_type`. `code` là mã sản phẩm theo danh mục của công ty, dùng trong mã tính năng `<code>-F<NNN>` cho mọi team; mã này được xác định khi dựng domain và không ghi cứng trong engine. `names` là các tên sản phẩm và công ty mà engine không được chứa. `jira_project_key`, `jira_project_name`, `jira_project_type` là dự án Jira nhận Story List, ví dụ:
 
    ```yaml
    jira_project_key: ABC
@@ -122,6 +122,6 @@ Chuẩn trong `engine/standards/` áp dụng nguyên vẹn cho sản phẩm mớ
 - [ ] Thông tin ở bảng mục 6 của chuẩn KB đã có, hoặc phần thiếu đã ghi ở vùng chưa phủ
 - [ ] `project.md` trống, `intents/` trống, `team.md` giữ nguyên
 - [ ] `python3 engine/scripts/po-tools.py doctor` không còn dòng Lỗi. Lệnh kiểm `domain.md` đủ 6 mục, KB tối thiểu, file trong bản đồ KB, file Template và Checklist của mọi stage, và engine không còn tên nào trong khoá `names` của `domain.md`
-- [ ] Mã sản phẩm `code` đã chốt và không trùng sản phẩm khác; các PIC đã nhận chuẩn bàn giao và có quyền ghi repo
+- [ ] Mã sản phẩm `code` đã xác định và không trùng sản phẩm khác; các PIC đã nhận chuẩn bàn giao và có quyền ghi repo
 - [ ] Frontmatter `domain.md` có `jira_project_key` và `jira_project_name`; `doctor` không cảnh báo dòng Dự án Jira
 - [ ] Chạy thử một intent S tới PRD, `po-tools.py status` khớp

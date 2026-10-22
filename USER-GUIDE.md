@@ -17,7 +17,7 @@ Tài liệu này hướng dẫn thao tác. Phương pháp và lý do của từn
 4. [Chạy một intent tới PRD](#4-chạy-một-intent-tới-prd)
 5. [Trả lời AI](#5-trả-lời-ai)
 6. [Đổi yêu cầu giữa chừng](#6-đổi-yêu-cầu-giữa-chừng)
-7. [Bàn giao sau khi chốt](#7-bàn-giao-sau-khi-chốt)
+7. [Bàn giao sau khi duyệt](#7-bàn-giao-sau-khi-duyệt)
 8. [Dành cho Design PIC, Tech PIC, QA PIC](#8-dành-cho-design-pic-tech-pic-qa-pic)
 9. [Dành cho Dev](#9-dành-cho-dev)
 10. [Lệnh](#10-lệnh)
@@ -26,7 +26,7 @@ Tài liệu này hướng dẫn thao tác. Phương pháp và lý do của từn
 
 ## 1. Quy trình tóm tắt
 
-Một yêu cầu là một intent. Intent đi qua 2 phase: Ideation xác định vấn đề và phạm vi; Inception chuyển phạm vi thành yêu cầu, phân tích ảnh hưởng, đề xuất và chọn phương án giải pháp, chia user story, viết PRD chi tiết, sau đó các team thiết kế từ PRD và chốt trên Decision Brief. Mỗi stage sinh một artifact và dừng ở một gate cho tới khi PO duyệt.
+Một yêu cầu là một intent. Intent đi qua 2 phase: Ideation xác định vấn đề và phạm vi; Inception chuyển phạm vi thành yêu cầu, phân tích ảnh hưởng, đề xuất và chọn phương án giải pháp, chia user story, viết PRD chi tiết, sau đó các team thiết kế từ PRD và thống nhất trên Decision Brief. Mỗi stage sinh một artifact và dừng ở một gate cho tới khi PO duyệt.
 
 | Stage | Artifact | Gate | Thư mục trong intent |
 |---|---|---|---|
@@ -79,6 +79,8 @@ git config --global user.email "email@congty.vn"
 Script `engine/scripts/po-tools.py` và hook `engine/scripts/po-hook.py` cần Python 3.9 trở lên. Không có Python thì quy trình vẫn chạy, nhưng AI phải kiểm thủ công thay cho các bước kiểm bằng máy, và hook không chặn được AI tự ghi duyệt.
 
 Mở Claude Code ở thư mục gốc của repo để hook trong `.claude/settings.json` chạy. Hook ghi mỗi câu PO gõ và mỗi lựa chọn PO bấm, lưu vào `.po/turns.jsonl` trên máy (file này không được commit); lệnh duyệt dựa vào sổ này để biết lời duyệt là của PO.
+
+Thư mục gốc nghĩa là chính thư mục repo: trong VS Code chọn File, Open Folder, mở thư mục repo, sau đó mở phiên Claude Code mới; ở terminal thì `cd` vào repo, sau đó chạy `claude`. Mở Claude Code ở thư mục cha, hoặc thêm repo như một thư mục phụ của phiên khác, thì Claude Code không nạp `.claude/settings.json` và `AGENTS.md` của repo: hook không chạy, sổ lượt người không có, lệnh duyệt từ chối và đòi PO chạy trong terminal. `doctor` báo dòng Hook ghi lượt PO là Cảnh báo khi gặp trường hợp này.
 
 Kiểm môi trường sau khi cài và mỗi khi thấy bất thường:
 
@@ -143,7 +145,7 @@ po-workflow/
 /new-intent Báo cáo giai đoạn 1
 ```
 
-AI tạo thư mục `intents/<YYMMDD>-bao-cao-giai-doan-1/`, cấp mã tính năng, đọc nhanh KB để ước lượng vùng bị chạm, sau đó hỏi một câu để chốt profile, ví dụ "Profile M: 7 stage, 6 gate. Đồng ý, đổi profile, hay đổi depth?".
+AI tạo thư mục `intents/<YYMMDD>-bao-cao-giai-doan-1/`, cấp mã tính năng, đọc nhanh KB để ước lượng vùng bị chạm, sau đó hỏi một câu để xác nhận profile, ví dụ "Profile M: 7 stage, 6 gate. Đồng ý, đổi profile, hay đổi depth?".
 
 Đặt tài liệu đầu vào như mô tả yêu cầu, email, biên bản họp, ảnh vào `inputs/`. Chưa có mô tả thì AI chép mẫu `inputs/request.md` gồm hiện trạng, điều muốn thay đổi, trong và ngoài phạm vi, điều không được thay đổi, mốc, câu hỏi mở. Gửi mẫu cho người yêu cầu điền. Mục "Điều không được thay đổi" tác động nhiều nhất tới phân tích ảnh hưởng ở sản phẩm đang vận hành. Ghi link Figma, Jira vào `intent.md`.
 
@@ -242,7 +244,7 @@ Mọi thay đổi chạm stage đã duyệt đi qua `/change-request`. Lệnh c�
 
 Khi Decision Brief đổi, các PIC ký lại. Khi PRD đổi, phiên bản tăng, các team xem lại file thiết kế theo bản mới, Story List được sinh lại sau khi duyệt.
 
-## 7. Bàn giao sau khi chốt
+## 7. Bàn giao sau khi duyệt
 
 ### 7.1 Sinh Story List
 
@@ -286,14 +288,14 @@ PIC làm việc ở 2 nơi: file thiết kế của mình trên repo của PO sa
 
 ### 8.1 Viết file thiết kế và ký Decision Brief, stage 2.43
 
-PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào file riêng, sau đó cùng chốt trên Decision Brief. Không có bước xem thẻ US trước PRD.
+PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào file riêng, sau đó cùng thống nhất trên Decision Brief. Không có bước xem thẻ US trước PRD.
 
 1. Pull, đọc `intents/<intent>/inception/prd/prd.md`. Mở file của mình: Design PIC `inception/ux-design/ux-design.md`, Tech PIC `inception/tech-design/tech-design.md`, QA PIC `inception/test-design/test-design.md`. Template ở `engine/templates/`.
 2. Chỉ sửa file của mình. Mọi phần trỏ về mã trong PRD: `US<n>`, `AC<n>.<m>`, `BR<n>.<m>`. Ghi `inputs: prd@<version>` đúng bản PRD đã đọc.
 3. Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US nó phục vụ; Story List lấy mã màn từ bảng này. Tech PIC viết cùng người phụ trách Backend và Frontend: service, ứng dụng hoặc repo bị chạm ghi đúng tên Dev dùng; hợp đồng API giữa hai phía; mỗi màn `SCR` của ux-design có route và component ở phần Frontend; story nào quá lớn để làm trong một sprint. QA PIC ghi cách kiểm cho từng AC.
-4. Ý kiến về PRD ghi ở mục Ý kiến về PRD trong file của mình: Đồng ý, Đề xuất sửa hoặc Phản đối, kèm mã và lý do. Không sửa PRD. Câu hỏi cho PO hoặc team khác ghi ở mục Rủi ro và câu hỏi cần chốt.
+4. Ý kiến về PRD ghi ở mục Ý kiến về PRD trong file của mình: Đồng ý, Đề xuất sửa hoặc Phản đối, kèm mã và lý do. Không sửa PRD. Câu hỏi cho PO hoặc team khác ghi ở mục Rủi ro và câu hỏi cần trả lời.
 5. Commit với message `design(<intent>): ux`, `tech` hoặc `test`, sau đó push.
-6. Sau khi AI viết Decision Brief, dự họp và ký ở bảng Ký của `inception/decision-brief/decision-brief.md`: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Nếu chọn Yêu cầu sửa, ghi rõ nội dung cần sửa.
+6. Sau khi AI viết Decision Brief, dự họp và ký ở bảng Ký của `inception/decision-brief/decision-brief.md`: tên đúng như `intent.md`, cột Bản là version ở đầu file Decision Brief mà mình đã đọc, trạng thái Chưa xem, Có ý kiến, Đồng ý hoặc Yêu cầu sửa. Nếu chọn Yêu cầu sửa, ghi rõ nội dung cần sửa. Decision Brief đổi sau khi gửi ký thì PO gửi bản mới và PIC ký lại.
 
 PIC không mở được repo thì gửi nội dung cho PO. PO dán nguyên văn, mở đầu bằng "(ghi theo <tên>, <ngày>)", và lưu tin nhắn xác nhận vào `decisions.md`.
 
@@ -319,7 +321,7 @@ Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ. Design
 
 ## 9. Dành cho Dev
 
-Bản chính thức là file trong repo theo tag của bản đã duyệt. Việc được giao qua story trên Jira. Agent AI của Dev đọc PRD trong repo theo tag của bản đã duyệt, nên luôn lấy đúng bản đã chốt.
+Bản chính thức là file trong repo theo tag của bản đã duyệt. Việc được giao qua story trên Jira. Agent AI của Dev đọc PRD trong repo theo tag của bản đã duyệt, nên luôn lấy đúng bản đó.
 
 1. Đọc `intents/INDEX.md` để biết tính năng nào đã có PRD duyệt, tag nào, service nào bị chạm, bao nhiêu story đạt điều kiện giao Dev.
 2. Lấy đúng bản theo tag, bằng `git show <tag>:<đường dẫn>` hoặc qua GitHub MCP server của công cụ đang dùng.
@@ -353,7 +355,9 @@ Lệnh của script, chạy từ thư mục gốc:
 | `po-tools.py check <intent> <stage>` | Kiểm bằng máy trước gate |
 | `po-tools.py trace <intent>` | Truy vết FR, US, BR, AC |
 | `po-tools.py review-start <intent> <stage>` | Ghi dấu artifact trước khi gọi AI Reviewer |
-| `po-tools.py approve <intent> <stage> --words "<lời PO>"` | Ghi chép sau khi PO duyệt; lời PO phải có trong sổ lượt người, trừ khi PO tự chạy trong terminal |
+| `po-tools.py approve <intent> <stage> --words "<lời PO>"` | Ghi chép sau khi PO duyệt; lời PO phải có trong sổ lượt người, trừ khi PO tự chạy trong terminal. Câu chặn, GAP, ORPHAN, mã biến mất phải sửa, hoặc PO quyết từng mục qua `--accept-items` và `--item-words` |
+| `po-tools.py skip`, `profile`, `switch`, `cr`, `reopen` | Ghi quyết định của PO ngoài gate: bỏ qua stage, đổi profile, bật tắt nghi thức, quyết change request, mở lại gate ghi nhầm. Lời PO phải nằm trong 3 lượt gần nhất |
+| `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC ký |
 | `po-tools.py replay <intent>` | Tóm lược diễn biến của intent cho người tiếp nhận |
 | `po-tools.py stories <intent> [--write]` | Xem trước hoặc ghi Story List cho Jira |
 | `po-tools.py dor <intent>` | Kiểm điều kiện giao Dev |

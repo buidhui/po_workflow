@@ -9,7 +9,7 @@ Story là đơn vị nghiệm thu.
 - Mỗi story là một mục tiêu hoàn chỉnh của một vai: người dùng làm trọn được và thấy kết quả.
 - Story đi trọn từ giao diện tới rule và dữ liệu. Kiểu chia này gọi là lát dọc.
 - Story kiểm được bằng tiêu chí chấp nhận: có đạt hoặc không đạt.
-- Mỗi story thuộc đúng một Unit. Unit là nhóm story theo giá trị và ưu tiên, dùng để chốt phạm vi và thứ tự.
+- Mỗi story thuộc đúng một Unit. Unit là nhóm story theo giá trị và ưu tiên, dùng để xác định phạm vi và thứ tự.
 
 Mỗi team tự chia việc của mình từ story:
 
@@ -26,7 +26,7 @@ Dùng bộ tiêu chí INVEST. Bảng dưới ghi nơi kiểm từng tiêu chí t
 | Tiêu chí | Nghĩa | Kiểm ở đâu |
 |---|---|---|
 | Độc lập | Làm và giao được mà không chờ story khác, hoặc chỉ phụ thuộc một chiều | Mục Phụ thuộc của thẻ US; bảng Unit trong `stories.md` |
-| Còn thương lượng được | Chi tiết còn mở tới khi PO viết PRD và các team chốt ở 2.43 | Thẻ US chưa có tiêu chí chấp nhận; chi tiết viết ở 2.42 |
+| Còn thương lượng được | Chi tiết còn mở tới khi PO viết PRD và các team thống nhất ở 2.43 | Thẻ US chưa có tiêu chí chấp nhận; chi tiết viết ở 2.42 |
 | Có giá trị | Vai thấy được lợi ích của mình | Mục Vai và mục tiêu của thẻ US có vế "để ..." |
 | Ước lượng được | Tech PIC ước được cỡ | 2.43, `tech-design.md` mục 7 |
 | Nhỏ | Làm xong trong một sprint | 2.42 có từ 3 tới 6 tiêu chí chấp nhận; 2.43 Tech PIC xác nhận |
@@ -120,7 +120,7 @@ Cách chia đúng:
 
 | Nội dung | AWS | PO-Workflow | Lý do khác |
 |---|---|---|---|
-| Ai chia story | Product agent ở 2.4; Design, Dev, QA góp ý cùng lúc khi bật cộng tác | PO chia ở 2.4; 3 PIC xác nhận cỡ và cách chia ở 2.43 sau khi đọc PRD | Các PIC là người thật, nên đọc PRD chi tiết một lần và chốt trong một buổi họp |
+| Ai chia story | Product agent ở 2.4; Design, Dev, QA góp ý cùng lúc khi bật cộng tác | PO chia ở 2.4; 3 PIC xác nhận cỡ và cách chia ở 2.43 sau khi đọc PRD | Các PIC là người thật, nên đọc PRD chi tiết một lần và thống nhất trong một buổi họp |
 | Tiêu chí | INVEST | INVEST, kèm nơi kiểm cụ thể trong quy trình | Không khác |
 | Tiêu chí chấp nhận | Viết ngay ở 2.4, mỗi story 3 tới 6 | Viết ở 2.42, trước khi các team thiết kế; con số 3 tới 6 dùng làm dấu hiệu cỡ story | Các team cần AC để thiết kế và lập kế hoạch test |
 | Cách tách | 6 cách: bước trong luồng, biến thể rule, biến thể dữ liệu, giao diện, xem tạo sửa xoá, hiệu năng | 8 cách: giữ 6 cách của AWS, thêm theo vai và luồng đơn giản trước; giao diện hiểu là kênh dùng được riêng | Sản phẩm có nhiều vai và nhiều cổng, 2 cách thêm gặp thường xuyên |

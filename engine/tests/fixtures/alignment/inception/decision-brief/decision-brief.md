@@ -35,8 +35,8 @@ Không có.
 Không có.
 
 ## 10. Ký
-| Vai | Người | Trạng thái | Ngày | Ghi chú |
-|---|---|---|---|---|
-| Design PIC | An | Đồng ý | 2026-10-12 | |
-| Tech PIC | Bình | Có ý kiến | 2026-10-12 | US2 làm sau |
-| QA PIC | Chi | Chưa xem | | |
+| Vai | Người | Bản | Trạng thái | Ngày | Ghi chú |
+|---|---|---|---|---|---|
+| Design PIC | An | 0.2 | Đồng ý | 2026-10-12 | |
+| Tech PIC | Bình | 0.2 | Có ý kiến | 2026-10-12 | US2 làm sau |
+| QA PIC | Chi | | Chưa xem | | |

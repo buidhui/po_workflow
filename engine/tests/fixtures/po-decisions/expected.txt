@@ -1,0 +1,129 @@
+# Profile M, 1.1, 1.4, 2.3 đã duyệt, CR1 chờ quyết. Bỏ qua stage, đổi profile, bật tắt nghi thức, quyết change request,
+# mở lại stage đã duyệt đều đi qua lệnh của po-tools.py và cần lời PO trong 3 lượt gần nhất; hook chặn AI sửa tay.
+[skip impact-analysis --words "bỏ qua impact analysis" --reason "chỉ đổi nhãn"]
+mã thoát: 2
+có: không thấy sổ lượt người
+có: mở đúng thư mục gốc
+
+[@hook hooks/p-skip.json]
+mã thoát: 0
+
+[skip impact-analysis --words "bỏ qua impact analysis" --reason "chỉ đổi nhãn" --who "Người thử"]
+mã thoát: 0
+có: Đã bỏ qua 2.31 Impact Analysis
+tệp state.md có: - [S] 2.31 impact-analysis · chỉ đổi nhãn
+tệp state.md có: | Stage | 2.4 user-stories |
+tệp decisions.md có: Bỏ qua 2.31 Impact Analysis: chỉ đổi nhãn | "bỏ qua impact analysis" | Người thử
+
+[skip requirements-analysis --words "bỏ qua impact analysis" --reason "thử"]
+mã thoát: 2
+có: Chỉ bỏ qua stage chưa làm
+
+[skip user-stories --words "bỏ qua user stories" --reason "thử"]
+mã thoát: 2
+có: không thấy lời bỏ qua stage "bỏ qua user stories"
+
+[skip user-stories --reason "thử"]
+mã thoát: 2
+có: luôn chạy với profile này; bỏ qua phải do PO quyết
+
+[skip solution-options --reason "chỉ có một hướng giải" --who "Người thử"]
+mã thoát: 2
+có: state.md không có dòng của stage solution-options
+
+[@hook hooks/e-skip.json]
+mã thoát: 2
+có: "permissionDecision": "deny"
+có: po-tools.py skip
+
+[@hook hooks/e-profile.json]
+mã thoát: 2
+có: po-tools.py profile
+
+[@hook hooks/e-switch.json]
+mã thoát: 2
+có: po-tools.py switch
+
+[@hook hooks/e-opencr.json]
+mã thoát: 2
+có: Dòng Open CR do po-tools.py cr ghi
+
+[@hook hooks/e-reopen.json]
+mã thoát: 2
+có: Stage requirements-analysis đã duyệt
+có: po-tools.py cr <intent> CR<n> nhan
+
+[@hook hooks/e-add-stage.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/e-cr-status.json]
+mã thoát: 2
+có: Trạng thái của CR1 do PO quyết
+
+[@hook hooks/e-cr-new.json]
+mã thoát: 2
+có: CR mới ghi trạng thái Chờ quyết
+
+[@hook hooks/e-cr-add.json]
+mã thoát: 0
+không có: deny
+
+[@hook hooks/b-sub.json]
+mã thoát: 2
+có: Subagent không chạy lệnh ghi của po-tools.py
+
+[@hook hooks/p-switch.json]
+mã thoát: 0
+
+[switch reviewer off --words "tắt reviewer" --who "Người thử"]
+mã thoát: 0
+có: Đã đặt reviewer: off
+tệp state.md có: | Switches | summary confirmation: on · reviewer: off · learnings: on |
+
+[switch reviewer off --words "tắt reviewer"]
+mã thoát: 2
+có: reviewer đang off
+
+[@hook hooks/p-cr.json]
+mã thoát: 0
+
+[cr CR1 nhan --words "nhận CR1"]
+mã thoát: 2
+có: --reopen
+
+[cr CR1 nhan --words "nhận CR1" --reopen requirements-analysis --who "Người thử"]
+mã thoát: 0
+có: Đã ghi CR1 Nhận, mở lại 2.3 Requirements Analysis
+tệp state.md có: - [R] 2.3 requirements-analysis · mở lại theo CR1
+tệp state.md có: | Open CR | CR1 |
+tệp decisions.md có: | CR1 | 2026-10-02 | Thêm rule khoá tài khoản | FR3 | Nhận |
+
+[cr CR1 dong --words "nhận CR1"]
+mã thoát: 2
+có: chưa duyệt lại: 2.3 Requirements Analysis
+
+[@hook hooks/p-profile.json]
+mã thoát: 0
+
+[profile L --words "nâng lên profile L" --reason "có migration dữ liệu" --who "Người thử"]
+mã thoát: 0
+có: Đã đổi profile M thành L
+tệp state.md có: profile: L
+tệp state.md có: | Profile | L, lý do: có migration dữ liệu |
+tệp state.md có: - [x] 1.1 intent-capture\n- [ ] 1.2 market-research\n- [x] 1.4 scope-definition\n- [ ] 1.7 approval-handoff
+tệp state.md có: - [S] 2.31 impact-analysis · chỉ đổi nhãn\n- [ ] 2.32 solution-options\n- [ ] 2.4 user-stories
+
+[@hook hooks/p-reopen.json]
+mã thoát: 0
+
+[reopen scope-definition --words "ghi nhầm duyệt 1.4" --reason "duyệt nhầm" --who "Người thử"]
+mã thoát: 0
+có: Đã đưa 1.4 Scope Definition về [?]
+tệp state.md có: - [?] 1.4 scope-definition
+tệp decisions.md có: Mở lại gate 1.4 Scope Definition: duyệt nhầm
+
+[skip solution-options --reason "chỉ có một hướng giải"]
+mã thoát: 0
+tệp state.md có: - [S] 2.32 solution-options · chỉ có một hướng giải
+tệp decisions.md có: chỉ có một hướng giải, điều kiện chạy không xảy ra | - | AI, theo điều kiện của stage

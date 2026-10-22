@@ -26,7 +26,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 | ID | Yêu cầu | Chỉ số đo | Nguồn |
 |---|---|---|---|
 | NFR1 | | | |
-<Ghi chỉ số đo được. Chưa có chỉ số thì ghi OQ ở mục Assumptions & Open Questions để PO chốt, không bỏ NFR.>
+<Ghi chỉ số đo được. Chưa có chỉ số thì ghi OQ ở mục Assumptions & Open Questions để PO xác định, không bỏ NFR.>
 
 ## 4. Constraints
 | Loại | Ràng buộc | Nguồn |

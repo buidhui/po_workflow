@@ -12,7 +12,7 @@ Theo BABOK 5.4 Assess Requirements Changes và 5.5 Approve Requirements. Mỗi t
 | CR | Ngày | Người yêu cầu | Thay đổi | Lý do | Mã bị chạm | Lợi ích, mục tiêu bị ảnh hưởng | Effort, mốc | Độ khẩn | Stage mở lại | DEC | Trạng thái |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 
-Trạng thái: Đề xuất, Nhận, Hoãn, Bác, Xong.
+Trạng thái: Chờ quyết khi AI ghi dòng mới; Nhận, Hoãn, Bác, Đóng do lệnh `po-tools.py cr` ghi sau khi PO quyết.
 
 ## Rủi ro
 Sổ rủi ro của intent, theo BABOK 6.3 Assess Risks và 10.38 Risk Analysis and Management. Rủi ro nêu ở artifact nào cũng ghi vào đây một lần, artifact chỉ trỏ mã `RK<n>`.

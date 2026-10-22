@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "{intent}/decisions.md",
+  "old_string": "| FR3 | Chờ quyết |",
+  "new_string": "| FR3 | Nhận |"
+ }
+}

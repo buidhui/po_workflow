@@ -7,7 +7,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 ---
 # Related Features & Docs Map: <Tên tính năng>
 
-Để PO soát: đủ chưa, sót gì, dòng nào không liên quan. Mọi `❓PO` phải chốt trước khi dựng Impact Matrix.
+Để PO soát: đủ chưa, sót gì, dòng nào không liên quan. Mọi `❓PO` phải được trả lời trước khi dựng Impact Matrix.
 
 ## Nguồn đã đối chiếu lại
 | Nguồn | Kết quả | Ngày |

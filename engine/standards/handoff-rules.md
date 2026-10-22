@@ -1,12 +1,12 @@
 # Quy tắc bàn giao liên team
 
-Áp cho đầu ra PO giao cho Design, Tech và QA. Quy ước mã ở `id-conventions.md`, cách đặt tên và liên kết ở Figma, git, test, API ở `naming-conventions.md`, quyết định giao việc trên Jira ở `adr/0002-story-tren-jira.md`, quyết định thiết kế ở file riêng và chốt trên Decision Brief ở `adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
+Áp cho đầu ra PO giao cho Design, Tech và QA. Quy ước mã ở `id-conventions.md`, cách đặt tên và liên kết ở Figma, git, test, API ở `naming-conventions.md`, quyết định giao việc trên Jira ở `adr/0002-story-tren-jira.md`, quyết định thiết kế ở file riêng và thống nhất trên Decision Brief ở `adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
 
 ## Hai mốc làm việc với các team
 
 | Mốc | Khi nào | Đầu vào | Kết quả |
 |---|---|---|---|
-| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba team viết `ux-design.md`, `tech-design.md`, `test-design.md` từ PRD | Họp trên Decision Brief, 3 PIC ký; cỡ story và thay đổi PRD được chốt |
+| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba team viết `ux-design.md`, `tech-design.md`, `test-design.md` từ PRD | Họp trên Decision Brief, 3 PIC ký; cỡ story và thay đổi PRD được thống nhất |
 | Giao Dev | Sau gate 2.43; profile S sau gate 2.42 | Story List import lên Jira | Story đạt điều kiện giao Dev |
 
 ## Story và chia việc

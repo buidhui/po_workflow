@@ -3,7 +3,7 @@
 ## Phạm vi
 - [ ] **[BLOCK]** Tách đủ In, Out, Potential. Mỗi dòng một câu kèm lý do và nguồn
 - [ ] Out of scope có nội dung thật, gồm thứ người đọc dễ tưởng là có và thứ từng bị loại
-- [ ] Hạng mục trùng tính năng có sẵn đã tra KB, nêu mã, chốt mở rộng hay làm mới
+- [ ] Hạng mục trùng tính năng có sẵn đã tra KB, nêu mã, quyết định mở rộng hay làm mới
 - [ ] Vùng KB chưa phủ ghi `❓PO`, không kết luận
 
 ## Units
