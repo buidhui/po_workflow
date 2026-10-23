@@ -1,0 +1,7 @@
+{
+ "project": "APP",
+ "stories": {
+  "US-LMS-F903-01": {"key": "APP-11", "prd": "0.9", "summary": "Tải chứng chỉ PDF", "description": "## MÔ TẢ\n\nLà học viên, tôi tải chứng chỉ dạng PDF.\n\n## TIÊU CHÍ CHẤP NHẬN\n\n- AC-LMS-F903-01.1 Trình duyệt tải về một tệp PDF.\n- AC-LMS-F903-01.9 Mã cũ đã bỏ.\n", "labels": ["LMS-F903", "US-LMS-F903-01", "LMS-F903-U1"], "blocked_by": [], "reasons": [], "hash": "cu", "removed": false, "pushed_at": "2026-10-12 09:00"},
+  "US-LMS-F903-04": {"key": "APP-14", "prd": "0.9", "summary": "Gửi chứng chỉ qua email", "description": "## MÔ TẢ\n\nGửi email.\n", "labels": ["LMS-F903", "US-LMS-F903-04"], "blocked_by": [], "reasons": [], "hash": "cu", "removed": false, "pushed_at": "2026-10-12 09:00"}
+ }
+}

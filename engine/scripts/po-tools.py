@@ -48,6 +48,11 @@ Ghi chép:
       Epic từ dòng Jira Epic của intent.md, ghi "U2: KEY" để gán Epic theo Unit. Description theo cú pháp
       Jira, mã đầy đủ. Labels: mã tính năng, mã story, Unit. So với bản CSV trước thì in story đổi và mới.
       --write ghi intents/<intent>/stories/story-list-prd-v<version>.csv, chỉ khi PRD đã duyệt.
+  po-tools.py jira-sync <intent> [--remote <file>] [--overwrite <mã story>] | --record <file> --words "<lời PO>"
+      Kế hoạch đẩy story lên Jira qua MCP: so với stories/jira-map.json để biết story nào tạo, cập nhật,
+      giữ nguyên, gắn nhãn removed-from-prd; story chưa đạt điều kiện sẵn sàng mang nhãn not-ready. Ghi
+      stories/jira-plan.json. --remote đối chiếu bản trên Jira, báo issue đã sửa tay. --record ghi kết quả
+      đẩy vào jira-map.json và một DEC, cần lời PO trong 3 lượt gần nhất. Script không gọi Jira.
   po-tools.py review-start <intent> <stage-slug>
       Trước khi gọi AI Reviewer: ghi dấu artifact vào reviews/review-<slug>-NN.digest. approve so dấu này để biết
       review còn ứng với bản hiện tại không.
@@ -3152,15 +3157,18 @@ def index(write_out=False):
         feat = intent_feature(it) or valid_feature(fm.get("feature", ""))
         hmeta, hst = us_handoff(it)
         scell = "%d, %d đạt" % (len(hst), sum(1 for x in hst if not x["reasons"])) if hmeta is not None else "-"
+        jm = load_jira_map(it)
+        live = [v for v in jm.values() if v.get("key") and not v.get("removed")]
+        jcell = "%d story, PRD v%s" % (len(live), max((v.get("prd", "") for v in live), key=lambda x: [int(n) for n in re.findall(r"\d+", x)])) if live else "-"
         rows.append((feat or "%s-%s (chưa cấp mã)" % (code, it.name), title, "v" + ver, fm.get("status", "-") or "-", at or "-",
-                     fm.get("services", "") or "-", scell, show(arch) if arch else "-", "%s/prd-v%s" % (it.name, ver),
+                     fm.get("services", "") or "-", scell, jcell, show(arch) if arch else "-", "%s/prd-v%s" % (it.name, ver),
                      published_ref(fm) or "-"))
     out = ["# Spec index", "",
            "Sinh bởi `python3 engine/scripts/po-tools.py index --write` ngày %s. Không sửa tay, chạy lại lệnh khi PRD đổi." % today().isoformat(),
            "",
            "Repo này là nguồn chuẩn của spec cho agent và Dev: đọc PRD theo đường dẫn archive (bản đã duyệt, không bao giờ sửa) hoặc theo tag git ở bảng dưới. Bản đăng ra ngoài repo, nếu có, chép từ repo, có thể chậm hơn repo.",
            ""]
-    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện sẵn sàng", "Bản duyệt mới nhất", "Tag git gợi ý", "Bản đăng"], rows)
+    out.append(md_table(["Mã tính năng", "Tên", "PRD", "Status", "Approved at", "Services", "Story, đạt điều kiện sẵn sàng", "Trên Jira", "Bản duyệt mới nhất", "Tag git gợi ý", "Bản đăng"], rows)
                if rows else "_Chưa có intent nào có PRD._")
     text = "\n".join(out) + "\n"
     for n in notes:
@@ -3623,6 +3631,14 @@ def jira_config():
             clean(fm.get("jira_project_type", "")).strip("\"'") or "software")
 
 
+def jira_push_config():
+    """(loại issue cho story, cách gắn Epic) từ frontmatter domain.md: jira_story_type mặc định Story,
+    jira_epic_mode là parent (Jira Cloud mới) hoặc epic-link (trường Epic Link cũ), mặc định parent."""
+    fm = frontmatter(read(DOMAIN_MD) or "")
+    return (clean(fm.get("jira_story_type", "")).strip("\"'") or "Story",
+            clean(fm.get("jira_epic_mode", "")).strip("\"'").lower() or "parent")
+
+
 def intent_row(imd, name):
     """Ô thứ hai của dòng bảng trong intent.md có ô đầu bắt đầu bằng name."""
     for ln in (imd or "").splitlines():
@@ -3705,6 +3721,18 @@ def jira_description(secs, feat, ref):
         cut = " \\\\  \\\\ (Mô tả dài quá giới hạn của Jira, xem đủ trong PRD) \\\\  \\\\ *THAM CHIẾU* \\\\ " + ref
         text = text[:JIRA_DESC_MAX - len(cut)] + cut
     return text
+
+
+def md_description(secs, feat, ref):
+    """Mô tả dạng Markdown cho lệnh tạo issue qua MCP: các mục của khối US, mã đầy đủ, bỏ comment HTML."""
+    parts = []
+    for key, title in JIRA_SECTIONS:
+        body = [to_full(re.sub(r"<!--.*?-->", "", l).rstrip(), feat) for l in secs.get(key) or []]
+        real = [b for b in tidy(body) if b.strip()]
+        if real and not all("<" in b and ">" in b and len(b) < 80 for b in real):
+            parts.append("## %s\n\n%s" % (title, "\n".join(tidy(body))))
+    parts.append("## THAM CHIẾU\n\n" + ref)
+    return "\n\n".join(parts) + "\n"
 
 
 BR0_DEF = re.compile(r"^\s*(?:[-*+]\s+)?[`*_]*BR-?0\.(\d+)[`*_]*")
@@ -3816,7 +3844,8 @@ def us_handoff(intent):
         uepic = epic_by_unit.get(int(unit[1:])) if unit else None
         stories.append({"num": n, "sid": sid, "title": clean(b["title"]) or sid, "unit": unit, "epic": uepic or epic,
                         "prio": prio, "jprio": jprio, "deps": deps,
-                        "reasons": reasons, "issues": mine, "desc": jira_description(secs, feat, ref)})
+                        "reasons": reasons, "issues": mine, "desc": jira_description(secs, feat, ref),
+                        "md": md_description(secs, feat, ref)})
     # story phụ thuộc: US nêu ở Pre-Condition chưa đạt vì lý do riêng của nó thì story này cũng chưa giao được
     own = dict((st["num"], [r for r in st["reasons"] if not r.startswith(("PRD chưa duyệt", "2.43 Design Alignment"))]) for st in stories)
     for st in stories:
@@ -3836,7 +3865,7 @@ def jira_rows(meta, stories):
             com.append("Câu hỏi còn mở trong PRD:")
             com += ["- %s" % clean(to_full(it["text"], meta["feat"])) for it in st["issues"]]
         com.append("Story point và thứ tự thực hiện: Dev điền.")
-        rows.append([key, name, ptype, "Story", st["title"], st["jprio"], st["desc"], st["epic"], meta["feat"], st["sid"],
+        rows.append([key, name, ptype, jira_push_config()[0], st["title"], st["jprio"], st["desc"], st["epic"], meta["feat"], st["sid"],
                      ("%s-%s" % (meta["feat"], st["unit"])) if st["unit"] else "", "\n".join(com)])
     return rows
 
@@ -3887,9 +3916,10 @@ def stories_cmd(intent, write_out=False, only=None):
         print("Lưu ý: " + x)
     if notes:
         print()
-    print(md_table(["Story", "Tên", "Ưu tiên", "Unit", "Epic", "Bàn giao cho Dev", "Lý do"],
+    jmap = load_jira_map(meta["intent"])
+    print(md_table(["Story", "Tên", "Ưu tiên", "Unit", "Epic", "Bàn giao cho Dev", "Lý do", "Jira"],
                    [(s["sid"], s["title"], s["prio"] or "-", s["unit"] or "-", s["epic"] or "-", "đạt" if not s["reasons"] else "chưa đạt",
-                     "; ".join(s["reasons"]) or "-") for s in stories]))
+                     "; ".join(s["reasons"]) or "-", (jmap.get(s["sid"]) or {}).get("key") or "-") for s in stories]))
     noprio = [s["sid"] for s in stories if not s["prio"]]
     if noprio:
         print("\nLưu ý: %d story chưa có dòng Ưu tiên trong PRD, cột Priority để trống: %s." % (len(noprio), ", ".join(noprio)))
@@ -3945,6 +3975,267 @@ def dor(intent, story=None):
     print(md_table(["Story", "Đạt?", "Lý do"], [(s["sid"], "Đạt" if not s["reasons"] else "Chưa đạt", "; ".join(s["reasons"]) or "-") for s in stories]))
     print("\nKết luận: %d/%d story đạt điều kiện sẵn sàng." % (npass, len(stories)))
     return 0 if npass == len(stories) else 1
+
+
+# ================================================================ đẩy story lên Jira qua MCP
+# Script lập kế hoạch và ghi kết quả; AI gọi công cụ Jira của MCP. Engine không phụ thuộc MCP: không có MCP thì dùng CSV.
+LABEL_NOT_READY = "not-ready"
+LABEL_REMOVED = "removed-from-prd"
+OWN_LABELS = (LABEL_NOT_READY, LABEL_REMOVED)
+REMOTE_SAME = 0.95  # tỉ lệ giống nhau tối thiểu giữa mô tả trên Jira và bản đẩy lần trước, sau khi bỏ định dạng
+FULL_ID = re.compile(r"\b(?:US|AC|BR|SCR|NFR|TR)-[A-Z][A-Z0-9]*-F\d+-\d+(?:\.\d+[a-z]?)?\b")
+SYNC_RESULTS = ("ok", "found", "failed", "skipped")
+
+
+def jira_map_path(intent):
+    return Path(intent) / "stories" / "jira-map.json"
+
+
+def jira_plan_path(intent):
+    return Path(intent) / "stories" / "jira-plan.json"
+
+
+def load_jira_map(intent):
+    """{mã story: bản ghi lần đẩy cuối} từ stories/jira-map.json; {} khi chưa đẩy lần nào hoặc file hỏng."""
+    try:
+        data = json.loads(read(jira_map_path(intent)) or "{}")
+    except ValueError:
+        return {}
+    return data.get("stories", {}) if isinstance(data, dict) else {}
+
+
+def story_hash(p):
+    keys = ("summary", "description", "priority", "epic", "labels", "blocked_by")
+    blob = json.dumps({k: p.get(k) for k in keys}, ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def plain_words(text):
+    t = unicodedata.normalize("NFC", text or "").casefold()
+    return re.sub(r"[^\w]+", " ", t).split()
+
+
+def remote_edited(pushed, remote):
+    """Câu mô tả chỗ issue trên Jira khác bản đẩy lần trước, hoặc None. So nội dung chữ, bỏ định dạng."""
+    out = []
+    if remote.get("summary") is not None and clean(remote["summary"]) != clean(pushed.get("summary", "")):
+        out.append("Summary")
+    if remote.get("description") is not None:
+        r = difflib.SequenceMatcher(None, plain_words(pushed.get("description", "")), plain_words(remote["description"]), autojunk=False).ratio()
+        if r < REMOTE_SAME:
+            out.append("Description khác bản đẩy lần trước, chỉ giống %d%%" % int(r * 100))
+    return ", ".join(out) or None
+
+
+def jira_plan(intent, remote=None, overwrite=()):
+    """(meta, kế hoạch) hoặc (None, thông báo). Mỗi mục: create, update, unchanged, remove, conflict."""
+    meta, stories = us_handoff(intent)
+    if meta is None:
+        return None, stories
+    if not meta["approved"]:
+        return None, "Chỉ đẩy story từ PRD đã duyệt. PRD đang %s." % (meta["status"] or "chưa ghi status")
+    if not meta["aligned"]:
+        return None, "Chỉ đẩy story sau khi 2.43 Design Alignment được duyệt."
+    key, _, _ = jira_config()
+    itype, emode = jira_push_config()
+    jmap = load_jira_map(meta["intent"])
+    src = "PRD v%s, tag %s" % (meta["ver"], meta["tag"])
+    items = []
+    for st in stories:
+        sid = st["sid"]
+        labels = [meta["feat"], sid] + (["%s-%s" % (meta["feat"], st["unit"])] if st["unit"] else [])
+        if st["reasons"]:
+            labels.append(LABEL_NOT_READY)
+        p = {"sid": sid, "summary": st["title"], "description": st["md"], "priority": st["jprio"], "epic": st["epic"],
+             "labels": labels, "blocked_by": ["US-%s-%02d" % (meta["feat"], k) for k in st["deps"]], "reasons": st["reasons"]}
+        p["hash"] = story_hash(p)
+        old = jmap.get(sid)
+        if not old or not old.get("key"):
+            p["action"] = "create"
+            p["jql"] = 'project = %s AND labels = "%s"' % (key or "<project>", sid)
+            com = ["Tạo từ %s." % src]
+            if st["reasons"]:
+                com.append("Chưa đạt điều kiện sẵn sàng: %s." % "; ".join(st["reasons"]))
+            if st["issues"]:
+                com.append("Câu hỏi còn mở trong PRD: %s." % "; ".join(clean(to_full(it["text"], meta["feat"])) for it in st["issues"]))
+            p["comment"] = " ".join(com)
+        else:
+            p["key"] = old["key"]
+            was = set(old.get("labels") or [])
+            p["labels_add"] = [l for l in labels if l not in was]
+            p["labels_remove"] = [l for l in was if l not in labels] + ([LABEL_REMOVED] if old.get("removed") else [])
+            p["links_add"] = [d for d in p["blocked_by"] if d not in (old.get("blocked_by") or [])]
+            if old.get("hash") == p["hash"] and not old.get("removed") and not p["links_add"]:
+                p["action"] = "unchanged"
+            else:
+                p["action"] = "update"
+                ids_old, ids_new = set(FULL_ID.findall(old.get("description", ""))), set(FULL_ID.findall(p["description"]))
+                com = ["Cập nhật theo %s." % src]
+                if old.get("removed"):
+                    com.append("Story có lại trong PRD, bỏ nhãn %s." % LABEL_REMOVED)
+                add, gone = sorted(ids_new - ids_old - {sid}), sorted(ids_old - ids_new)
+                if add:
+                    com.append("Mã thêm: %s." % ", ".join(add))
+                if gone:
+                    com.append("Mã bỏ: %s." % ", ".join(gone))
+                if not add and not gone and old.get("description") != p["description"]:
+                    com.append("Mô tả đổi, mã giữ nguyên.")
+                if LABEL_NOT_READY in p["labels_add"] or (st["reasons"] and old.get("reasons") != st["reasons"]):
+                    com.append("Chưa đạt điều kiện sẵn sàng: %s." % "; ".join(st["reasons"]))
+                elif LABEL_NOT_READY in p["labels_remove"]:
+                    com.append("Đã đạt điều kiện sẵn sàng.")
+                p["comment"] = " ".join(com)
+                rem = (remote or {}).get(old["key"]) or (remote or {}).get(sid)
+                why = remote_edited(old, rem) if rem else None
+                if why and sid not in overwrite:
+                    p["action"], p["edited"] = "conflict", why
+        items.append(p)
+    now_ids = {p["sid"] for p in items}
+    for sid, old in sorted(jmap.items()):
+        if sid in now_ids or not old.get("key") or old.get("removed"):
+            continue
+        items.append({"sid": sid, "key": old["key"], "action": "remove", "summary": old.get("summary", ""),
+                      "labels_add": [LABEL_REMOVED], "labels_remove": [], "hash": old.get("hash", ""),
+                      "comment": "Story không còn trong %s. Issue giữ nguyên, gắn nhãn %s; đóng hoặc huỷ theo quy trình của team."
+                                 % (src, LABEL_REMOVED)})
+    plan = {"intent": meta["intent"].name, "prd": meta["ver"], "tag": meta["tag"], "project": key, "issue_type": itype,
+            "epic_mode": emode, "items": items}
+    plan["digest"] = hashlib.sha256(json.dumps([(p["sid"], p["action"] if p["action"] != "conflict" else "update", p["hash"])
+                                                for p in items], sort_keys=True).encode("utf-8")).hexdigest()[:16]
+    return meta, plan
+
+
+def jira_sync(intent, remote_path=None, overwrite=None, record_path=None, words=None, who=None):
+    if record_path:
+        return jira_record(intent, record_path, words, who)
+    remote = None
+    if remote_path:
+        try:
+            remote = json.loads(read(Path(remote_path)) or "")
+        except ValueError:
+            print("Không đọc được %s: cần JSON dạng {\"<mã issue>\": {\"summary\": ..., \"description\": ...}}." % remote_path)
+            return 2
+    ow = [x for x in re.split(r"[,\s]+", overwrite or "") if x]
+    meta, plan = jira_plan(intent, remote, ow)
+    if meta is None:
+        print(plan)
+        return 2
+    if not plan["project"]:
+        print("domain.md chưa có jira_project_key ở frontmatter, chưa đẩy được. Xem DOMAIN-SETUP.md mục 5.")
+        return 2
+    items = plan["items"]
+    print("# Đẩy story lên Jira: %s · PRD v%s · dự án %s · %s\n" % (plan["intent"], plan["prd"], plan["project"],
+          "Epic gắn qua trường parent" if plan["epic_mode"] == "parent" else "Epic gắn qua trường Epic Link"))
+    act = {"create": "tạo", "update": "cập nhật", "unchanged": "giữ nguyên", "remove": "gắn nhãn " + LABEL_REMOVED,
+           "conflict": "đã sửa trên Jira, chờ PO"}
+    rows = []
+    for p in items:
+        lab = " ".join(["+" + l for l in p.get("labels_add", [])] + ["-" + l for l in p.get("labels_remove", [])]) \
+            if p.get("key") else " ".join(p.get("labels", []))
+        note = p.get("edited") or "; ".join(p.get("reasons") or []) or "-"
+        rows.append((p["sid"], p.get("key") or "-", act[p["action"]], lab or "-", note))
+    print(md_table(["Story", "Jira", "Việc", "Nhãn", "Ghi chú"], rows))
+    count = {a: sum(1 for p in items if p["action"] == a) for a in act}
+    print("\nTạo %d, cập nhật %d, giữ nguyên %d, gắn nhãn bỏ %d, chờ PO %d. Mã kế hoạch %s."
+          % (count["create"], count["update"], count["unchanged"], count["remove"], count["conflict"], plan["digest"]))
+    nr = sum(1 for p in items if LABEL_NOT_READY in p.get("labels", []))
+    if nr:
+        print("%d story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn %s và comment ghi lý do." % (nr, LABEL_NOT_READY))
+    if count["conflict"]:
+        print("Issue đã bị sửa trên Jira sau lần đẩy trước. PO chọn giữ bản trên Jira (bỏ qua story đó) hoặc ghi đè: "
+              "chạy lại với --overwrite <mã story>.")
+    if remote is None and any(p["action"] == "update" for p in items):
+        print("Chưa đối chiếu bản trên Jira. Lấy Summary và Description của các issue cần cập nhật, ghi vào một file JSON, "
+              "chạy lại với --remote <file> trước khi trình PO.")
+    write(jira_plan_path(meta["intent"]), json.dumps(plan, ensure_ascii=False, indent=1) + "\n")
+    print("\nĐã ghi kế hoạch vào %s. Trình bảng trên cho PO; PO đồng ý thì đẩy theo kế hoạch, ghi kết quả vào một file JSON "
+          "và chạy: jira-sync %s --record <file> --words \"<lời PO>\"." % (rel(jira_plan_path(meta["intent"]), meta["intent"]), show(meta["intent"])))
+    return 0
+
+
+def jira_record(intent, record_path, words, who=None):
+    """Ghi kết quả đẩy vào stories/jira-map.json và một DEC. Cần lời PO trong RECENT_TURNS lượt gần nhất."""
+    intent = resolve_intent(intent)
+    if not (words or "").strip():
+        print("Thiếu --words: cần lời đồng ý đẩy của PO, nguyên văn.")
+        return 2
+    msg = presence_recent(words, "đồng ý đẩy story lên Jira")
+    if msg:
+        print("Không ghi: " + msg)
+        return 2
+    try:
+        saved = json.loads(read(jira_plan_path(intent)) or "")
+        results = json.loads(read(Path(record_path)) or "")
+    except ValueError:
+        print("Không đọc được %s hoặc %s." % (rel(jira_plan_path(intent), intent), record_path))
+        return 2
+    meta, plan = jira_plan(intent)
+    if meta is None:
+        print(plan)
+        return 2
+    if saved.get("digest") != plan["digest"]:
+        print("PRD hoặc jira-map.json đã đổi sau lần xem trước (mã %s, nay %s). Chạy lại jira-sync, trình PO bản mới."
+              % (saved.get("digest"), plan["digest"]))
+        return 2
+    by_sid = {p["sid"]: p for p in plan["items"]}
+    bad = [s for s in results if s not in by_sid]
+    wrong = [s for s, r in results.items() if (r or {}).get("status") not in SYNC_RESULTS]
+    nokey = [s for s, r in results.items() if (r or {}).get("status") in ("ok", "found") and not JIRA_KEY.fullmatch(str(r.get("key", "")))]
+    if bad or wrong or nokey:
+        print("Kết quả không khớp kế hoạch: %s." % "; ".join(
+            x for x in ["không có trong kế hoạch: " + ", ".join(bad) if bad else "",
+                        "status phải là " + ", ".join(SYNC_RESULTS) + ": " + ", ".join(wrong) if wrong else "",
+                        "thiếu mã issue: " + ", ".join(nokey) if nokey else ""] if x))
+        return 2
+    path = jira_map_path(intent)
+    try:
+        data = json.loads(read(path) or "{}")
+    except ValueError:
+        data = {}
+    jmap = data.setdefault("stories", {})
+    stamp = now().strftime("%Y-%m-%d %H:%M")
+    done = {"create": [], "update": [], "remove": [], "found": []}
+    failed = []
+    keys = {k: v.get("key") for k, v in jmap.items() if not v.get("removed")}
+    keys.update({s: x.get("key") for s, x in results.items() if x.get("key")})
+    for sid, r in results.items():
+        p, st = by_sid[sid], r["status"]
+        if st in ("failed", "skipped"):
+            if st == "failed":
+                failed.append(sid)
+            continue
+        if p["action"] == "remove":
+            jmap[sid] = dict(jmap.get(sid, {}), removed=True, pushed_at=stamp)
+            done["remove"].append(sid)
+            continue
+        jmap[sid] = {"key": r["key"], "prd": plan["prd"], "summary": p["summary"], "description": p["description"],
+                     "labels": p["labels"], "blocked_by": [d for d in p["blocked_by"] if keys.get(d)], "reasons": p["reasons"],
+                     "hash": p["hash"] if st == "ok" else "", "removed": False, "pushed_at": stamp}
+        done["found" if st == "found" else ("create" if p["action"] == "create" else "update")].append(sid)
+    data["project"] = plan["project"]
+    write(path, json.dumps(data, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    parts = [("tạo %d" % len(done["create"])) if done["create"] else "", ("cập nhật %d" % len(done["update"])) if done["update"] else "",
+             ("nhận issue có sẵn %d" % len(done["found"])) if done["found"] else "",
+             ("gắn nhãn %s %d" % (LABEL_REMOVED, len(done["remove"]))) if done["remove"] else ""]
+    what = "Đẩy story PRD v%s lên Jira %s: %s" % (plan["prd"], plan["project"], ", ".join(x for x in parts if x) or "không đổi gì")
+    who = (who or git_user() or "PO").strip()
+    so = load_state(intent)
+    dtext = read(intent / "decisions.md") or "# Decisions: %s\n" % intent.name
+    dec = next_dec(dtext)
+    new_dec, _ = add_decision(dtext, {"DEC": dec, "Ngày": stamp, "Stage": "-", "Quyết định": what,
+                                      "Nguyên văn": '"%s"' % words.strip().strip('"“”'), "Người quyết": who, "Read when": "story-list"})
+    write(intent / "decisions.md", new_dec)
+    if so is not None:
+        lines = so.text.splitlines()
+        append_log(lines, "- %s %s bởi %s, %s" % (stamp, what, who, dec))
+        write(so.path, "\n".join(lines) + "\n")
+    print("Đã ghi %s vào %s, %s." % (what, rel(path, intent), dec))
+    if done["found"]:
+        print("Issue có sẵn trên Jira (%s) đã nhận vào map; lần chạy sau sẽ đối chiếu và cập nhật." % ", ".join(done["found"]))
+    if failed:
+        print("Chưa đẩy được: %s. Chạy lại jira-sync để thử lần nữa." % ", ".join(failed))
+    print("Commit %s cùng decisions.md; chạy index --write để INDEX.md có số story trên Jira." % rel(path, intent))
+    return 0
 
 
 # ================================================================ manifest
@@ -4103,6 +4394,10 @@ def doctor():
     if not no_domain:
         add("Dự án Jira trong domain.md", "Đạt" if jk and jn else "Cảnh báo", "%s, %s, %s" % (jk, jn, jt) if jk and jn else "thiếu jira_project_key hoặc jira_project_name, Story List sẽ để trống cột Project",
             "-" if jk and jn else "Thêm jira_project_key, jira_project_name vào frontmatter domain/domain.md, xem DOMAIN-SETUP.md mục 5")
+        itype, emode = jira_push_config()
+        okm = emode in ("parent", "epic-link")
+        add("Cách đẩy story lên Jira", "Đạt" if okm else "Lỗi", "loại issue %s, Epic gắn qua %s" % (itype, emode),
+            "-" if okm else "jira_epic_mode chỉ nhận parent hoặc epic-link, xem DOMAIN-SETUP.md mục 5")
     dl = (read(DOMAIN_MD) or "").splitlines()
     nums = set(int(m.group(1)) for _, lvl, t in headings(dl) if lvl == 2 for m in [re.match(r"(\d+)\.", clean(t))] if m)
     miss = [str(n) for n in range(1, 7) if n not in nums]
@@ -4175,7 +4470,7 @@ def doctor():
 # ================================================================ selftest
 COMMANDS = ("status", "next", "check", "trace", "approve", "review-start", "archive", "replay", "feature-id",
             "stories", "dor", "index", "migrate", "doctor", "manifest", "engine-check", "selftest",
-            "skip", "profile", "switch", "cr", "reopen", "sign-start")
+            "skip", "profile", "switch", "cr", "reopen", "sign-start", "jira-sync")
 # Lệnh không có ca fixture, kèm lý do. Mọi lệnh khác phải có ít nhất một ca trong engine/tests/fixtures.
 UNTESTED = {"selftest": "chính là bộ chạy các ca",
             "manifest": "đọc file engine của repo; CI chạy engine-check --strict trên repo thật ở mỗi lần push",
@@ -4830,6 +5125,10 @@ def main(argv):
             pos, kv = parse_opts(args, flags=("--write",), opts=("--us",))
             if pos:
                 return stories_cmd(pos[0], kv.get("--write", False), kv.get("--us"))
+        if cmd == "jira-sync" and args:
+            pos, kv = parse_opts(args, opts=("--remote", "--overwrite", "--record", "--words", "--who"))
+            if pos:
+                return jira_sync(pos[0], kv.get("--remote"), kv.get("--overwrite"), kv.get("--record"), kv.get("--words"), kv.get("--who"))
         if cmd == "dor" and args:
             pos, kv = parse_opts(args, opts=("--story",))
             if pos:

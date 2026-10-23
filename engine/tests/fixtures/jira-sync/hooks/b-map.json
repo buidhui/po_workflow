@@ -1,0 +1,5 @@
+{
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Bash",
+ "tool_input": {"command": "sed -i '' 's/APP-14/APP-15/' {intent}/stories/jira-map.json"}
+}

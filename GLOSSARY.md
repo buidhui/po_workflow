@@ -33,7 +33,9 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Mã tính năng | `<mã sản phẩm>-F<NNN>`, ví dụ `APP-F012`. Cấp khi tạo intent, đi theo tính năng tới PRD, story trên Jira, test case, nhánh code | Quy ước chung các team, `engine/standards/id-conventions.md` |
 | Mã đầy đủ | Mã có mã tính năng, như `AC-APP-F012-01.1`, duy nhất trong toàn công ty. Dùng ở mọi nơi ngoài repo PO: Jira, Figma, nhánh, commit, test, đặc tả API | `engine/standards/naming-conventions.md` mục 3 |
 | Trailer của commit | Dòng `Khoá: giá trị` ở cuối thông điệp commit, như `Implements: AC-APP-F012-01.1`; git đọc lại được bằng `git log --format='%(trailers:key=Implements,valueonly)'` | Conventional Commits 1.0.0; `git interpret-trailers` |
-| Story List | `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`, mỗi US trong PRD một dòng theo mẫu import CSV của Jira. Sinh bằng `/po-stories` sau gate 2.43, profile S thì sau gate 2.42; các team làm việc trên story Jira | Quy ước chung các team, `engine/standards/handoff-rules.md`, ADR 0002 |
+| Story List | `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`, mỗi US trong PRD một dòng theo mẫu import CSV của Jira. Sinh bằng `/po-stories` sau gate 2.43, profile S thì sau gate 2.42; có Jira MCP thì đẩy thẳng lên Jira thay cho import. Các team làm việc trên story Jira |
+| `jira-map.json` | `intents/<intent>/stories/jira-map.json`: mã story ứng với mã issue Jira, bản PRD đã đẩy, nội dung đã đẩy. Do `po-tools.py jira-sync --record` ghi, không sửa tay | ADR 0002, mục bổ sung |
+| `not-ready`, `removed-from-prd` | Hai nhãn Jira do engine gắn: story chưa đạt điều kiện sẵn sàng; story không còn trong PRD. Issue không bị xoá | `engine/standards/handoff-rules.md` | Quy ước chung các team, `engine/standards/handoff-rules.md`, ADR 0002 |
 | Checkpoint | Buổi PO họp với Design PIC, Tech PIC, QA PIC trên Decision Brief ở 2.43, sau khi các team thiết kế từ PRD | Quy ước chung các team |
 | Điều kiện sẵn sàng, DoR | Điều kiện để giao một story cho Dev: PRD đã duyệt, với profile M, L thì 2.43 đã duyệt, US có AC, mọi BR có AC, không còn `❓PO` và câu chặn, giao diện có màn trong `ux-design.md`, story phụ thuộc đã đạt. Kiểm bằng `po-tools.py dor` | Quy ước chung các team. Bản hẹp phía PO của Definition of Ready của AWS; hai mục thiết kế đã xem và đã ước lượng do Design, Dev làm trên Jira |
 | Nguyên tắc chia story | Định nghĩa story, tiêu chí INVEST, dấu hiệu quá lớn, 8 cách tách, các cách không chia, ở `engine/standards/story-splitting.md` | PO-Workflow, theo AWS user-story-patterns |
@@ -94,11 +96,11 @@ Tiện ích:
 - `/po-status`: trạng thái mọi intent, kiểm lệch
 - `/po-review`: review độc lập bằng AI Reviewer
 - `/po-replay`: tóm lược diễn biến của một intent khi bàn giao giữa các PO
-- `/po-stories`: sinh Story List để import lên Jira từ PRD đã duyệt, sau gate 2.43 với profile M, L; kiểm điều kiện sẵn sàng
+- `/po-stories`: đẩy story lên Jira qua MCP hoặc sinh Story List để import, từ PRD đã duyệt, sau gate 2.43 với profile M, L; kiểm điều kiện sẵn sàng
 - `/change-request`: đổi yêu cầu sau khi đã duyệt
 - `/generate-user-guide`: viết User Guide sau khi Dev làm xong
 - `/new-domain`: dựng khung domain pack cho sản phẩm mới
-- Script `engine/scripts/po-tools.py`: `next` stage kế tiếp; `check` kiểm bằng máy; `approve` ghi chép sau khi duyệt, chỉ khi lời PO có trong sổ lượt người; `review-start` ghi dấu artifact trước khi gọi reviewer; `trace` truy vết FR, US, BR, AC; `archive` chụp bản duyệt; `status` kiểm lệch giữa state và file; `feature-id` cấp mã tính năng; `stories` sinh Story List cho Jira; `dor` kiểm điều kiện sẵn sàng; `index` sinh chỉ mục; `replay` tóm lược diễn biến của intent; `migrate` chuyển intent từ bản engine cũ; `doctor` kiểm môi trường
+- Script `engine/scripts/po-tools.py`: `next` stage kế tiếp; `check` kiểm bằng máy; `approve` ghi chép sau khi duyệt, chỉ khi lời PO có trong sổ lượt người; `review-start` ghi dấu artifact trước khi gọi reviewer; `trace` truy vết FR, US, BR, AC; `archive` chụp bản duyệt; `status` kiểm lệch giữa state và file; `feature-id` cấp mã tính năng; `stories` sinh Story List cho Jira; `jira-sync` lập kế hoạch đẩy story qua Jira MCP và ghi kết quả; `dor` kiểm điều kiện sẵn sàng; `index` sinh chỉ mục; `replay` tóm lược diễn biến của intent; `migrate` chuyển intent từ bản engine cũ; `doctor` kiểm môi trường
 
 ## Họ mã
 | Họ | Dạng | Phạm vi | Ví dụ | Thay cho |

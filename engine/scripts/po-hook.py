@@ -5,7 +5,8 @@
   chỉ ghi duyệt khi lời PO có nguyên văn trong sổ này, như HUMAN_TURN của AWS.
 - PreToolUse của Edit, Write, MultiEdit, NotebookEdit: chặn AI tự đổi phần state.md do engine giữ (đánh [x], bỏ qua
   stage [S], mở lại stage đã duyệt, đổi profile, Switches, Open CR), đổi trạng thái CR trong decisions.md, sửa phần thân
-  artifact đã duyệt, sửa dòng DEC cũ, AI Reviewer ghi ngoài reviews/, phiên chính sửa file review đã có hoặc file digest.
+  artifact đã duyệt, sửa dòng DEC cũ, AI Reviewer ghi ngoài reviews/, phiên chính sửa file review đã có, file digest,
+  hoặc stories/jira-map.json, stories/jira-plan.json của lệnh jira-sync.
   Các chuyển trạng thái này đi qua lệnh skip, profile, switch, cr, reopen, approve của po-tools.py, đòi lời PO, như
   ENGINE_OWNED_STATE_TRANSITIONS của AWS.
 - PreToolUse của Bash: chặn lệnh đụng sổ lượt người, lệnh sửa state.md, decisions.md, archive/ bằng shell, và subagent
@@ -28,8 +29,8 @@ _spec.loader.exec_module(T)
 
 KEEP_TURNS = 200
 FILE_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
-WRITE_CMDS = re.compile(r"po-tools\.py\s+(approve|archive|migrate|review-start|skip|profile|switch|cr|reopen|sign-start)\b")
-GUARDED = r"(?:(?:state|decisions)\.md\b|/archive/|\.digest\b)"
+WRITE_CMDS = re.compile(r"po-tools\.py\s+(approve|archive|migrate|review-start|skip|profile|switch|cr|reopen|sign-start|jira-sync)\b")
+GUARDED = r"(?:(?:state|decisions)\.md\b|/archive/|\.digest\b|jira-(?:map|plan)\.json\b)"
 SHELL_EDIT = re.compile(r"\bsed\s+-[a-zA-Z]*i|\bperl\s+-[a-zA-Z]*i|\btee\b|\bmv\b|\bcp\b|\brm\b|python3?\s+-c|\btruncate\b")
 GUARDED_SHELL = re.compile(GUARDED)
 REDIRECT_INTO = re.compile(r">{1,2}\s*['\"]?[^\s|;&]*" + GUARDED)
@@ -149,6 +150,8 @@ def pre_file(payload):
         return 0
     if intent is None:
         return 0
+    if inner in ("stories/jira-map.json", "stories/jira-plan.json"):
+        return deny("%s do po-tools.py jira-sync ghi, không sửa tay. Kết quả đẩy lên Jira ghi bằng jira-sync --record." % inner)
     if re.fullmatch(r"reviews/[a-z0-9.-]+\.digest", inner):
         return deny("File digest do po-tools.py review-start hoặc sign-start ghi, không sửa tay.")
     if re.fullmatch(r"reviews/review-[a-z0-9-]+-\d+\.md", inner) and path.exists():
@@ -189,7 +192,7 @@ def pre_bash(payload):
         return deny("Subagent không chạy lệnh ghi của po-tools.py (approve, archive, migrate, review-start). "
                     "Phiên chính chạy sau khi PO quyết.")
     if REDIRECT_INTO.search(cmd) or (GUARDED_SHELL.search(cmd) and SHELL_EDIT.search(cmd)):
-        return deny("Không sửa state.md, decisions.md, archive/ hay file digest bằng lệnh shell. Dùng Edit để hook kiểm được, "
+        return deny("Không sửa state.md, decisions.md, archive/, file digest hay jira-map.json bằng lệnh shell. Dùng Edit để hook kiểm được, "
                     "hoặc lệnh của po-tools.py.")
     return 0
 

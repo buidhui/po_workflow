@@ -1,0 +1,67 @@
+# Cùng PRD v1.0 với fixture story-list. stories/jira-map.json ghi US1 đã đẩy ở PRD v0.9 thành APP-11 và US4 thành APP-14;
+# US4 không còn trong PRD. US2, US3 chưa đạt điều kiện sẵn sàng nhưng vẫn đẩy, mang nhãn not-ready.
+[jira-sync]
+mã thoát: 0
+có: | US-LMS-F903-01 | APP-11 | cập nhật | - | - |
+có: | US-LMS-F903-02 | - | tạo | LMS-F903 US-LMS-F903-02 LMS-F903-U2 not-ready | chưa có AC;
+có: | US-LMS-F903-03 | - | tạo | LMS-F903 US-LMS-F903-03 LMS-F903-U2 not-ready | phụ thuộc US-LMS-F903-02 chưa đạt |
+có: | US-LMS-F903-04 | APP-14 | gắn nhãn removed-from-prd | +removed-from-prd | - |
+có: Tạo 2, cập nhật 1, giữ nguyên 0, gắn nhãn bỏ 1, chờ PO 0.
+có: Chưa đối chiếu bản trên Jira
+tệp stories/jira-plan.json có: "comment": "Cập nhật theo PRD v1.0, tag jira-sync/prd-v1.0. Mã thêm: AC-LMS-F903-01.2, BR-LMS-F903-01.1, BR-LMS-F903-01.2, SCR-LMS-F903-01. Mã bỏ: AC-LMS-F903-01.9."
+tệp stories/jira-plan.json có: "jql": "project = APP AND labels = \"US-LMS-F903-02\""
+tệp stories/jira-plan.json có: Chưa đạt điều kiện sẵn sàng: phụ thuộc US-LMS-F903-02 chưa đạt.
+tệp stories/jira-plan.json có: ## TIÊU CHÍ CHẤP NHẬN
+tệp stories/jira-plan.json có: "epic_mode": "parent"
+
+[jira-sync {intent} --remote {intent}/remote.json]
+mã thoát: 0
+có: | US-LMS-F903-01 | APP-11 | đã sửa trên Jira, chờ PO | - | Description khác bản đẩy lần trước
+có: chạy lại với --overwrite <mã story>
+
+[jira-sync {intent} --remote {intent}/remote-same.json]
+mã thoát: 0
+có: | US-LMS-F903-01 | APP-11 | cập nhật | - | - |
+
+[jira-sync {intent} --remote {intent}/remote.json --overwrite US-LMS-F903-01]
+mã thoát: 0
+có: | US-LMS-F903-01 | APP-11 | cập nhật | - | - |
+
+[jira-sync {intent} --record {intent}/results.json --words "đẩy lên Jira"]
+mã thoát: 2
+có: không thấy sổ lượt người
+
+[@hook hooks/p-push.json]
+mã thoát: 0
+
+[jira-sync {intent} --record {intent}/results-bad.json --words "đẩy lên Jira"]
+mã thoát: 2
+có: không có trong kế hoạch: US-LMS-F903-09
+có: thiếu mã issue: US-LMS-F903-02
+
+[jira-sync {intent} --record {intent}/results.json --words "đẩy lên Jira" --who "Người thử"]
+mã thoát: 0
+có: Đã ghi Đẩy story PRD v1.0 lên Jira APP: tạo 2, cập nhật 1, gắn nhãn removed-from-prd 1
+tệp stories/jira-map.json có: "key": "APP-21"
+tệp stories/jira-map.json có: "removed": true
+tệp decisions.md có: | Đẩy story PRD v1.0 lên Jira APP: tạo 2, cập nhật 1, gắn nhãn removed-from-prd 1 | "đẩy lên Jira" | Người thử |
+
+[jira-sync]
+mã thoát: 0
+có: | US-LMS-F903-01 | APP-11 | giữ nguyên | - | - |
+có: | US-LMS-F903-03 | APP-22 | giữ nguyên | - | phụ thuộc US-LMS-F903-02 chưa đạt |
+không có: US-LMS-F903-04
+có: Tạo 0, cập nhật 0, giữ nguyên 3, gắn nhãn bỏ 0, chờ PO 0.
+
+[stories]
+mã thoát: 0
+có: | US-LMS-F903-02 | Xem lại chứng chỉ đã cấp | Should | U2 | APP-9 | chưa đạt | chưa có AC; câu chặn còn mở ở Câu hỏi mở: #1; giao diện chưa có màn trong ux-design | APP-21 |
+
+[@hook hooks/e-map.json]
+mã thoát: 2
+có: "permissionDecision": "deny"
+có: jira-sync --record
+
+[@hook hooks/b-map.json]
+mã thoát: 2
+có: "permissionDecision": "deny"

@@ -73,11 +73,14 @@ Tham khảo khối lượng: knowledge base của sản phẩm đầu tiên áp 
    - `code` là mã sản phẩm theo danh mục của công ty, dùng trong mã tính năng `<code>-F<NNN>` cho mọi team; mã này được xác định khi dựng domain và không ghi cứng trong engine.
    - `names` là các tên sản phẩm và công ty mà engine không được chứa.
    - Ba khoá Jira là dự án Jira nhận Story List. Script điền ba khoá này vào ba cột đầu của Story List; thiếu thì `doctor` cảnh báo.
+   - Hai khoá tuỳ chọn cho đường đẩy qua Jira MCP: `jira_story_type` là tên loại issue cho story, mặc định `Story`; `jira_epic_mode` là cách gắn Epic, `parent` với dự án Jira Cloud dùng trường parent, `epic-link` với dự án còn trường Epic Link, mặc định `parent`. `doctor` báo lỗi khi `jira_epic_mode` sai giá trị.
 
    ```yaml
    jira_project_key: ABC
    jira_project_name: Tên dự án trên Jira
    jira_project_type: software
+   jira_story_type: Story
+   jira_epic_mode: parent
    ```
 
 2. Nguồn sống và bản chốt, kèm ngày đối chiếu và phiên bản nguồn.
@@ -106,7 +109,7 @@ Chuẩn trong `engine/standards/` áp dụng nguyên vẹn cho sản phẩm mớ
 2. Thống nhất với Design, Tech và QA rằng PRD, ba file thiết kế ở 2.43, Decision Brief và story trên Jira là đầu vào chính thức. Template của ba file thiết kế nằm ở `engine/templates/`; team đã có mẫu riêng thì đối chiếu và đề xuất sửa template của engine. Kiểm lại dự án Jira khai ở mục 5 với người quản trị Jira.
 3. Gửi các PIC ba chuẩn: `engine/standards/id-conventions.md` về mã, `engine/standards/naming-conventions.md` về tên nhánh, commit, tag test, frame Figma, và `engine/standards/handoff-rules.md` về quy tắc bàn giao. Phần áp dụng trong repo và công cụ của từng team có hiệu lực khi Tech PIC và QA PIC đồng ý.
 4. Cấp quyền ghi repo cho Design PIC, Tech PIC, QA PIC và quyền đọc cho Dev. Trước khi cấp, rà `domain/` và `intents/` để loại tài khoản môi trường thử nghiệm và thông tin nhạy cảm.
-5. Việc chia và theo dõi nằm trên Jira theo `engine/standards/adr/0002-story-tren-jira.md`; repo chỉ giữ file CSV theo phiên bản PRD.
+5. Việc chia và theo dõi nằm trên Jira theo `engine/standards/adr/0002-story-tren-jira.md`; repo chỉ giữ file CSV theo phiên bản PRD và, khi đẩy qua MCP, `jira-map.json`. Muốn đẩy qua MCP thì cài Jira MCP cho Claude Code và cấp quyền tạo, sửa issue trong dự án.
 
 ## 9. Chạy thử
 

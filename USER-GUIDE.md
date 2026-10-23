@@ -288,6 +288,15 @@ Khi duyệt lại, script so mã với bản đã duyệt trước. Mã nào b�
 
 AI trình bản xem trước: mỗi US trong PRD một story, kèm ưu tiên, Unit, Epic và kết quả điều kiện sẵn sàng. Khi PO đồng ý, AI ghi `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`. AI chỉ ghi file khi PRD đã duyệt; với profile M, L, chỉ ghi sau gate 2.43. Mã màn của từng story lấy từ `ux-design.md`. File có 12 cột theo mẫu import CSV của Jira, gồm cột Priority đổi từ dòng Ưu tiên của US: Must thành Highest, Should thành High, Could thành Medium. PO import lên Jira bằng chức năng import CSV.
 
+Phiên Claude Code đã nối Jira MCP thì AI đẩy story thẳng lên Jira, không cần import:
+
+1. AI chạy `po-tools.py jira-sync intents/<intent>` và trình bảng kế hoạch: story nào tạo, cập nhật, giữ nguyên, gắn nhãn `removed-from-prd`. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready`.
+2. Story đã đẩy trước đó mà bị sửa tay trên Jira thì AI báo; PO chọn giữ bản trên Jira hoặc ghi đè.
+3. PO đồng ý, ví dụ "đồng ý đẩy lên Jira". AI tạo, cập nhật issue qua MCP, sau đó ghi kết quả bằng `jira-sync --record`. Script chỉ ghi khi lời đồng ý có trong 3 lượt gần nhất của PO.
+4. PO commit `stories/jira-map.json` và `decisions.md`.
+
+Khi PRD đổi qua change request, chạy lại `/po-stories`; chỉ story đổi được cập nhật, kèm comment ghi bản PRD mới.
+
 Trước lần sinh Story List đầu tiên, kiểm hai điểm:
 
 - `domain/domain.md` có `jira_project_key` và `jira_project_name` ở frontmatter. Hai khoá này được khai báo khi dựng domain pack, theo DOMAIN-SETUP.md mục 5.
@@ -339,7 +348,7 @@ PIC không mở được repo thì gửi nội dung cho PO. PO dán nguyên văn
 
 ### 8.2 Làm việc trên story Jira
 
-Sau gate 2.43, hoặc sau gate 2.42 với profile S, PO import Story List lên Jira. Mỗi US trong PRD là một story; phần Description lấy từ PRD, gồm tiêu chí chấp nhận và business rule có mã đầy đủ.
+Sau gate 2.43, hoặc sau gate 2.42 với profile S, PO đẩy story lên Jira qua MCP hoặc import Story List. Mỗi US trong PRD là một story; phần Description lấy từ PRD, gồm tiêu chí chấp nhận và business rule có mã đầy đủ.
 
 | Người | Việc trên story |
 |---|---|
@@ -349,9 +358,10 @@ Sau gate 2.43, hoặc sau gate 2.42 với profile S, PO import Story List lên J
 
 Quy tắc:
 
-1. Không sửa phần Description. Nội dung nghiệp vụ chỉ đổi khi PRD đổi qua change request; khi đó PO sửa story theo danh sách story đổi mà script in ra.
+1. Không sửa phần Description. Nội dung nghiệp vụ chỉ đổi khi PRD đổi qua change request; khi đó PO cập nhật story, kèm comment ghi bản PRD mới. Description bị sửa trên Jira sẽ được báo cho PO ở lần đẩy sau.
 2. Câu hỏi nghiệp vụ ghi bằng comment trên story, gắn người phải trả lời. Câu trả lời làm đổi PRD thì PO đi qua change request.
-3. Cột Comment của story ghi kết quả điều kiện sẵn sàng lúc import. Story chưa đạt thì chờ PO xử lý các lý do ghi ở cột này trước khi nhận việc.
+3. Story chưa đạt điều kiện sẵn sàng mang nhãn `not-ready`, comment ghi lý do. Chờ PO xử lý các lý do đó trước khi nhận việc; nhãn được bỏ khi story đạt.
+4. Story mang nhãn `removed-from-prd` không còn trong PRD. Không làm tiếp; đóng hoặc huỷ theo quy trình của team.
 
 ### 8.3 Mã và cách trỏ
 
@@ -388,7 +398,7 @@ Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev 
 | `/po-status [intent]` | Xem trạng thái mọi intent, phát hiện lệch giữa `state.md` và file |
 | `/po-review <file>` | Review độc lập bằng AI Reviewer; thêm `--shadow` cho tài liệu người khác viết |
 | `/po-replay <intent>` | Tóm lược diễn biến của intent theo dòng thời gian: quyết định, review, việc còn chặn. Dùng khi chuyển intent cho PO khác |
-| `/po-stories <intent>` | Sinh Story List để import lên Jira từ PRD đã duyệt; profile M, L chạy sau gate 2.43 |
+| `/po-stories <intent>` | Đẩy story lên Jira qua MCP hoặc sinh Story List để import, từ PRD đã duyệt; profile M, L chạy sau gate 2.43 |
 | `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt; PO quyết định Nhận, Hoãn hoặc Bác trước khi sửa |
 | `/po-evaluate <intent>` | Đánh giá giải pháp sau phát hành theo tiêu chí thành công của PRD |
 | `/generate-user-guide <intent>` | Viết User Guide sau khi Dev hoàn thành |
@@ -409,6 +419,7 @@ Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI ch�
 | `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC ký |
 | `po-tools.py replay <intent>` | Tóm lược diễn biến của intent cho người tiếp nhận |
 | `po-tools.py stories <intent> [--write]` | Xem trước hoặc ghi Story List cho Jira |
+| `po-tools.py jira-sync <intent>` | Lập kế hoạch đẩy story lên Jira qua MCP; `--remote` đối chiếu bản trên Jira, `--record` ghi kết quả |
 | `po-tools.py dor <intent>` | Kiểm điều kiện sẵn sàng |
 | `po-tools.py index --write` | Cập nhật `intents/INDEX.md` |
 | `po-tools.py migrate <intent> [--feature <mã>] [--write]` | Chuyển intent tạo từ bản engine cũ |

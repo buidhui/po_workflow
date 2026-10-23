@@ -123,7 +123,7 @@ BABOK v3 nêu thêm sáu nhóm năng lực nền. Quy trình hỗ trợ PO thể
 | Kiến thức nghiệp vụ | Knowledge base của sản phẩm trong domain pack; đọc lại nguồn sống khi yêu cầu chạm tới |
 | Kỹ năng giao tiếp | Template thống nhất; Decision Brief tối đa 1.500 từ; văn phong bàn giao có mã kèm nội dung |
 | Kỹ năng tương tác | Questions file gắn người trả lời; buổi họp trên Decision Brief; ý kiến phản đối chép nguyên văn |
-| Công cụ và công nghệ | Công cụ AI, script kiểm tra, Git, Jira qua import CSV |
+| Công cụ và công nghệ | Công cụ AI, script kiểm tra, Git, Jira qua MCP hoặc import CSV |
 
 Scrum Guide 2020 giao cho PO bốn trách nhiệm với backlog. PO có thể giao việc cho người khác nhưng vẫn chịu trách nhiệm cuối.
 
@@ -460,18 +460,20 @@ Tiêu chí chấp nhận là thoả thuận giữa PO và QA về điều kiện
 
 ### 6.6 Story List
 
-Sau khi PRD được duyệt, và với profile M, L thì sau gate 2.43, lệnh `/po-stories` sinh `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv` theo mẫu import CSV của Jira, mỗi US trong PRD một dòng. PO import file lên Jira; các team làm việc trên story Jira. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
+Sau khi PRD được duyệt, và với profile M, L thì sau gate 2.43, lệnh `/po-stories` sinh `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv` theo mẫu import CSV của Jira, mỗi US trong PRD một dòng. Phiên AI có Jira MCP thì `/po-stories` đẩy story thẳng lên Jira thay cho import, xem dưới bảng. Các team làm việc trên story Jira. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
 
 | Cột | Nội dung |
 |---|---|
 | Project key, Project name, Project type | Dự án Jira, lấy từ frontmatter `domain/domain.md` |
-| Issue Type | `Story` |
+| Issue Type | `Story`, đổi được bằng khoá `jira_story_type` của `domain.md` |
 | Summary | Tên user story |
 | Priority | Từ dòng Ưu tiên của US: Must thành Highest, Should thành High, Could thành Medium |
 | Description | Mô tả, tiền điều kiện, kịch bản, tiêu chí chấp nhận, giao diện và validate, business rule, dữ liệu, yêu cầu phi chức năng, ngoài phạm vi, tham chiếu tới PRD, tag và mã màn lấy từ `ux-design.md`; cú pháp Jira, mã đầy đủ |
 | Epic Link | Mã Epic ở dòng Jira Epic của `intent.md`; nhiều Epic thì ghi `U2: <mã Epic>` để gán theo Unit |
 | Labels, ba cột | Mã tính năng, mã story, mã tính năng kèm Unit |
 | Comment | Nguồn PRD và tag, kết quả điều kiện sẵn sàng, câu hỏi còn mở, nhắc Dev điền story point và thứ tự |
+
+Đẩy qua Jira MCP dùng lệnh `po-tools.py jira-sync`. Script lập kế hoạch và ghi kết quả, AI gọi công cụ của MCP, nên engine không phụ thuộc MCP. Mỗi lần chạy, script so PRD với `stories/jira-map.json` và xếp mỗi story vào một việc: tạo, cập nhật, giữ nguyên, hoặc gắn nhãn `removed-from-prd` khi story không còn trong PRD; issue không bao giờ bị xoá. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready` và comment ghi lý do. Trước khi cập nhật, script so bản trên Jira với bản đẩy lần trước; issue bị sửa tay thì PO quyết định giữ hoặc ghi đè. PO đồng ý bằng lời trước khi đẩy; kết quả ghi vào `jira-map.json` và một DEC. Story nêu ở Tiền điều kiện thành liên kết "is blocked by". Mã issue không ghi vào PRD. Quyết định và các nguồn tham khảo ở ADR 0002, mục bổ sung.
 
 Trên Jira, Design gắn mã màn và link thiết kế, Tech gom story vào Unit of work, chia sub-task và ước lượng story point, QA viết test case trỏ về mã AC. Câu hỏi nghiệp vụ ghi bằng comment trên story; câu trả lời làm đổi PRD thì đi qua change request. Quy tắc đầy đủ ở `engine/standards/handoff-rules.md`.
 
@@ -491,15 +493,15 @@ Một story được bàn giao cho Dev khi đạt đủ bảy điều kiện:
 
 ### 6.8 Phiên bản, tag và chỉ mục
 
-Mỗi lần duyệt PRD hoặc Decision Brief, script in tên tag dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. PO commit artifact vừa duyệt, gắn tag và đẩy tag lên. File CSV của Story List được commit cùng PRD với profile S, cùng Decision Brief với profile M, L. Lệnh `po-tools.py index --write` sinh `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, nơi đăng bản đọc nếu có, và số story đạt điều kiện sẵn sàng. Agent AI của Dev đọc PRD theo tag, nên luôn lấy đúng bản đã duyệt. Bản đăng ra ngoài repo, nếu có, chỉ để đọc; nội dung không được sửa ở đó để chép ngược về repo.
+Mỗi lần duyệt PRD hoặc Decision Brief, script in tên tag dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. PO commit artifact vừa duyệt, gắn tag và đẩy tag lên. File CSV của Story List được commit cùng PRD với profile S, cùng Decision Brief với profile M, L. Lệnh `po-tools.py index --write` sinh `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị chạm, tag, nơi đăng bản đọc nếu có, số story đạt điều kiện sẵn sàng và số story đã đẩy lên Jira. Agent AI của Dev đọc PRD theo tag, nên luôn lấy đúng bản đã duyệt. Bản đăng ra ngoài repo, nếu có, chỉ để đọc; nội dung không được sửa ở đó để chép ngược về repo.
 
 ### 6.9 Thay đổi yêu cầu sau bàn giao
 
-Thay đổi chạm stage đã duyệt đi qua `/change-request`. PRD được duyệt lại thành bản mới, ví dụ 1.1. `/po-stories` sinh file CSV mới và so với bản trước, in story nào đổi, story nào mới, story nào bị bỏ. PO sửa story đã import trên Jira theo danh sách đó, import riêng các story mới, và báo đúng PIC phải xem lại. Test case ghi bản PRD đã dùng khi chạy, để biết kết quả còn đúng hay không.
+Thay đổi chạm stage đã duyệt đi qua `/change-request`. PRD được duyệt lại thành bản mới, ví dụ 1.1. Với đường MCP, chạy lại `/po-stories`: `jira-sync` cập nhật đúng các story đổi, tạo story mới, gắn nhãn `removed-from-prd` cho story bị bỏ, và comment trên từng story ghi bản PRD mới cùng các mã thêm, bỏ. Với đường CSV, `/po-stories` sinh file CSV mới và so với bản trước, in story nào đổi, story nào mới, story nào bị bỏ; PO sửa story đã import trên Jira theo danh sách đó và import riêng các story mới. Cả hai đường, PO báo đúng PIC phải xem lại. Test case ghi bản PRD đã dùng khi chạy, để biết kết quả còn đúng hay không.
 
 ### 6.10 Nơi lưu và quyền truy cập
 
-File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bản PRD một file. Việc chia và theo dõi nằm trên Jira, theo `engine/standards/adr/0002-story-tren-jira.md`. Các PIC cần quyền ghi repo để viết file thiết kế và ký Decision Brief, nên họ cũng đọc được phần làm việc nội bộ của PO. Trước khi mở quyền, PO rà thông tin nhạy cảm như tài khoản môi trường thử nghiệm; workflow gitleaks quét mỗi lần đẩy lên.
+File CSV lưu trong `intents/<intent>/stories/` của repo PO, mỗi phiên bản PRD một file; `jira-map.json` của đường MCP cũng ở đây. Việc chia và theo dõi nằm trên Jira, theo `engine/standards/adr/0002-story-tren-jira.md`. Các PIC cần quyền ghi repo để viết file thiết kế và ký Decision Brief, nên họ cũng đọc được phần làm việc nội bộ của PO. Trước khi mở quyền, PO rà thông tin nhạy cảm như tài khoản môi trường thử nghiệm; workflow gitleaks quét mỗi lần đẩy lên.
 
 ## 7. Sau PRD
 
