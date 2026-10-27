@@ -8,10 +8,10 @@ Kiến thức chung cho vai Product, không phụ thuộc sản phẩm, chép t�
 |---|---|
 | Repo | https://github.com/awslabs/aidlc-workflows |
 | Commit đối chiếu lần cuối | `0488aff`, ngày 18/10/2026, sau bản phát hành 2.11.0 |
-| Kết quả đối chiếu | 7 file dưới đây trùng nội dung bản đó, chỉ khác dòng ghi nguồn. Nhãn "v2.10" ghi trước đây là sai: nội dung đã là bản 2.11 |
+| Kết quả đối chiếu | 8 file dưới đây trùng nội dung bản đó, chỉ khác dòng ghi nguồn. Nhãn "v2.10" ghi trước đây là sai: nội dung đã là bản 2.11 |
 | Lần đối chiếu sau | Khi AWS ra bản mới: so từng file ở đây, sau đó so dòng "Lệch so với AWS" trong bảng đầu mỗi file `engine/stages/` với stage cùng số của AWS |
 
-Engine cũng bám bản này cho protocol stage, gate và review. Domain pack của sản phẩm đang cài nằm riêng ở `domain/` tại gốc repo. File stage trong `engine/stages/` ghi file nào cần đọc.
+Protocol stage, gate và review của quy trình cũng bám bản này. Knowledge base của sản phẩm nằm riêng ở `domain/` tại gốc repo. File stage trong `engine/stages/` ghi file nào cần đọc.
 
 | File | Nội dung | Stage đọc | Tình trạng |
 |---|---|---|---|

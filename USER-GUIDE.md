@@ -21,7 +21,7 @@ Tài liệu này mô tả thao tác. Phương pháp và lý do của từng stag
 8. [Dành cho Design PIC, Tech PIC, QA PIC](#8-dành-cho-design-pic-tech-pic-qa-pic)
 9. [Dành cho Dev](#9-dành-cho-dev)
 10. [Lệnh](#10-lệnh)
-11. [Domain pack](#11-domain-pack)
+11. [Knowledge base của sản phẩm](#11-knowledge-base-của-sản-phẩm)
 12. [Xử lý tình huống](#12-xử-lý-tình-huống)
 
 ## 1. Quy trình tóm tắt
@@ -40,7 +40,7 @@ Mỗi yêu cầu là một intent. Intent đi qua hai phase: Ideation xác đị
 | 2.4 User Stories | `stories.md`, mã `US1` | Có | `inception/user-stories/` |
 | 2.42 PRD Generation | PRD, `traceability.md` | Có | `inception/prd/` |
 | 2.43 Design Alignment, profile M và L | Ba file thiết kế do các team viết, Decision Brief | Alignment gate, 3 PIC ký | `inception/ux-design/`, `tech-design/`, `test-design/`, `decision-brief/` |
-| Sau gate 2.43, hoặc sau PRD với profile S | Story List để import lên Jira | Không | `stories/` |
+| Sau gate 2.43, hoặc sau PRD với profile S | Story trên Jira, đẩy qua MCP hoặc import Story List | Không | `stories/` |
 | Sau khi Dev hoàn thành | User Guide | Không | `user-guide/` |
 
 Profile quyết định số stage. Khi tạo intent, AI đề xuất profile kèm lý do; PO có quyền đổi. Khi phân vân giữa hai profile, chọn profile lớn hơn.
@@ -59,7 +59,7 @@ Gate là điểm dừng bắt buộc. AI không chuyển sang stage tiếp theo 
 
 ### 2.1 Công cụ AI
 
-Quy trình nằm trong `engine/` và `AGENTS.md`, không phụ thuộc công cụ. Với Claude Code, bản terminal, ứng dụng desktop hoặc extension cho IDE đều dùng được; các lệnh như `/po`, `/new-intent` có sẵn trong `.claude/commands/`. Với công cụ khác, yêu cầu AI đọc `AGENTS.md`, sau đó đọc `engine/commands/<lệnh>.md` hoặc `engine/stages/<stage>.md` và làm theo.
+PO dùng được nhiều công cụ AI, vì quy trình nằm trong `engine/` và `AGENTS.md`. Với Claude Code, bản terminal, ứng dụng desktop hoặc extension cho IDE đều dùng được; các lệnh như `/po`, `/new-intent` có sẵn trong `.claude/commands/`. Với công cụ khác, yêu cầu AI đọc `AGENTS.md`, sau đó đọc `engine/commands/<lệnh>.md` hoặc `engine/stages/<stage>.md` và làm theo.
 
 ### 2.2 Mở đúng thư mục gốc
 
@@ -90,7 +90,7 @@ Kiểm tra môi trường sau khi cài đặt và mỗi khi thấy bất thườ
 python3 engine/scripts/po-tools.py doctor
 ```
 
-Lệnh kiểm tên git, Python, thư mục đang mở, hook ghi lượt PO đã chạy chưa, file chưa commit, nguồn knowledge base quá hạn đối chiếu, domain pack, mã tính năng trùng, và tên sản phẩm xuất hiện trong engine. Mỗi dòng không đạt có gợi ý cách sửa. Dòng "Hook ghi lượt PO" chuyển sang Đạt sau khi PO gõ câu đầu tiên trong một phiên mở đúng thư mục gốc.
+Lệnh kiểm tên git, Python, thư mục đang mở, hook ghi lượt PO đã chạy chưa, file chưa commit, nguồn knowledge base quá hạn đối chiếu, knowledge base của sản phẩm, mã tính năng trùng, và tên sản phẩm lọt vào phần quy trình dùng chung. Mỗi dòng không đạt có gợi ý cách sửa. Dòng "Hook ghi lượt PO" chuyển sang Đạt sau khi PO gõ câu đầu tiên trong một phiên mở đúng thư mục gốc.
 
 ### 2.5 Chụp màn hình cho User Guide
 
@@ -106,8 +106,8 @@ po-workflow/
 ├── USER-GUIDE.md              file này
 ├── DOMAIN-SETUP.md            đưa một sản phẩm mới vào quy trình
 ├── GLOSSARY.md                thuật ngữ, tên stage, họ mã
-├── CHANGELOG.md · VERSION     phiên bản engine và cách nâng cấp
-├── engine/                    quy trình, không phụ thuộc sản phẩm và công cụ
+├── CHANGELOG.md · VERSION     phiên bản quy trình và cách nâng cấp
+├── engine/                    quy trình dùng chung cho mọi sản phẩm
 │   ├── stages/                mỗi stage một file
 │   ├── commands/              lệnh: po, new-intent, po-status, po-review, po-replay, po-stories, po-evaluate, change-request, generate-user-guide, new-domain
 │   ├── protocol/              quy định chung: stage, gate, review, câu hỏi, profile
@@ -117,10 +117,10 @@ po-workflow/
 │   ├── standards/             quy ước mã, quy ước đặt tên, quy tắc bàn giao, sơ đồ, chuẩn knowledge base, ADR
 │   ├── knowledge/             kiến thức vai PO lấy từ AWS
 │   ├── scripts/               po-tools.py: kiểm tra, truy vết, duyệt, quyết định, Story List, chỉ mục; po-hook.py: hook của Claude Code
-│   └── tests/                 dữ liệu kiểm thử của script, dành cho người giữ engine
+│   └── tests/                 dữ liệu kiểm thử của script, dành cho người sửa quy trình
 ├── domain/                    knowledge base của sản phẩm: domain.md, các file KB, corner checklist
 ├── memory/
-│   ├── team.md                bài học dùng chung, đi theo engine
+│   ├── team.md                bài học dùng chung, đi theo quy trình
 │   └── project.md             bài học của sản phẩm đang cài
 ├── .claude/                   cấu hình riêng cho Claude Code: lối tắt cho lệnh, quyền, hook
 ├── .po/                       sổ lượt người trên máy này, không commit
@@ -133,7 +133,7 @@ po-workflow/
         ├── memory.md          quan sát của AI, PO đọc tại gate
         ├── inputs/            tài liệu đầu vào
         ├── ideation/  inception/
-        ├── stories/           Story List để import lên Jira
+        ├── stories/           Story List, bảng ghép story với issue Jira
         └── reviews/  verification/  archive/  design/  user-guide/  evaluation/
 ```
 
@@ -147,7 +147,7 @@ po-workflow/
 /new-intent Báo cáo giai đoạn 1
 ```
 
-AI tạo thư mục `intents/<YYMMDD>-bao-cao-giai-doan-1/`, cấp mã tính năng, đọc nhanh knowledge base để ước lượng vùng bị chạm, sau đó hỏi một câu để xác nhận profile, ví dụ "Profile M: 7 stage, 6 gate. Đồng ý, đổi profile, hay đổi depth?".
+AI tạo thư mục `intents/<YYMMDD>-bao-cao-giai-doan-1/`, cấp mã tính năng, đọc nhanh knowledge base để ước lượng vùng bị chạm, sau đó hỏi một câu để xác nhận profile, ví dụ "Profile M: 7 stage, 6 gate. Đồng ý, đổi profile hoặc đổi depth?".
 
 Đặt tài liệu đầu vào như mô tả yêu cầu, email, biên bản họp, ảnh vào `inputs/`. Khi chưa có mô tả, AI chép mẫu `inputs/request.md` gồm hiện trạng, điều muốn thay đổi, trong và ngoài phạm vi, điều không được thay đổi, mốc thời gian, câu hỏi mở; PO gửi mẫu cho người yêu cầu điền. Mục "Điều không được thay đổi" có tác động lớn nhất tới phân tích ảnh hưởng. Ghi link Figma, Jira và tên các PIC vào `intent.md`.
 
@@ -185,7 +185,7 @@ Stage 2.32 Solution Options chỉ chạy khi có nhiều hướng giải. PO đ�
 - mục 6 viết từng US với mười mục con: dòng Ưu tiên, business rule theo BABOK 10.9, tiêu chí chấp nhận theo Given/When/Then có ghi business rule mà nó kiểm, trường hợp ngoại lệ lấy từ Impact Matrix;
 - mục 7 tới 10 gom yêu cầu phi chức năng, yêu cầu chuyển đổi, giả định và câu hỏi mở.
 
-Đối tượng đổi trạng thái có bảng chuyển trạng thái và sơ đồ trạng thái ở mục 4; script kiểm hai bên khớp nhau. Với điểm phụ thuộc thiết kế hoặc kỹ thuật chưa rõ, AI ghi đề xuất kèm câu hỏi gắn tên PIC để các team trả lời ở 2.43. Trước gate, AI chạy kiểm truy vết FR, US, BR, AC và sửa phần thiếu.
+Đối tượng đổi trạng thái có bảng chuyển trạng thái và sơ đồ trạng thái ở mục 4; script kiểm hai bên khớp nhau và kiểm cú pháp mọi sơ đồ Mermaid, để sơ đồ hiển thị được trên GitHub. Với điểm phụ thuộc thiết kế hoặc kỹ thuật chưa rõ, AI ghi đề xuất kèm câu hỏi gắn tên PIC để các team trả lời ở 2.43. Trước gate, AI chạy kiểm truy vết FR, US, BR, AC và sửa phần thiếu.
 
 Stage 2.43 Design Alignment chạy với profile M và L, theo bốn bước:
 
@@ -299,7 +299,7 @@ Khi PRD đổi qua change request, chạy lại `/po-stories`; chỉ story đổ
 
 Trước lần sinh Story List đầu tiên, kiểm hai điểm:
 
-- `domain/domain.md` có `jira_project_key` và `jira_project_name` ở frontmatter. Hai khoá này được khai báo khi dựng domain pack, theo DOMAIN-SETUP.md mục 5.
+- `domain/domain.md` có `jira_project_key` và `jira_project_name` ở frontmatter. Hai khoá này được khai báo khi dựng knowledge base của sản phẩm, theo DOMAIN-SETUP.md mục 5.
 - Dòng Jira Epic trong `intent.md` có mã Epic. Intent có nhiều Epic thì ghi thêm `U2: <mã Epic>` để story của Unit đó gắn đúng Epic.
 
 ### 7.2 Gắn tag và cập nhật chỉ mục
@@ -402,13 +402,13 @@ Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev 
 | `/change-request <intent>` | Đổi hoặc bổ sung yêu cầu sau khi đã duyệt; PO quyết định Nhận, Hoãn hoặc Bác trước khi sửa |
 | `/po-evaluate <intent>` | Đánh giá giải pháp sau phát hành theo tiêu chí thành công của PRD |
 | `/generate-user-guide <intent>` | Viết User Guide sau khi Dev hoàn thành |
-| `/new-domain <sản phẩm>` | Dựng khung domain pack trong repo của sản phẩm mới |
+| `/new-domain <sản phẩm>` | Dựng khung knowledge base trong repo của sản phẩm mới |
 
 Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI chạy; PO chạy trực tiếp khi dùng công cụ không có hook.
 
 | Lệnh | Việc |
 |---|---|
-| `po-tools.py doctor` | Kiểm môi trường và domain pack |
+| `po-tools.py doctor` | Kiểm môi trường và knowledge base của sản phẩm |
 | `po-tools.py status` | Trạng thái mọi intent, artifact bị sửa ngoài change request, mã tính năng trùng, nguồn quá hạn |
 | `po-tools.py next <intent>` | Stage cần làm tiếp và số câu hỏi còn trống |
 | `po-tools.py check <intent> <stage>` | Kiểm bằng máy trước gate |
@@ -422,11 +422,11 @@ Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI ch�
 | `po-tools.py jira-sync <intent>` | Lập kế hoạch đẩy story lên Jira qua MCP; `--remote` đối chiếu bản trên Jira, `--record` ghi kết quả |
 | `po-tools.py dor <intent>` | Kiểm điều kiện sẵn sàng |
 | `po-tools.py index --write` | Cập nhật `intents/INDEX.md` |
-| `po-tools.py migrate <intent> [--feature <mã>] [--write]` | Chuyển intent tạo từ bản engine cũ |
-| `po-tools.py engine-check` | Liệt kê file engine đã bị sửa tay, trước khi nâng cấp |
-| `po-tools.py selftest` | Chạy dữ liệu kiểm thử của script sau khi nâng cấp hoặc sửa engine |
+| `po-tools.py migrate <intent> [--feature <mã>] [--write]` | Chuyển intent tạo từ bản quy trình cũ |
+| `po-tools.py engine-check` | Liệt kê file của quy trình đã bị sửa tay, trước khi nâng cấp |
+| `po-tools.py selftest` | Chạy dữ liệu kiểm thử của script sau khi nâng cấp hoặc sửa quy trình |
 
-## 11. Domain pack
+## 11. Knowledge base của sản phẩm
 
 Mọi dữ kiện riêng của sản phẩm nằm trong `domain/`. AI đọc `domain/domain.md` ở đầu mỗi phiên. File này có sáu mục:
 
@@ -456,7 +456,7 @@ Ký hiệu chung trong artifact:
 | `[Q3]`, `[DEC5]`, `[KB-04 §3]` | Thẻ nguồn: câu trả lời, quyết định, đoạn knowledge base |
 | Hidden | Tính năng có code nhưng đang ẩn, vẫn phải xét khi phân tích ảnh hưởng |
 
-Để đưa một sản phẩm khác vào quy trình, đọc [DOMAIN-SETUP.md](DOMAIN-SETUP.md), sau đó chạy `/new-domain` trong repo mới. Engine giữ nguyên; chỉ domain pack và `memory/project.md` thay đổi.
+Để đưa một sản phẩm khác vào quy trình, đọc [DOMAIN-SETUP.md](DOMAIN-SETUP.md), sau đó chạy `/new-domain` trong repo mới. Phần quy trình dùng chung giữ nguyên; chỉ knowledge base trong `domain/` và `memory/project.md` thay đổi.
 
 ## 12. Xử lý tình huống
 
