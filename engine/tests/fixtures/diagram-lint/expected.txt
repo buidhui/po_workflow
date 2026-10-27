@@ -1,0 +1,20 @@
+# PRD có năm sơ đồ Mermaid mắc lỗi cú pháp đã thử trên Mermaid 11.12, theo engine/standards/diagrams.md mục 6:
+# nhãn có ngoặc đơn không đặt trong ngoặc kép, mã nút 'end', style thiếu color, thông điệp thiếu dấu hai chấm,
+# dấu chấm phẩy trong thông điệp, khối alt thiếu end, nhãn sự kiện có dấu hai chấm, thuộc tính sai thứ tự,
+# nhãn quan hệ có ngoặc, gõ sai loại sơ đồ. Nhãn đã đặt trong ngoặc kép và style có color không bị báo.
+[check prd-generation]
+mã thoát: 0
+có: prd.md:14 Sơ đồ: Nhãn của nút A có ký tự
+có: prd.md:15 Sơ đồ: Nhãn mũi tên |Có (đủ)|
+có: prd.md:16 Sơ đồ: Mã nút 'end'
+có: style C có fill mà thiếu color
+có: prd.md:25 Sơ đồ: Thông điệp thiếu dấu hai chấm
+có: Dấu chấm phẩy trong thông điệp
+có: Còn 1 khối alt, opt, loop, par chưa có dòng 'end'
+có: prd.md:35 Sơ đồ: Nhãn sự kiện 'Tạo: PO' có dấu hai chấm
+có: Thuộc tính viết sai thứ tự
+có: Nhãn quan hệ 'có(n)'
+có: Dòng đầu khối là 'flowchat'
+không có: Nhãn của nút B
+không có: Nhãn của nút C
+không có: style B

@@ -30,7 +30,7 @@
 - [ ] **[BLOCK]** Field hiện có ghi là hiện có. Không tự thêm field
 - [ ] **[BLOCK]** Tính năng có đối tượng đổi trạng thái thì mục 4 có Vòng đời trạng thái: bảng chuyển trạng thái và sơ đồ khớp nhau, mọi trạng thái tới được từ nút Bắt đầu, trạng thái cuối nối tới nút Kết thúc. `po-tools.py check` kiểm phần khớp
 - [ ] Mỗi chuyển trạng thái có ít nhất một tiêu chí chấp nhận; chuyển trạng thái bị cấm có tiêu chí cho nhánh lỗi
-- [ ] Sơ đồ theo `engine/standards/diagrams.md`: sơ đồ trạng thái dùng `stateDiagram-v2`, sơ đồ luồng và phụ thuộc dùng `flowchart`; từ ba Unit có sơ đồ phụ thuộc; luồng có từ hai điểm rẽ có sơ đồ luồng
+- [ ] Sơ đồ theo `engine/standards/diagrams.md`: sơ đồ trạng thái dùng `stateDiagram-v2`, sơ đồ luồng và phụ thuộc dùng `flowchart`; từ ba Unit có sơ đồ phụ thuộc; luồng có từ hai điểm rẽ có sơ đồ luồng; `po-tools.py check` không còn cảnh báo cú pháp ở nhóm Sơ đồ
 - [ ] Hằng số ghi cứng hay cấu hình
 - [ ] Sự kiện, mail bị chạm đối chiếu file sự kiện trong KB
 - [ ] **[BLOCK]** M, L: điểm phụ thuộc thiết kế hay kỹ thuật mà artifact đã duyệt chưa nói có `[đề xuất]` và câu hỏi mở gắn tên PIC. PRD không quy định cách làm kỹ thuật

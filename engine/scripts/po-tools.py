@@ -1383,6 +1383,198 @@ def check_lifecycle(W, f, lines, b0):
         W.add("diagram", f, lo + 1, "Vòng đời trạng thái: trạng thái '%s' không có đường ra; nếu là trạng thái cuối thì thêm '%s --> [*]'" % (x, x))
 
 
+# Kiểm cú pháp tĩnh: mỗi quy tắc ứng với một lỗi đã thử trên Mermaid 11.12; theo engine/standards/diagrams.md mục 6
+MERMAID_TYPES = ("flowchart", "graph", "stateDiagram-v2", "sequenceDiagram", "erDiagram")
+MERMAID_MAX_NODES = 20
+FLOW_OPEN = re.compile(r'(?<![\w-])([A-Za-z_](?:[\w-]*\w)?)(\(\(\(|\(\(|\(\[|\[\(|\[\[|\[/|\[\\|\{\{|\[|\(|\{|>)')
+FLOW_CLOSE = {"(((": ")))", "((": "))", "([": "])", "[(": ")]", "[[": "]]", "{{": "}}", "[": "]", "(": ")", "{": "}", ">": "]"}
+FLOW_BAD = re.compile(r'[()\[\]{}|"@]')
+FLOW_ARROW = r'(?:<?-->|<?==>|<?-\.->|---|===|-\.-|--[ox]|&)'
+SEQ_ARROW = re.compile(r'(-->>|->>|-->|->|--x|-x|--\)|-\))')
+SEQ_KEYS = re.compile(r'^(participant|actor|note|alt|else|opt|loop|par|and|critical|option|break|rect|box|end|autonumber|activate|deactivate|title|create|destroy|links?)\b', re.I)
+
+
+def lint_mermaid(block):
+    """[(chỉ số dòng trong khối, lời báo)] cho lỗi làm sơ đồ không hiển thị và chỗ lệch chuẩn của engine."""
+    out = []
+    body = [(k, re.sub(r"%%(?!\{).*$", "", ln).rstrip()) for k, ln in enumerate(block)]
+    body = [(k, ln) for k, ln in body if ln.strip()]
+    if not body:
+        return [(0, "Khối mermaid rỗng")]
+    k0, head = body[0]
+    if head.strip().startswith("%%{"):
+        out.append((k0, "Không dùng khối %%{init}%%: màu và giao diện do nơi hiển thị quyết định"))
+        body = body[1:]
+        if not body:
+            return out
+        k0, head = body[0]
+    words = head.split()
+    kind = words[0]
+    if kind not in MERMAID_TYPES:
+        return out + [(k0, "Dòng đầu khối là '%s'; chuẩn chỉ dùng %s" % (kind, ", ".join(MERMAID_TYPES)))]
+    if kind in ("flowchart", "graph") and (len(words) > 2 or (len(words) == 2 and words[1] not in ("TB", "TD", "BT", "RL", "LR"))):
+        out.append((k0, "Dòng đầu chỉ ghi loại sơ đồ và hướng, như 'flowchart TD'; nút và mũi tên viết từ dòng sau"))
+    rest = body[1:]
+    for k, ln in rest:
+        s = ln.strip()
+        m = re.match(r"(classDef|style)\s+(\S+)\s+(.*)$", s)
+        if m and "fill" in m.group(3) and "color" not in m.group(3).replace("fill", ""):
+            out.append((k, "%s %s có fill mà thiếu color: chữ khó đọc ở nền tối; thêm color:#000 hoặc màu chữ tương phản" % (m.group(1), m.group(2))))
+        if re.match(r"click\s", s):
+            out.append((k, "Không dùng click: GitHub và hầu hết nơi hiển thị bỏ qua liên kết trong sơ đồ"))
+    if kind in ("flowchart", "graph"):
+        out += _lint_flow(rest)
+    elif kind == "stateDiagram-v2":
+        out += _lint_state(rest)
+    elif kind == "sequenceDiagram":
+        out += _lint_seq(rest)
+    else:
+        out += _lint_er(rest)
+    return out
+
+
+def _flow_nodes(s, k, out, ids):
+    pos = 0
+    while True:
+        m = FLOW_OPEN.search(s, pos)
+        if not m:
+            return
+        nid, op = m.group(1), m.group(2)
+        ids.add(nid)
+        if nid == "end":
+            out.append((k, "Mã nút 'end' trùng từ khoá đóng subgraph; đổi thành 'END' hoặc 'KET_THUC'"))
+        start = m.end()
+        if op in ("[/", "[\\"):
+            close = min([i for i in (s.find("/]", start), s.find("\\]", start)) if i >= 0] or [-1])
+            nxt = s.find("]", start)
+            if close < 0 or (nxt >= 0 and nxt < close):
+                out.append((k, "Nhãn của nút %s bắt đầu bằng / hoặc \\ nên bị đọc thành hình thang; đặt nhãn trong ngoặc kép" % nid))
+                pos = (nxt + 1) if nxt >= 0 else len(s)
+                continue
+            lab, pos = s[start:close], close + 2
+        else:
+            close = s.find(FLOW_CLOSE[op], start)
+            if close < 0:
+                out.append((k, "Nút %s mở '%s' mà không có '%s' đóng" % (nid, op, FLOW_CLOSE[op])))
+                return
+            lab, pos = s[start:close], close + len(FLOW_CLOSE[op])
+        lab = lab.strip()
+        if not lab.startswith('"') and FLOW_BAD.search(lab):
+            out.append((k, "Nhãn của nút %s có ký tự ( ) [ ] { } | \" hoặc @ mà không đặt trong ngoặc kép: %s[\"%s\"]" % (nid, nid, lab.replace('"', "'"))))
+
+
+def _lint_flow(rest):
+    out, ids, depth = [], set(), 0
+    for k, ln in rest:
+        s = re.sub(r'"[^"]*"', '"…"', ln.strip())
+        if re.match(r"(classDef|class|style|linkStyle|click|direction)\b", s):
+            continue
+        if s == "end":
+            depth -= 1
+            if depth < 0:
+                out.append((k, "'end' thừa: không có subgraph nào đang mở"))
+                depth = 0
+            continue
+        m = re.match(r"subgraph\s+(.*)$", s)
+        if m:
+            depth += 1
+            t = m.group(1)
+            mt = re.match(r"([\w-]+)\s*\[(.*)\]\s*$", t)
+            if mt and not mt.group(2).strip().startswith('"') and FLOW_BAD.search(mt.group(2)):
+                out.append((k, "Tên subgraph %s có ký tự đặc biệt mà không đặt trong ngoặc kép" % mt.group(1)))
+            continue
+        for lab in re.findall(r"\|([^|]*)\|", s):
+            if not lab.strip().startswith('"') and FLOW_BAD.search(lab):
+                out.append((k, "Nhãn mũi tên |%s| có ký tự ( ) [ ] { } \" hoặc @ mà không đặt trong ngoặc kép: |\"%s\"|" % (lab, lab.replace('"', "'"))))
+        s = re.sub(r"\|[^|]*\|", " ", s)
+        if re.search(r"(?:^|%s)\s*end\s*(?:$|%s)" % (FLOW_ARROW, FLOW_ARROW), s) and s != "end":
+            out.append((k, "Mã nút 'end' trùng từ khoá đóng subgraph; đổi thành 'END' hoặc 'KET_THUC'"))
+        _flow_nodes(s, k, out, ids)
+        for t in re.split(FLOW_ARROW + r"|--\s[^-]*?\s-->", s):
+            t = t.strip()
+            if re.fullmatch(r"[A-Za-z_][\w-]*", t):
+                ids.add(t)
+    if depth > 0:
+        out.append((rest[-1][0] if rest else 0, "Còn %d subgraph chưa có dòng 'end'" % depth))
+    if len(ids) > MERMAID_MAX_NODES:
+        out.append((0, "Sơ đồ có %d nút, quá %d: tách thành nhiều sơ đồ, mỗi sơ đồ một luồng hoặc một nhóm" % (len(ids), MERMAID_MAX_NODES)))
+    return out
+
+
+def _lint_state(rest):
+    out, ids = [], set()
+    for k, ln in rest:
+        s = ln.strip()
+        if re.match(r"(class|style)\s", s) and "[*]" in s:
+            out.append((k, "Không gắn class hoặc style cho [*]"))
+            continue
+        m = re.match(r'state\s+"([^"]*)"\s+as\s+(\w+)\s*\{?$', s)
+        if s.startswith('state "') and not m:
+            out.append((k, "Khai báo trạng thái sai dạng state \"<tên>\" as <MÃ>; tên trạng thái không chứa dấu ngoặc kép"))
+            continue
+        if m:
+            ids.add(m.group(2))
+            continue
+        m = re.match(r"(\[\*\]|[\w]+)\s*-->\s*(\[\*\]|[\w]+)\s*(?::(.*))?$", s)
+        if m:
+            ids |= {x for x in m.group(1, 2) if x != "[*]"}
+            if m.group(3) and ":" in m.group(3):
+                out.append((k, "Nhãn sự kiện '%s' có dấu hai chấm; bỏ dấu hai chấm hoặc thay bằng dấu phẩy" % m.group(3).strip()))
+    if len(ids) > MERMAID_MAX_NODES:
+        out.append((0, "Sơ đồ có %d trạng thái, quá %d: tách theo nhóm trạng thái hoặc dùng state lồng" % (len(ids), MERMAID_MAX_NODES)))
+    return out
+
+
+def _lint_seq(rest):
+    out, depth = [], 0
+    for k, ln in rest:
+        s = ln.strip()
+        if re.match(r"(participant|actor)\s+end\b", s):
+            out.append((k, "Tên participant 'end' trùng từ khoá đóng khối; đổi tên"))
+        if re.match(r"(alt|opt|loop|par|critical|break|rect|box)\b", s):
+            depth += 1
+        elif s == "end":
+            depth -= 1
+            if depth < 0:
+                out.append((k, "'end' thừa: không có khối alt, opt, loop, par nào đang mở"))
+                depth = 0
+        if re.match(r"note\b", s, re.I):
+            if ";" in re.sub(r"#\w+;", "", s):
+                out.append((k, "Dấu chấm phẩy trong Note làm vỡ sơ đồ; thay bằng dấu phẩy"))
+            continue
+        if SEQ_KEYS.match(s) or not SEQ_ARROW.search(s):
+            continue
+        if ":" not in s:
+            out.append((k, "Thông điệp thiếu dấu hai chấm trước nội dung: A->>B: nội dung"))
+        elif ";" in re.sub(r"#\w+;", "", s.split(":", 1)[1]):
+            out.append((k, "Dấu chấm phẩy trong thông điệp làm vỡ sơ đồ; thay bằng dấu phẩy"))
+    if depth > 0:
+        out.append((rest[-1][0] if rest else 0, "Còn %d khối alt, opt, loop, par chưa có dòng 'end'" % depth))
+    return out
+
+
+def _lint_er(rest):
+    out, inside = [], False
+    for k, ln in rest:
+        s = ln.strip()
+        m = re.match(r"\S+\s+[|}o]{1,2}(?:--|\.\.)[|{o]{1,2}\s+\S+\s*:\s*(.+)$", s)
+        if m and not m.group(1).startswith('"') and re.search(r'[()\[\]{}"@:;|]', m.group(1)):
+            out.append((k, "Nhãn quan hệ '%s' có ký tự đặc biệt mà không đặt trong ngoặc kép" % m.group(1)))
+        parts = []
+        if "{" in s:
+            inside = True
+            parts.append(s.split("{", 1)[1])
+        elif inside:
+            parts.append(s)
+        for p in parts:
+            if "}" in p:
+                p, inside = p.split("}", 1)[0], False
+            w = p.split()
+            if w and w[0].upper() in ("PK", "FK", "UK"):
+                out.append((k, "Thuộc tính viết sai thứ tự: loại dữ liệu, tên, sau đó mới tới PK, FK, UK"))
+    return out
+
+
 def check_artifact(ctx, W, st, path):
     intent = ctx.intent
     text = read(path) or ""
@@ -1412,6 +1604,10 @@ def check_artifact(ctx, W, st, path):
 
     # sơ đồ: vòng đời trạng thái khớp bảng, theo engine/standards/diagrams.md
     check_lifecycle(W, f, lines, b0)
+    # sơ đồ: cú pháp mọi khối mermaid, theo engine/standards/diagrams.md mục 6
+    for bl, block in mermaid_blocks(lines, b0):
+        for k, msg in lint_mermaid(block):
+            W.add("diagram", f, bl + 2 + k, "Sơ đồ: " + msg)
     # mã ổn định so với bản duyệt gần nhất: BABOK 3.4, ISO 29148 mục 5.2.8.2, permanent traceability keys của AWS
     chg = id_changes(intent, st.slug, path)
     if chg:
@@ -4421,6 +4617,12 @@ def doctor():
         add("File trong bản đồ KB", "Cảnh báo" if lost else "Đạt", ("không có " + ", ".join(lost)) if lost else "%d file đều có" % len(mapped),
             "Tạo file hoặc sửa domain.md mục 3" if lost else "-")
     kb = [show(p) for p in sorted((ROOT / "domain").rglob("*.md")) if "chưa viết" in (read(p) or "")] if (ROOT / "domain").is_dir() else []
+    bad_dg = []
+    for p in sorted((ROOT / "domain").rglob("*.md")) if (ROOT / "domain").is_dir() else []:
+        ls = (read(p) or "").splitlines()
+        bad_dg += ["%s:%d %s" % (show(p), bl + 2 + k, msg) for bl, block in mermaid_blocks(ls) for k, msg in lint_mermaid(block)]
+    add("Sơ đồ trong KB", "Cảnh báo" if bad_dg else "Đạt", "; ".join(bad_dg[:5]) + (" và %d lỗi khác" % (len(bad_dg) - 5) if len(bad_dg) > 5 else "") or "không có lỗi cú pháp",
+        "Sửa theo engine/standards/diagrams.md mục 6" if bad_dg else "-")
     add("KB còn chữ 'chưa viết'", "Cảnh báo" if kb else "Đạt", ", ".join(kb) or "không có", "Viết nốt KB hoặc ghi vùng chưa phủ" if kb else "-")
     S = load_stages()
     bad = []
@@ -4639,6 +4841,14 @@ def selftest():
             m = re.search(r"ai-reviewer\s+ở\s+([SML](?:\s*,\s*[SML])*)", stg.reviewer)
             if m and prof not in re.findall(r"[SML]", m.group(1)):
                 fails.append("%s.md: Reviewer '%s' không gồm profile %s mà profiles.md bật" % (stg.slug, stg.reviewer, prof))
+    # sơ đồ mẫu trong engine và tài liệu chung qua được lint; engine/tests có sơ đồ lỗi cố ý nên bỏ qua
+    for p in sorted((REPO / "engine").rglob("*.md")) + [REPO / n for n in MANIFEST_FILES if n.endswith(".md")]:
+        if not p.is_file() or p.relative_to(REPO).parts[:2] == ("engine", "tests"):
+            continue
+        ls = (read(p) or "").splitlines()
+        for bl, block in mermaid_blocks(ls):
+            for k, msg in lint_mermaid(block):
+                fails.append("%s:%d sơ đồ: %s" % (rel(p, REPO), bl + 2 + k, msg))
     fx_dirs = sorted(p for p in FIXTURES.iterdir() if p.is_dir()) if FIXTURES.is_dir() else []
     if not fx_dirs:
         fails.append("Không có fixture nào trong %s" % rel(FIXTURES, REPO))

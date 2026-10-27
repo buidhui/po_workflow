@@ -69,4 +69,32 @@ Sơ đồ luồng dùng `flowchart TD`: nút hành động dạng chữ nhật, 
 
 - Mã nút và mã trạng thái viết không dấu, không khoảng trắng: `CHO`, `U1`. Tên tiếng Việt đặt trong ngoặc kép.
 - Mọi nút được khai báo trước khi dùng ở mũi tên, hoặc khai báo ngay trong mũi tên đầu tiên chạm tới nó.
-- Tô màu bằng `style <mã> fill:#...,stroke:#...` khi cần đánh dấu vùng rủi ro hay Unit quan trọng; không dùng màu làm cách duy nhất để phân biệt, nhãn phải nói đủ.
+- Tô màu bằng `style <mã> fill:#...,stroke:#...,color:#...` khi cần đánh dấu vùng rủi ro hoặc Unit quan trọng. Có `fill` thì phải có `color`, vì nơi hiển thị ở nền tối giữ màu chữ sáng trên nền ô sáng. Không dùng màu làm cách duy nhất để phân biệt, nhãn phải nói đủ.
+- Nhãn tiếng Việt có dấu ngoặc, dấu gạch đứng, dấu ngoặc kép hoặc chữ `@` thì đặt trong ngoặc kép, ở cả nút lẫn mũi tên: `A["Mở màn (SCR1)"]`, `-->|"Có (đủ)"|`.
+- Mỗi sơ đồ tối đa 20 nút. Nhiều hơn thì tách thành nhiều sơ đồ, mỗi sơ đồ một luồng hoặc một nhóm.
+- Chỉ dùng năm dòng đầu khối: `flowchart`, `graph`, `stateDiagram-v2`, `sequenceDiagram`, `erDiagram`. Không dùng khối `%%{init}%%` vì màu và giao diện do nơi hiển thị quyết định, không dùng `click` vì GitHub bỏ qua liên kết trong sơ đồ. Các loại sơ đồ có hậu tố `-beta` chưa ổn định giữa các phiên bản Mermaid.
+
+## 6. Lỗi cú pháp và cách kiểm
+
+Sơ đồ sai cú pháp không hiển thị, người đọc chỉ thấy thông báo lỗi. AWS yêu cầu kiểm cú pháp và kiểm nút đã khai báo trước khi ghi sơ đồ vào file (`stage-protocol.md` mục 10, Mermaid diagram validation). `po-tools.py check` kiểm mọi khối Mermaid của artifact, `doctor` kiểm sơ đồ trong knowledge base, `selftest` kiểm sơ đồ mẫu của engine. Kết quả nằm ở nhóm cảnh báo Sơ đồ.
+
+Bảng dưới gồm các lỗi đã thử trên Mermaid 11.12. Danh sách ban đầu lấy từ `references/guides/troubleshooting.md` của repo `spillwavesolutions/design-doc-mermaid` (giấy phép MIT). Khoảng một nửa lỗi ở đó không còn xảy ra trên Mermaid 11, như mã nút bắt đầu bằng `o` hoặc `x`, dấu hai chấm hoặc dấu `#` trong nhãn nút, dòng chú thích `%%` rỗng, nên không đưa vào.
+
+| Loại sơ đồ | Viết sai | Viết đúng |
+|---|---|---|
+| `flowchart` | `A[Mở màn (SCR1)]`: nhãn có `( ) [ ] { } \| " @` mà không đặt trong ngoặc kép | `A["Mở màn (SCR1)"]` |
+| `flowchart` | `-->\|Có (đủ)\|`: nhãn mũi tên có ký tự như trên | `-->\|"Có (đủ)"\|` |
+| `flowchart` | `A[/api/lop]`: nhãn bắt đầu bằng `/` hoặc `\` bị đọc thành hình thang | `A["/api/lop"]` |
+| `flowchart` | `B --> end`: `end` viết thường là từ khoá đóng `subgraph` | `B --> KET_THUC` |
+| `flowchart` | `flowchart TD A --> B`: nút viết cùng dòng đầu | Dòng đầu chỉ có `flowchart TD` |
+| `flowchart` | `subgraph` không có dòng `end` tương ứng | Mỗi `subgraph` một dòng `end` |
+| `stateDiagram-v2` | `NHAP --> CHO : Gửi: duyệt`: nhãn sự kiện có dấu hai chấm | `NHAP --> CHO : Gửi duyệt` |
+| `stateDiagram-v2` | `state "Nháp "mới"" as NHAP`: tên có ngoặc kép bên trong | `state "Nháp mới" as NHAP` |
+| `stateDiagram-v2` | `class [*] tenlop`: gắn class cho `[*]` | Không tô `[*]` |
+| `sequenceDiagram` | `FE->>BE Gửi`: thiếu dấu hai chấm trước nội dung | `FE->>BE: Gửi` |
+| `sequenceDiagram` | `FE->>BE: Nhận; lưu`: dấu chấm phẩy trong thông điệp hoặc `Note` | `FE->>BE: Nhận, lưu` |
+| `sequenceDiagram` | `alt`, `opt`, `loop`, `par` không có `end`; participant tên `end` | Mỗi khối một dòng `end` |
+| `erDiagram` | `LOP { PK string ma }`: khoá đứng trước loại dữ liệu và tên | `LOP { string ma PK }` |
+| `erDiagram` | `KHOA_HOC \|\|--o{ LOP : có(n)`: nhãn quan hệ có ký tự đặc biệt | `KHOA_HOC \|\|--o{ LOP : "có (n)"` |
+
+Hai quy tắc ở mục 5 không phải lỗi cú pháp nhưng script vẫn báo: `fill` thiếu `color`, và sơ đồ quá 20 nút. Script kiểm tĩnh nên không thay được việc xem sơ đồ hiển thị trên GitHub. Người duyệt PR vẫn mở bản xem trước để thấy sơ đồ có đúng ý hay không.
