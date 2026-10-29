@@ -4754,7 +4754,7 @@ def doc_files():
 
 def doc_sync_problems():
     """Tài liệu khớp script và engine: lệnh po-tools.py nhắc tới có thật, đường dẫn engine/ có thật,
-    bảng stage ở README mục 3.2 đủ mã và tên của engine/stages."""
+    bảng stage ở README mục 2.5 đủ mã và tên của engine/stages."""
     out = []
     for r, p in doc_files():
         text = read(p) or ""
@@ -4771,7 +4771,7 @@ def doc_sync_problems():
     readme = read(REPO / "README.md") or ""
     for st in load_stages().list:
         if "| %s %s |" % (st.code, st.name) not in readme:
-            out.append("README.md mục 3.2 thiếu dòng của stage %s %s" % (st.code, st.name))
+            out.append("README.md mục 2.5 thiếu dòng của stage %s %s" % (st.code, st.name))
     return out
 
 

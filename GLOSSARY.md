@@ -64,7 +64,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Bản chỉ mục cho Dev | `intents/INDEX.md` do `po-tools.py index` sinh: mã tính năng, bản PRD đã duyệt, service bị chạm, tag, số story đạt điều kiện sẵn sàng | PO-Workflow |
 | Tag bản duyệt | `<intent>/prd-v<X.Y>` hoặc `<intent>/decision-brief-v<X.Y>`, gắn mỗi lần PRD hoặc Decision Brief được duyệt; agent của Dev đọc theo tag | PO-Workflow |
 | Phiên bản artifact | 0.x là bản nháp; lần duyệt đầu là 1.0; mỗi lần duyệt lại sau change request tăng số phụ | PO-Workflow |
-| Mức độ sẵn sàng áp dụng | Quy trình đã sẵn sàng áp dụng tới đâu, theo 2 trục: phạm vi sử dụng (cá nhân, team, liên team, nhân rộng) và giao tiếp (người với người, người với máy, máy với máy). Đánh giá ở README mục 9 | PO-Workflow |
+| Mức độ sẵn sàng áp dụng | Quy trình đã sẵn sàng áp dụng tới đâu, theo 2 trục: phạm vi sử dụng (cá nhân, team, liên team, nhân rộng) và giao tiếp (người với người, người với máy, máy với máy). Đánh giá ở README mục 5 | PO-Workflow |
 | Archive | Bản chụp tại gate và trước CR, không sửa | AWS |
 | Initiative Brief | Tài liệu một trang xác định hướng đi, stage 1.7 | AWS. Thay BRD |
 | Decision Brief | Tài liệu ngắn cho buổi họp quyết định ở 2.43: điểm cần quyết, đề xuất sửa PRD, mâu thuẫn giữa các thiết kế, độ phủ, độ lớn so với mốc, ý kiến phản đối nguyên văn, bảng Ký. AI viết, tối đa 1.500 từ cho phần tổng hợp | AWS dùng chữ decision brief cho bản tóm tắt trình người quyết định trước gate |
