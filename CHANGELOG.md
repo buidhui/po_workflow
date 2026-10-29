@@ -113,7 +113,7 @@ Theo cách AWS giữ chất lượng repo, ở quy mô một người giữ engi
 - Mã ví dụ trong `id-conventions.md`, README, GLOSSARY, USER-GUIDE và `/new-domain` đổi từ `LMS-F012` sang `APP-F012`, để engine không gắn với sản phẩm đang cài.
 - README mục 2 thêm phần Nghiệp vụ và năng lực của PO theo BABOK v3 và Scrum Guide 2020: 6 nhóm nghiệp vụ đối chiếu với stage, kể cả nhóm chưa đáp ứng; 6 năng lực nền; 4 trách nhiệm của PO với backlog; kỹ thuật ngành AI dùng từ `engine/knowledge/`. Câu tóm tắt quy trình ở README và USER-GUIDE thêm bước đề xuất và chọn phương án giải pháp.
 - README mục 1 thêm phần Giá trị của quy trình: mỗi giá trị gắn với cơ chế tạo ra nó và bằng chứng hiện có; thêm bảng so sánh với việc dùng trực tiếp AI hội thoại để soạn PRD.
-- README.md viết lại bằng văn phong trang trọng, giữ cấu trúc 12 mục. Mục 1 thêm bảng phạm vi áp dụng; mục 5 thêm bảng ba mức finding Critical, Major, Minor; mục 9 cập nhật mức độ sẵn sàng theo đánh giá mới, bỏ phần việc cần làm để lên mức kế và chỉ số cần thu.
+- README.md viết lại thành tài liệu giới thiệu quy trình hiện có, văn phong trang trọng, trung lập sản phẩm. Bỏ lịch sử hình thành, số liệu áp dụng, quy tắc rút từ sự cố, bảng đối chiếu AWS và phần mức độ sẵn sàng; các nguồn phương pháp (AWS AI-DLC, BABOK v3, Scrum Guide và các chuẩn khác) gom vào một mục Cơ sở phương pháp. Thêm bảng vai trò, bảng phạm vi áp dụng, ba mức finding. GLOSSARY bỏ dẫn chiếu tới phần đánh giá đã bỏ.
 
 ### Đổi tên
 - Proto-Unit thành Unit, mã `PU1` thành `U1`, mục PRD Proto-Units thành Units, theo quyết định ngày 19/10/2026. GLOSSARY ghi khác biệt với Unit of work của AWS ở 2.7.
