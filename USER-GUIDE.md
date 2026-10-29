@@ -39,7 +39,7 @@ Mỗi yêu cầu là một intent. Intent đi qua hai phase: Ideation xác đị
 | 2.32 Solution Options | `solution-options.md` | Chỉ khi có nhiều hướng giải | `inception/solution-options/` |
 | 2.4 User Stories | `stories.md`, mã `US1` | Có | `inception/user-stories/` |
 | 2.42 PRD Generation | PRD, `traceability.md` | Có | `inception/prd/` |
-| 2.43 Design Alignment, profile M và L | Ba file thiết kế do các team viết, Decision Brief | Alignment gate, 3 PIC ký | `inception/ux-design/`, `tech-design/`, `test-design/`, `decision-brief/` |
+| 2.43 Design Alignment, profile M và L | Ba file thiết kế do các team viết, Decision Brief | Alignment gate, 3 PIC duyệt | `inception/ux-design/`, `tech-design/`, `test-design/`, `decision-brief/` |
 | Sau gate 2.43, hoặc sau PRD với profile S | Story trên Jira, đẩy qua MCP hoặc import Story List | Không | `stories/` |
 | Sau khi Dev hoàn thành | User Guide | Không | `user-guide/` |
 
@@ -190,9 +190,9 @@ Stage 2.32 Solution Options chỉ chạy khi có nhiều hướng giải. PO đ�
 Stage 2.43 Design Alignment chạy với profile M và L, theo bốn bước:
 
 1. Sau khi PRD được duyệt, AI tạo ba file thiết kế từ template và chỉ điền phần đầu file. PO gửi ba PIC đường dẫn PRD và file của họ, kèm hạn; cách viết của PIC ở mục 8.
-2. Khi các team viết xong, PO gọi lại `/po`. AI đối chiếu ba file với PRD, báo phần còn thiếu, viết Decision Brief chỉ gồm điểm cần quyết định, sau đó chạy `po-tools.py sign-start` để ghi lại bản gửi ký.
-3. Các bên họp trên Decision Brief. Quyết định làm đổi yêu cầu được xử lý qua change request. Tech PIC đã ghi cỡ của từng Unit ở `tech-design.md` mục 7; quyết định tách, gộp Unit hoặc chuyển US giữa các Unit cũng sửa PRD mục 5 qua change request trước khi ký.
-4. Gate duyệt khi cả ba PIC ghi Đồng ý hoặc Có ý kiến ở bảng Ký, đúng tên ở `intent.md` và đúng bản đã gửi. PIC quá hạn chưa ký thì PO được chọn Accept as-is kèm lý do. Story List chỉ sinh sau khi gate này được duyệt.
+2. Khi các team viết xong, PO gọi lại `/po`. AI đối chiếu ba file với PRD, báo phần còn thiếu, viết Decision Brief chỉ gồm điểm cần quyết định, sau đó chạy `po-tools.py sign-start` để ghi lại bản gửi duyệt.
+3. Các bên họp trên Decision Brief. Quyết định làm đổi yêu cầu được xử lý qua change request. Tech PIC đã ghi cỡ của từng Unit ở `tech-design.md` mục 7; quyết định tách, gộp Unit hoặc chuyển US giữa các Unit cũng sửa PRD mục 5 qua change request trước khi duyệt.
+4. Gate duyệt khi cả ba PIC ghi Đồng ý hoặc Có ý kiến ở bảng Duyệt, đúng tên ở `intent.md` và đúng bản đã gửi. PIC quá hạn chưa duyệt thì PO được chọn Accept as-is kèm lý do. Story List chỉ sinh sau khi gate này được duyệt.
 
 ## 5. Trả lời AI và duyệt
 
@@ -276,7 +276,7 @@ Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate
 4. AI chụp artifact bị chạm vào `archive/` với nhãn pre-CR, chạy xuôi từ stage đó và chỉ sửa phần bị chạm.
 5. Mỗi artifact sửa xong được trình lại gate. Khi mọi stage mở lại đã được duyệt lại, AI đóng CR bằng `po-tools.py cr` với lời PO.
 
-Khi duyệt lại, script so mã với bản đã duyệt trước. Mã nào bị bỏ phải được giữ dòng kèm chữ "bỏ", "chuyển sang" hoặc "gộp vào"; mã biến mất không có ghi chú thì lệnh duyệt từ chối. Khi Decision Brief đổi, các PIC ký lại. Khi PRD đổi, phiên bản tăng, các team xem lại file thiết kế theo bản mới, và Story List được sinh lại sau khi duyệt.
+Khi duyệt lại, script so mã với bản đã duyệt trước. Mã nào bị bỏ phải được giữ dòng kèm chữ "bỏ", "chuyển sang" hoặc "gộp vào"; mã biến mất không có ghi chú thì lệnh duyệt từ chối. Khi Decision Brief đổi, các PIC duyệt lại. Khi PRD đổi, phiên bản tăng, các team xem lại file thiết kế theo bản mới, và Story List được sinh lại sau khi duyệt.
 
 ## 7. Bàn giao sau khi duyệt
 
@@ -324,13 +324,13 @@ Script in story nào đạt, story nào chưa và lý do kèm mã US, theo bảy
 
 ### 7.4 Trước khi mở quyền repo cho các team
 
-Các PIC cần quyền ghi repo của PO để viết file thiết kế và ký Decision Brief, nên họ cũng đọc được `decisions.md`, `memory.md` và questions file. Rà thông tin nhạy cảm như tài khoản môi trường thử nghiệm trước khi mở quyền. Workflow gitleaks trong `.github/` quét mỗi lần đẩy lên.
+Các PIC cần quyền ghi repo của PO để viết file thiết kế và duyệt Decision Brief, nên họ cũng đọc được `decisions.md`, `memory.md` và questions file. Rà thông tin nhạy cảm như tài khoản môi trường thử nghiệm trước khi mở quyền. Workflow gitleaks trong `.github/` quét mỗi lần đẩy lên.
 
 ## 8. Dành cho Design PIC, Tech PIC, QA PIC
 
 PIC làm việc ở hai nơi: file thiết kế của mình trên repo của PO sau khi PRD được duyệt, và story trên Jira sau gate 2.43. PIC có thể sửa repo bằng Claude Code, công cụ AI khác hoặc giao diện web của GitHub, và không cần chạy quy trình của PO.
 
-### 8.1 Viết file thiết kế và ký Decision Brief, stage 2.43
+### 8.1 Viết file thiết kế và duyệt Decision Brief, stage 2.43
 
 PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào file riêng, sau đó cùng thống nhất trên Decision Brief.
 
@@ -342,7 +342,7 @@ PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào fi
    - QA PIC ghi cách kiểm cho từng AC.
 4. Ghi ý kiến ở mục Ý kiến về PRD trong file của mình: Đồng ý, Đề xuất sửa hoặc Phản đối, kèm mã và lý do. Không sửa PRD. Câu hỏi cho PO hoặc team khác ghi ở mục Rủi ro và câu hỏi cần trả lời.
 5. Commit với message `design(<intent>): ux`, `tech` hoặc `test`, sau đó push.
-6. Sau khi nhận Decision Brief, dự họp và ký ở bảng Ký của `inception/decision-brief/decision-brief.md`: ghi tên đúng như `intent.md`; cột Bản là version ở đầu file Decision Brief đã đọc; trạng thái là Chưa xem, Có ý kiến, Đồng ý hoặc Yêu cầu sửa. Chọn Yêu cầu sửa thì ghi rõ nội dung cần sửa. Decision Brief đổi sau khi gửi ký thì PO gửi bản mới và PIC ký lại.
+6. Sau khi nhận Decision Brief, dự họp và duyệt ở bảng Duyệt của `inception/decision-brief/decision-brief.md`: ghi tên đúng như `intent.md`; cột Bản là version ở đầu file Decision Brief đã đọc; trạng thái là Chưa xem, Có ý kiến, Đồng ý hoặc Yêu cầu sửa. Chọn Yêu cầu sửa thì ghi rõ nội dung cần sửa. Decision Brief đổi sau khi gửi duyệt thì PO gửi bản mới và PIC duyệt lại.
 
 PIC không mở được repo thì gửi nội dung cho PO. PO dán nguyên văn, mở đầu bằng "(ghi theo <tên>, <ngày>)", và lưu tin nhắn xác nhận vào `decisions.md`.
 
@@ -416,7 +416,7 @@ Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI ch�
 | `po-tools.py review-start <intent> <stage>` | Ghi dấu artifact trước khi gọi AI Reviewer |
 | `po-tools.py approve <intent> <stage> --words "<lời PO>"` | Ghi kết quả duyệt. Câu chặn, GAP, ORPHAN, mã biến mất phải được sửa, hoặc PO quyết định từng mục qua `--accept-items` và `--item-words` |
 | `po-tools.py skip`, `profile`, `switch`, `cr`, `reopen` | Ghi quyết định của PO ngoài gate, theo mục 5.4 |
-| `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC ký |
+| `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC duyệt |
 | `po-tools.py replay <intent>` | Tóm lược diễn biến của intent cho người tiếp nhận |
 | `po-tools.py stories <intent> [--write]` | Xem trước hoặc ghi Story List cho Jira, mỗi Unit một story |
 | `po-tools.py jira-sync <intent>` | Lập kế hoạch đẩy story lên Jira qua MCP; `--remote` đối chiếu bản trên Jira, `--record` ghi kết quả |
@@ -473,8 +473,8 @@ Ký hiệu chung trong artifact:
 | Vô tình sửa tay artifact đã duyệt | `/po-status` báo lệch. Thay đổi có chủ đích thì chạy `/change-request`; nếu không, lấy lại bản trong `archive/` |
 | Chọn nhầm tại gate | Báo ngay. Ghi nhầm Request Changes thì AI trình lại gate; ghi nhầm Approve thì AI chạy `po-tools.py reopen` với lời PO |
 | Reviewer báo NOT-READY nhưng PO chấp nhận | Nêu finding nào được chấp nhận; AI ghi Accepted risk vào `decisions.md` |
-| PIC chưa viết file thiết kế hoặc chưa ký Decision Brief | Chờ tới hạn. Quá hạn mà thiếu file: PO quyết định viết Decision Brief với phần đã có, ghi DEC. Quá hạn mà thiếu chữ ký: PO chọn Accept as-is tại gate, lý do ghi DEC |
-| Chữ ký của PIC không được tính | Xem lý do trong kết quả `po-tools.py check`: sai tên so với `intent.md`, cột Bản khác bản đã gửi, hoặc Decision Brief đã đổi sau khi gửi |
+| PIC chưa viết file thiết kế hoặc chưa duyệt Decision Brief | Chờ tới hạn. Quá hạn mà thiếu file: PO quyết định viết Decision Brief với phần đã có, ghi DEC. Quá hạn mà thiếu lượt duyệt: PO chọn Accept as-is tại gate, lý do ghi DEC |
+| Lượt duyệt của PIC không được tính | Xem lý do trong kết quả `po-tools.py check`: sai tên so với `intent.md`, cột Bản khác bản đã gửi, hoặc Decision Brief đã đổi sau khi gửi |
 | Story không đạt điều kiện sẵn sàng | Chạy `po-tools.py dor`, xử lý theo lý do script in ra |
 | Không chụp được màn hình | Gõ `skip-screenshot`; AI để trống vị trí ảnh và liệt kê ảnh còn thiếu |
 

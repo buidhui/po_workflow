@@ -26,7 +26,7 @@ Kiểm ranh giới phase trước khi mở gate cuối của phase. Giữ bảng
 | 3 | Mọi US làm đợt này có trong PRD | | |
 | 4 | Mọi BR thuộc một US có trong PRD | | |
 | 5 | Mọi BR có AC trỏ tới | | |
-| 6 | M, L: Decision Brief ở 2.43 đủ chữ ký, hoặc Accept as-is có DEC | | |
+| 6 | M, L: Decision Brief ở 2.43 đủ lượt duyệt, hoặc Accept as-is có DEC | | |
 | 7 | Conflict trong Impact Matrix đều có DEC | | |
 | 8 | Field Intake không còn `❓PO` chưa chuyển thành OQ | | |
 | 9 | Câu hỏi mở có cờ Chặn đã đóng | | |

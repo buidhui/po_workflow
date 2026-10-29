@@ -4,12 +4,12 @@
 mã thoát: 0
 có: ## Giới hạn từ (1)
 có: quá giới hạn 1500
-có: Tech PIC chưa ký, đang ghi 'Yêu cầu sửa': gate là Request Changes
-có: Bảng Ký thiếu dòng QA PIC
+có: Tech PIC chưa duyệt, đang ghi 'Yêu cầu sửa': gate là Request Changes
+có: Bảng Duyệt thiếu dòng QA PIC
 có: Chưa có file thiết kế của Design PIC
 có: Chưa có file thiết kế của Tech PIC
 có: Chưa có file thiết kế của QA PIC
-không có: Design PIC chưa ký
+không có: Design PIC chưa duyệt
 
 [check prd-generation]
 mã thoát: 0

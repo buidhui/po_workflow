@@ -33,7 +33,7 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 |---|---|---|---|
 
 ## 7. Độ lớn so với mốc
-<Ước lượng của Tech PIC theo Unit, so với mốc cứng ở scope-document. Vượt mốc thì nêu lựa chọn: cắt phạm vi, dời mốc, tách đợt. Unit được Tech PIC ghi không vừa một sprint thì nêu đề xuất tách, gộp hoặc chuyển US; quyết định đi change request trên PRD mục 5 trước khi ký.>
+<Ước lượng của Tech PIC theo Unit, so với mốc cứng ở scope-document. Vượt mốc thì nêu lựa chọn: cắt phạm vi, dời mốc, tách đợt. Unit được Tech PIC ghi không vừa một sprint thì nêu đề xuất tách, gộp hoặc chuyển US; quyết định đi change request trên PRD mục 5 trước khi duyệt.>
 
 ## 8. Rủi ro
 <Mã `RK<n>` của sổ rủi ro trong `decisions.md`; rủi ro mới nêu ở buổi họp thì thêm vào sổ.>
@@ -43,11 +43,11 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 ## 9. Ý kiến phản đối
 <Chép nguyên văn từng ý kiến Phản đối còn lại sau khi xử lý, kèm tên người nêu. Không có thì ghi "Không có".>
 
-## 10. Ký
+## 10. Duyệt
 | Vai | Người | Bản | Trạng thái | Ngày | Ghi chú |
 |---|---|---|---|---|---|
 | Design PIC | | | Chưa xem | | |
 | Tech PIC | | | Chưa xem | | |
 | QA PIC | | | Chưa xem | | |
 
-Trạng thái: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Người ghi đúng tên ở `intent.md`; Bản là version của Decision Brief mà PIC đã đọc. Decision Brief đổi sau khi gửi ký thì chữ ký cũ không còn tính.
+Trạng thái: Chưa xem, Có ý kiến, Đồng ý, Yêu cầu sửa. Người ghi đúng tên ở `intent.md`; Bản là version của Decision Brief mà PIC đã đọc. Decision Brief đổi sau khi gửi duyệt thì lượt duyệt cũ không còn tính.

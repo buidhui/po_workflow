@@ -14,7 +14,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Workflow profile | `S`, `M`, `L`. Tập stage, công tắc nghi thức, depth | AWS gọi là scope trong engine. Không dùng chữ Scope vì đã dùng cho phạm vi tính năng |
 | Depth | Minimal, Standard, Comprehensive. Mức chi tiết artifact | AWS |
 | Approval gate | Điểm duyệt cuối mỗi stage | AWS. Thay "Gate 1 đến 4" và "điểm dừng" |
-| Alignment gate | Gate của 2.43, cần chữ ký của 3 PIC ở bảng Ký của Decision Brief. PIC quá hạn chưa ký thì PO được chọn Accept as-is kèm lý do | PO-Workflow |
+| Alignment gate | Gate của 2.43, cần lượt duyệt của 3 PIC ở bảng Duyệt của Decision Brief. PIC quá hạn chưa duyệt thì PO được chọn Accept as-is kèm lý do | PO-Workflow |
 | Summary confirmation | Xác nhận tóm tắt câu trả lời trước khi sinh artifact | AWS |
 | Field Intake | Summary confirmation riêng của 2.42 về field, rule, validate | Repo |
 | Questions file | `<stage>-questions.md`, nguồn sự thật của câu trả lời | AWS |
@@ -53,14 +53,14 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Sổ rủi ro, RK | Mục Rủi ro trong `decisions.md`, mỗi rủi ro một mã `RK<n>` với khả năng, tác động, cách xử lý, owner, trạng thái; artifact khác chỉ trỏ mã | BABOK v3 6.3, 10.38 |
 | Yêu cầu chuyển đổi, TR | Yêu cầu chỉ cần trong giai đoạn đưa tính năng vào dùng: dữ liệu cũ, cách bật, chạy song song, quay lui, đào tạo. Mã `TR<n>` ở Impact Matrix mục 8 và PRD mục 8 | BABOK v3 2.3, 6.4 |
 | Đánh giá giải pháp | Đo lại tiêu chí thành công sau phát hành, tìm hạn chế, đề xuất hành động, bằng lệnh `/po-evaluate` | BABOK v3 chương 8 |
-| PIC | Người phụ trách một mảng của tính năng: Design PIC, Tech PIC, QA PIC. Viết file thiết kế của mình và ký Decision Brief ở 2.43. Tech PIC chịu trách nhiệm cả phần Backend và Frontend của `tech-design.md` | PO-Workflow |
+| PIC | Người phụ trách một mảng của tính năng: Design PIC, Tech PIC, QA PIC. Viết file thiết kế của mình và duyệt Decision Brief ở 2.43. Tech PIC chịu trách nhiệm cả phần Backend và Frontend của `tech-design.md` | PO-Workflow |
 | Verification checklist | Checklist tự kiểm của stage cho phần cần phán đoán, mục blocking | PO-Workflow. AWS không có tên tương đương; compartment `## Sensors` của AWS là phần kiểm tự động, ứng với Kiểm bằng máy |
 | Kiểm bằng máy | `po-tools.py check` và `trace`: phần kiểm được bằng script, chạy trước checklist | Tương đương sensor của AWS |
 | Sổ lượt người | `.po/turns.jsonl`, hook ghi mỗi lượt PO gõ hoặc chọn; `approve` chỉ ghi duyệt khi lời PO có trong sổ. Không commit, AI không sửa được | AWS gọi là HUMAN_TURN, kiểm có người thật ở gate |
 | Hook | `engine/scripts/po-hook.py`, chạy khi PO gửi câu, khi PO chọn trong hộp chọn, và trước mỗi lần AI sửa file hoặc chạy lệnh shell. Ghi sổ lượt người và chặn sửa trái quy trình | AWS core/hooks |
 | Quyết định ngoài gate | Bỏ qua stage, đổi profile, bật tắt nghi thức, quyết change request, mở lại stage đã duyệt. Chỉ ghi được bằng lệnh `skip`, `profile`, `switch`, `cr`, `reopen` của `po-tools.py` với lời PO; hook chặn sửa tay | AWS ENGINE_OWNED_STATE_TRANSITIONS |
 | Quyết từng mục | Ở gate, câu chặn chưa trả lời, GAP, ORPHAN, mã biến mất chỉ qua khi PO quyết riêng từng mã; lời PO phải nêu mã đó | AWS: sensor chặn có Fix hoặc Override ghi lại; không đi tiếp khi câu hỏi chưa trả lời đủ |
-| Gửi ký | `po-tools.py sign-start` ghi dấu bản Decision Brief gửi PIC. Chữ ký chỉ tính với đúng bản đó, đúng tên PIC ở `intent.md` | AWS `aidlc-review-freeze`: receipt gắn với bản artifact |
+| Gửi duyệt | `po-tools.py sign-start` ghi dấu bản Decision Brief gửi PIC. Lượt duyệt chỉ tính với đúng bản đó, đúng tên PIC ở `intent.md` | AWS `aidlc-review-freeze`: receipt gắn với bản artifact |
 | Review digest | `reviews/review-<slug>-<NN>.digest`, dấu của artifact lúc gọi reviewer, ghi bằng `po-tools.py review-start`. `approve` so dấu này để biết review còn ứng với bản hiện tại | AWS gắn biên nhận review với đúng bản đã review |
 | Bản chỉ mục cho Dev | `intents/INDEX.md` do `po-tools.py index` sinh: mã tính năng, bản PRD đã duyệt, service bị chạm, tag, số story đạt điều kiện sẵn sàng | PO-Workflow |
 | Tag bản duyệt | `<intent>/prd-v<X.Y>` hoặc `<intent>/decision-brief-v<X.Y>`, gắn mỗi lần PRD hoặc Decision Brief được duyệt; agent của Dev đọc theo tag | PO-Workflow |
@@ -68,7 +68,7 @@ Thuật ngữ và họ mã của PO-Workflow, theo AWS AI-DLC Workflows 2.11, fi
 | Mức độ sẵn sàng áp dụng | Quy trình đã sẵn sàng áp dụng tới đâu, theo 2 trục: phạm vi sử dụng (cá nhân, team, liên team, nhân rộng) và giao tiếp (người với người, người với máy, máy với máy). | PO-Workflow |
 | Archive | Bản chụp tại gate và trước CR, không sửa | AWS |
 | Initiative Brief | Tài liệu một trang xác định hướng đi, stage 1.7 | AWS. Thay BRD |
-| Decision Brief | Tài liệu ngắn cho buổi họp quyết định ở 2.43: điểm cần quyết, đề xuất sửa PRD, mâu thuẫn giữa các thiết kế, độ phủ, độ lớn so với mốc, ý kiến phản đối nguyên văn, bảng Ký. AI viết, tối đa 1.500 từ cho phần tổng hợp | AWS dùng chữ decision brief cho bản tóm tắt trình người quyết định trước gate |
+| Decision Brief | Tài liệu ngắn cho buổi họp quyết định ở 2.43: điểm cần quyết, đề xuất sửa PRD, mâu thuẫn giữa các thiết kế, độ phủ, độ lớn so với mốc, ý kiến phản đối nguyên văn, bảng Duyệt. AI viết, tối đa 1.500 từ cho phần tổng hợp | AWS dùng chữ decision brief cho bản tóm tắt trình người quyết định trước gate |
 | File thiết kế của team | `ux-design.md`, `tech-design.md`, `test-design.md` ở `inception/`, do Design PIC, Tech PIC, QA PIC viết từ PRD đã duyệt; AI của PO không sửa | AWS: mỗi vai một artifact riêng ở 2.5, 2.6, 2.8, 3.1, 3.6 |
 | HLD Brief | Tài liệu định hướng liên team ở stage 2.41 cũ, trước PRD. Bỏ ngày 20/10/2026, thay bằng 2.43 Design Alignment; bản cũ nằm trong `archive/hld-brief/` của intent | PO-Workflow, ADR 0003 |
 | Mob, Mob Elaboration | Không dùng làm tên stage hoặc artifact. Hai nghĩa ở AWS: bài blog AI-DLC (Raja SP, 07/2025) gọi Mob Elaboration là buổi cả team cùng kiểm câu hỏi và đề xuất của AI trong Inception; bản Workflows từ v2.10 gọi mob là chế độ nhiều agent ở stage 2.4 User Stories; từ v2.11 chế độ này mặc định tắt, chỉ bật ở scope `enterprise`. Trong PO-Workflow, buổi họp trên Decision Brief ở 2.43 là bản do người thật thực hiện theo nghĩa trong bài blog; mob agent không chạy | AWS, hai nguồn |

@@ -63,7 +63,7 @@ Profile S: PRD rút gọn gồm frontmatter, bảng thông tin, Lịch sử phi�
 
 ## Verify
 1. Checklist.
-2. Truy vết: chạy `python3 engine/scripts/po-tools.py trace intents/<slug> --write`. Script dựng `traceability.md`, gồm cả lớp BR sang AC, và năm dòng đầu của `verification/phase-check-inception.md`; AI kiểm dòng 7 đến 9 theo `engine/templates/phase-check.md`. Dòng 6 về chữ ký Decision Brief chỉ áp với profile M, L và điền ở 2.43. Có GAP hoặc ORPHAN thì sửa trước gate. Không chạy được python thì làm tay theo template.
+2. Truy vết: chạy `python3 engine/scripts/po-tools.py trace intents/<slug> --write`. Script dựng `traceability.md`, gồm cả lớp BR sang AC, và năm dòng đầu của `verification/phase-check-inception.md`; AI kiểm dòng 7 đến 9 theo `engine/templates/phase-check.md`. Dòng 6 về lượt duyệt Decision Brief chỉ áp với profile M, L và điền ở 2.43. Có GAP hoặc ORPHAN thì sửa trước gate. Không chạy được python thì làm tay theo template.
 3. Reviewer ai-reviewer.
 
 ## Gate

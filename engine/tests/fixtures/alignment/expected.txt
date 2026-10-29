@@ -1,8 +1,8 @@
 # Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt, bảng Units U1 gồm US1, U2 gồm US2. Tech PIC ghi U1 không vừa một sprint, chưa xác nhận U2. ux-design có màn cho US1. tech-design thiếu US2 và chưa ghi SCR1 ở phần Frontend, test-design thiếu AC2.2
-# và dựng từ prd@0.9. Decision Brief: QA PIC chưa ký. Story List chỉ ghi được sau khi 2.43 được duyệt.
+# và dựng từ prd@0.9. Decision Brief: QA PIC chưa duyệt. Story List chỉ ghi được sau khi 2.43 được duyệt.
 [sign-start]
 mã thoát: 0
-có: Đã ghi dấu bản 0.2 gửi ký
+có: Đã ghi dấu bản 0.2 gửi duyệt
 tệp reviews/sign-decision-brief-v0.2.digest có: version: 0.2
 
 [check design-alignment]
@@ -13,11 +13,11 @@ có: U1 được Tech PIC ghi không vừa một sprint: tách Unit qua change r
 có: U2 chưa có ở mục 7 của tech-design
 có: AC2.2 chưa có trong kế hoạch test
 có: Dựng từ prd@0.9, PRD hiện là 1.0: QA PIC xem lại theo bản mới
-có: QA PIC chưa ký, đang ghi 'Chưa xem'
+có: QA PIC chưa duyệt, đang ghi 'Chưa xem'
 không có: ux-design chưa có màn
-không có: Design PIC chưa ký
-không có: Tech PIC chưa ký
-không có: Chưa ghi dấu bản gửi ký
+không có: Design PIC chưa duyệt
+không có: Tech PIC chưa duyệt
+không có: Chưa ghi dấu bản gửi duyệt
 không có: intent.md chưa ghi tên
 
 [stories]

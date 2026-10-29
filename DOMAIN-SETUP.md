@@ -116,7 +116,7 @@ Chuẩn trong `engine/standards/` áp dụng nguyên vẹn cho sản phẩm mớ
 1. Mở Claude Code tại thư mục gốc của repo, chạy `python3 engine/scripts/po-tools.py doctor`, gõ một câu bất kỳ, chạy lại `doctor` và kiểm dòng Hook ghi lượt PO đã Đạt.
 2. Chạy `/new-intent` với một yêu cầu nhỏ, profile S, đi tới PRD. Mục tiêu là kiểm stage tra đúng knowledge base và manifest; PRD chưa cần hoàn chỉnh.
 3. Kiểm `po-tools.py status` báo khớp và `po-tools.py doctor` không còn dòng Lỗi.
-4. Chạy một intent profile M qua 2.43 để kiểm vòng viết thiết kế và ký Decision Brief của các PIC, sau đó sinh Story List bằng `/po-stories`, import thử lên Jira và kiểm `po-tools.py dor`.
+4. Chạy một intent profile M qua 2.43 để kiểm vòng viết thiết kế và duyệt Decision Brief của các PIC, sau đó sinh Story List bằng `/po-stories`, import thử lên Jira và kiểm `po-tools.py dor`.
 5. Bài học đầu tiên được ghi vào `memory/project.md` qua câu hỏi tại gate; bài học đúng cho mọi sản phẩm thì chuyển sang `memory/team.md`.
 
 ## 10. Checklist domain đã sẵn sàng

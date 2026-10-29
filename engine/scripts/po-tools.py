@@ -16,7 +16,7 @@ Theo dõi và kiểm:
   po-tools.py check   <intent> <stage-slug> [--strict]
       Kiểm máy artifact của stage: heading bắt buộc, thẻ nguồn, [Qn] và [DECn] có thật; questions file có bảng
       Độ phủ đủ chủ đề và mọi câu đã có câu trả lời;
-      chữ mẫu còn sót, thẻ US đủ chín mục, mục cấm trong PRD; ở 2.43 thêm giới hạn từ và chữ ký của
+      chữ mẫu còn sót, thẻ US đủ chín mục, mục cấm trong PRD; ở 2.43 thêm giới hạn từ và lượt duyệt của
       Decision Brief, độ phủ của ba file thiết kế so với PRD; mã có ở bản đã duyệt mà bản này không còn,
       US đổi tên hẳn so với bản đã duyệt,
       cột ưu tiên của FR. Với PRD còn kiểm: mã AC trùng, BR chưa có AC trỏ tới, frontmatter
@@ -87,7 +87,7 @@ Ghi chép:
   po-tools.py reopen <intent> <stage-slug> --words "<lời PO>" --reason "<lý do>"
       Ghi nhầm Approve: đưa stage [x] về [?], thêm DEC; bản chụp archive giữ nguyên.
   po-tools.py sign-start <intent>
-      Ghi dấu bản Decision Brief gửi PIC ký: reviews/sign-decision-brief-v<version>.digest. Chữ ký chỉ tính khi
+      Ghi dấu bản Decision Brief gửi PIC duyệt: reviews/sign-decision-brief-v<version>.digest. Lượt duyệt chỉ tính khi
       đúng tên PIC ở intent.md, đúng bản đã gửi, và Decision Brief không đổi sau đó.
   po-tools.py archive <intent> <stage-slug> <artifact> [--label <nhãn>]
       Chép artifact vào archive/<slug>/<tên>-v<version>-<YYYYMMDD>.md, hoặc
@@ -1080,7 +1080,7 @@ def trace(intent, write_out=False):
             ("4", "Mọi BR thuộc một US có trong PRD", "Chưa kiểm" if prd is None else ("Không đạt" if [o for o in orphans if o.startswith("BR")] else "Đạt")),
             ("5", "Mọi BR có AC trỏ tới", "Chưa kiểm" if prd is None else ("Không đạt" if [g for g in gaps if g.endswith("chưa có AC")] else "Đạt")),
         ]
-        write(pc, "---\nintent: %s\nphase: inception\ndate: %s\nresult: %s\n---\n# Phase check: INCEPTION · %s\n\nSinh bởi po-tools.py trace. Điều kiện ngữ nghĩa (OQ chặn đã đóng; với profile M, L thì Decision Brief đủ chữ ký ở 2.43) AI kiểm thêm theo template phase-check.md.\n\n%s\n\n## Kết luận\n%s. GAP: %d. ORPHAN: %d. Chi tiết trong %s.\n"
+        write(pc, "---\nintent: %s\nphase: inception\ndate: %s\nresult: %s\n---\n# Phase check: INCEPTION · %s\n\nSinh bởi po-tools.py trace. Điều kiện ngữ nghĩa (OQ chặn đã đóng; với profile M, L thì Decision Brief đủ lượt duyệt của ba PIC ở 2.43) AI kiểm thêm theo template phase-check.md.\n\n%s\n\n## Kết luận\n%s. GAP: %d. ORPHAN: %d. Chi tiết trong %s.\n"
               % (intent.name, day0, result, intent.name, md_table(["#", "Điều kiện", "Kết quả"], pc_rows), result, len(gaps), len(orphans), rel(out, intent)))
         print("Đã ghi:", out, "và", pc)
     return 0 if result == "Đạt" else 1
@@ -1090,7 +1090,7 @@ def trace(intent, write_out=False):
 class Warns(object):
     KINDS = [("heading", "Mục bắt buộc"), ("tag", "Thẻ nguồn"), ("ref", "Thẻ trỏ sai"),
              ("handoff", "Artifact bàn giao"), ("card", "Thẻ US"), ("split", "Cỡ story"), ("words", "Giới hạn từ"),
-             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Chữ ký"), ("diagram", "Sơ đồ"),
+             ("prd", "PRD"), ("fr", "Cột của FR"), ("design", "Thiết kế của các team"), ("sign", "Lượt duyệt của PIC"), ("diagram", "Sơ đồ"),
              ("idgone", "Mã có ở bản đã duyệt, bản này không còn"), ("id", "Mã đổi nghĩa"),
              ("question", "Câu hỏi và độ phủ"), ("qblock", "Câu chặn chưa trả lời")]
     # loại approve xét riêng từng mục, không tính vào số cảnh báo chấp nhận chung
@@ -1600,6 +1600,8 @@ def check_artifact(ctx, W, st, path):
     if eng:
         tl = template_lines(eng[0])
         have = set(norm_heading(t) for _, _, t in headings(lines, b0))
+        if "ký" in have:  # mục Ký của Decision Brief nay gọi là Duyệt
+            have.add("duyệt")
         for _, lvl, t in headings(tl, body_start(tl)):
             if lvl == 2 and not is_optional_heading(t) and norm_heading(t) not in have:
                 W.add("heading", f, None, "Thiếu mục bắt buộc của template %s: '## %s'" % (rel(eng[0], REPO), clean(re.sub(r"<!--.*?-->", "", t))))
@@ -2903,20 +2905,20 @@ def reopen_cmd(intent, slug, words, reason, who=None):
     return 0
 
 
-# ================================================================ chữ ký Decision Brief
+# ================================================================ lượt duyệt Decision Brief của các PIC
 def brief_digest(text):
-    """sha256 phần thân Decision Brief, bỏ mục Ký vì PIC ghi vào đó sau khi nhận bản."""
+    """sha256 phần thân Decision Brief, bỏ mục Duyệt (bản cũ gọi là Ký) vì PIC ghi vào đó sau khi nhận bản."""
     out, skip = [], False
     for ln in norm_body(text).splitlines():
         if re.match(r"^##\s", ln):
-            skip = bool(re.match(r"^##\s+(?:\d+\.\s*)?Ký\b", ln))
+            skip = bool(re.match(r"^##\s+(?:\d+\.\s*)?(?:Duyệt|Ký)\b", ln))
         if not skip:
             out.append(ln)
     return hashlib.sha256("\n".join(out).encode("utf-8")).hexdigest()
 
 
 def sign_digests(intent):
-    """[(version, sha)] của các lần gửi ký, theo version tăng dần."""
+    """[(version, sha)] của các lần gửi duyệt, theo version tăng dần."""
     d = Path(intent) / "reviews"
     out = []
     if d.is_dir():
@@ -2929,7 +2931,7 @@ def sign_digests(intent):
 
 
 def sign_start(intent):
-    """Ghi dấu bản Decision Brief gửi PIC ký: reviews/sign-decision-brief-v<version>.digest."""
+    """Ghi dấu bản Decision Brief gửi PIC duyệt: reviews/sign-decision-brief-v<version>.digest."""
     intent = resolve_intent(intent)
     p = stage_file(intent, "design-alignment")
     text = read(p)
@@ -2944,14 +2946,14 @@ def sign_start(intent):
     dst = intent / "reviews" / ("sign-decision-brief-v%s.digest" % ver)
     if dst.exists():
         if re.search(r"sha256 %s" % dg, read(dst) or ""):
-            print("Bản %s đã ghi dấu gửi ký, nội dung không đổi." % ver)
+            print("Bản %s đã ghi dấu gửi duyệt, nội dung không đổi." % ver)
             return 0
-        print("Decision Brief đã đổi nhưng version vẫn là %s: tăng version trước khi gửi ký lại." % ver)
+        print("Decision Brief đã đổi nhưng version vẫn là %s: tăng version trước khi gửi duyệt lại." % ver)
         return 2
     dst.parent.mkdir(parents=True, exist_ok=True)
     write(dst, "sha256 %s\nversion: %s\ncreated: %s\n" % (dg, ver, now().strftime("%Y-%m-%d %H:%M")))
-    print("Đã ghi dấu bản %s gửi ký: %s." % (ver, rel(dst, intent)))
-    print("Mỗi PIC ghi ở bảng Ký: tên như ở intent.md, cột Bản là %s, trạng thái. Decision Brief đổi sau mốc này thì chữ ký cũ không còn tính." % ver)
+    print("Đã ghi dấu bản %s gửi duyệt: %s." % (ver, rel(dst, intent)))
+    print("Mỗi PIC ghi ở bảng Duyệt: tên như ở intent.md, cột Bản là %s, trạng thái. Decision Brief đổi sau mốc này thì lượt duyệt cũ không còn tính." % ver)
     return 0
 
 
@@ -2966,7 +2968,7 @@ def pic_names(intent):
 
 
 def sign_rows(lines):
-    """{vai: {name, ver, status}} từ bảng Ký; ver là None khi bảng chưa có cột Bản."""
+    """{vai: {name, ver, status}} từ bảng Duyệt; ver là None khi bảng chưa có cột Bản."""
     out = {}
     for t in parse_tables(lines):
         vc, sc = col(t["header"], "Vai"), col(t["header"], "Trạng thái")
@@ -2982,35 +2984,35 @@ def sign_rows(lines):
 
 
 def check_signatures(intent, W, f, text, lines):
-    """Chữ ký ở 2.43 chỉ tính khi đúng người ghi ở intent.md, đúng bản đã gửi ký, và Decision Brief không đổi sau đó."""
+    """Lượt duyệt ở 2.43 chỉ tính khi đúng người ghi ở intent.md, đúng bản đã gửi duyệt, và Decision Brief không đổi sau đó."""
     digs = sign_digests(intent)
     sver = None
     if not digs:
-        W.add("sign", f, None, "Chưa ghi dấu bản gửi ký: chạy po-tools.py sign-start trước khi gửi Decision Brief cho PIC")
+        W.add("sign", f, None, "Chưa ghi dấu bản gửi duyệt: chạy po-tools.py sign-start trước khi gửi Decision Brief cho PIC")
     else:
         sver, ssha = digs[-1]
         if ssha != brief_digest(text):
-            W.add("sign", f, None, "Decision Brief đổi sau khi gửi ký bản %s: tăng version, chạy sign-start, lấy lại chữ ký" % sver)
+            W.add("sign", f, None, "Decision Brief đổi sau khi gửi duyệt bản %s: tăng version, chạy sign-start, lấy lại lượt duyệt" % sver)
     names = pic_names(intent)
     rows = sign_rows(lines)
     for who in SIGNERS:
         r = rows.get(who)
         if r is None:
-            W.add("sign", f, None, "Bảng Ký thiếu dòng %s" % who)
+            W.add("sign", f, None, "Bảng Duyệt thiếu dòng %s" % who)
             continue
         st_ = r["status"]
         if st_.lower() not in SIGNED:
-            W.add("sign", f, None, "%s chưa ký, đang ghi '%s'%s" % (who, st_ or "trống", ": gate là Request Changes" if st_.lower() == "yêu cầu sửa" else ""))
+            W.add("sign", f, None, "%s chưa duyệt, đang ghi '%s'%s" % (who, st_ or "trống", ": gate là Request Changes" if st_.lower() == "yêu cầu sửa" else ""))
             continue
         if r["ver"] is None:
-            W.add("sign", f, None, "Bảng Ký chưa có cột Bản: không biết PIC ký bản nào", once=True)
+            W.add("sign", f, None, "Bảng Duyệt chưa có cột Bản: không biết PIC duyệt bản nào", once=True)
         elif sver and ver_tuple(r["ver"]) != ver_tuple(sver):
-            W.add("sign", f, None, "%s ký bản %s, bản đang gửi ký là %s: PIC ký lại" % (who, r["ver"] or "trống", sver))
+            W.add("sign", f, None, "%s duyệt bản %s, bản đang gửi duyệt là %s: PIC duyệt lại" % (who, r["ver"] or "trống", sver))
         want = names.get(who)
         if not want:
-            W.add("sign", f, None, "intent.md chưa ghi tên %s: không đối chiếu được người ký" % who)
+            W.add("sign", f, None, "intent.md chưa ghi tên %s: không đối chiếu được người duyệt" % who)
         elif norm_words(r["name"]) != norm_words(want):
-            W.add("sign", f, None, "%s ký tên '%s', intent.md ghi '%s'" % (who, r["name"] or "trống", want))
+            W.add("sign", f, None, "%s ghi tên '%s', intent.md ghi '%s'" % (who, r["name"] or "trống", want))
 
 
 # ================================================================ mã ổn định

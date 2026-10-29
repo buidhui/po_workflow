@@ -6,7 +6,7 @@
 
 | Mốc | Khi nào | Đầu vào | Kết quả |
 |---|---|---|---|
-| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba team viết `ux-design.md`, `tech-design.md`, `test-design.md` từ PRD | Họp trên Decision Brief, 3 PIC ký; cỡ từng Unit, cỡ story và thay đổi PRD được thống nhất |
+| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba team viết `ux-design.md`, `tech-design.md`, `test-design.md` từ PRD | Họp trên Decision Brief, 3 PIC duyệt; cỡ từng Unit, cỡ story và thay đổi PRD được thống nhất |
 | Bàn giao cho Dev | Sau gate 2.43; profile S sau gate 2.42 | Story List đẩy lên Jira qua MCP hoặc import CSV | Story đạt điều kiện sẵn sàng |
 
 ## Story và chia việc

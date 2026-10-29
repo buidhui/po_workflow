@@ -20,6 +20,6 @@
 
 ## Sau họp
 - [ ] Mỗi quyết định một DEC. Quyết định đổi PRD đã đi change request, PRD đã duyệt lại
-- [ ] **[BLOCK]** Đã chạy `po-tools.py sign-start` trước khi gửi PIC; Decision Brief không đổi sau đó, hoặc đã tăng version và gửi ký lại
-- [ ] **[BLOCK]** Ba PIC ký Đồng ý hoặc Có ý kiến, đúng tên ở `intent.md`, cột Bản đúng bản đã gửi; PIC quá hạn chưa ký thì PO chọn Accept as-is, lý do ghi DEC
+- [ ] **[BLOCK]** Đã chạy `po-tools.py sign-start` trước khi gửi PIC; Decision Brief không đổi sau đó, hoặc đã tăng version và gửi duyệt lại
+- [ ] **[BLOCK]** Ba PIC duyệt Đồng ý hoặc Có ý kiến, đúng tên ở `intent.md`, cột Bản đúng bản đã gửi; PIC quá hạn chưa duyệt thì PO chọn Accept as-is, lý do ghi DEC
 - [ ] **[BLOCK]** `verification/phase-check-inception.md` đã điền dòng 6 và cập nhật Kết luận

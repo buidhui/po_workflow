@@ -1,23 +1,23 @@
-# Decision Brief bản 0.2; lần gửi ký trước là bản 0.1 với nội dung khác. Tech PIC còn ký bản 0.1; QA PIC ký bằng tên
-# khác với intent.md. Chữ ký chỉ tính khi đúng người, đúng bản đã gửi, và Decision Brief không đổi sau khi gửi.
+# Decision Brief bản 0.2; lần gửi duyệt trước là bản 0.1 với nội dung khác. Tech PIC còn duyệt bản 0.1; QA PIC duyệt bằng tên
+# khác với intent.md. Lượt duyệt chỉ tính khi đúng người, đúng bản đã gửi, và Decision Brief không đổi sau khi gửi.
 [check design-alignment]
 mã thoát: 0
-có: Decision Brief đổi sau khi gửi ký bản 0.1
-có: Design PIC ký bản 0.2, bản đang gửi ký là 0.1
-không có: Chưa ghi dấu bản gửi ký
+có: Decision Brief đổi sau khi gửi duyệt bản 0.1
+có: Design PIC duyệt bản 0.2, bản đang gửi duyệt là 0.1
+không có: Chưa ghi dấu bản gửi duyệt
 
 [sign-start]
 mã thoát: 0
-có: Đã ghi dấu bản 0.2 gửi ký
+có: Đã ghi dấu bản 0.2 gửi duyệt
 tệp reviews/sign-decision-brief-v0.2.digest có: version: 0.2
 
 [sign-start]
 mã thoát: 0
-có: Bản 0.2 đã ghi dấu gửi ký, nội dung không đổi
+có: Bản 0.2 đã ghi dấu gửi duyệt, nội dung không đổi
 
 [check design-alignment]
 mã thoát: 0
-không có: Decision Brief đổi sau khi gửi ký
-có: Tech PIC ký bản 0.1, bản đang gửi ký là 0.2
-có: QA PIC ký tên 'Dũng', intent.md ghi 'Chi'
-không có: Design PIC ký
+không có: Decision Brief đổi sau khi gửi duyệt
+có: Tech PIC duyệt bản 0.1, bản đang gửi duyệt là 0.2
+có: QA PIC ghi tên 'Dũng', intent.md ghi 'Chi'
+không có: Design PIC duyệt

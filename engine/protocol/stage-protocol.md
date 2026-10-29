@@ -34,7 +34,7 @@ File stage bắt đầu bằng tiêu đề `# <mã> <tên>`, tiếp theo là m�
 | Plugin | `po-workflow` với stage repo thêm (2.31, 2.32, 2.42, 2.43). Bỏ trống với stage gốc AWS. Đây chỉ là nhãn; cơ chế plugin của AWS không dùng ở repo này |
 | Lệch so với AWS | Điểm khác stage cùng số của AWS, để khi AWS ra bản mới biết phải so điểm nào |
 | Execution | `always`, hoặc `conditional` kèm điều kiện |
-| Lead | Agent dẫn stage theo AWS, luôn là `product` trong phạm vi PO. Với 2.43 ghi thêm các PIC viết thiết kế và ký |
+| Lead | Agent dẫn stage theo AWS, luôn là `product` trong phạm vi PO. Với 2.43 ghi thêm các PIC viết thiết kế và duyệt Decision Brief |
 | Produces | Artifact sinh ra, kèm questions file |
 | Consumes | Artifact đọc vào, ghi rõ bắt buộc hay tuỳ |
 | Requires | Stage phải xong trước |

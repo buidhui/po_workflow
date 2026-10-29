@@ -2,7 +2,7 @@
 intent: <slug>
 artifact: tech-design
 feature: <mã tính năng>
-owner: <Tech PIC, chịu trách nhiệm cả file và ký Decision Brief>
+owner: <Tech PIC, chịu trách nhiệm cả file và duyệt Decision Brief>
 contributors: <người viết phần Backend, người viết phần Frontend, nếu khác Tech PIC>
 version: 0.1
 status: draft

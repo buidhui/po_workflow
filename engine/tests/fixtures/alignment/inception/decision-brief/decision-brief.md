@@ -34,7 +34,7 @@ Không có.
 ## 9. Ý kiến phản đối
 Không có.
 
-## 10. Ký
+## 10. Duyệt
 | Vai | Người | Bản | Trạng thái | Ngày | Ghi chú |
 |---|---|---|---|---|---|
 | Design PIC | An | 0.2 | Đồng ý | 2026-10-12 | |
