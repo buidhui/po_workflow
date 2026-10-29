@@ -290,7 +290,7 @@ AI trình bản xem trước: mỗi US trong PRD một story, kèm ưu tiên, Un
 
 Phiên Claude Code đã nối Jira MCP thì AI đẩy story thẳng lên Jira, không cần import:
 
-1. AI chạy `po-tools.py jira-sync intents/<intent>` và trình bảng kế hoạch: story nào tạo, cập nhật, giữ nguyên, gắn nhãn `removed-from-prd`. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready`.
+1. AI chạy `po-tools.py jira-sync intents/<intent>` và trình bảng kế hoạch: story nào tạo, cập nhật, giữ nguyên, gắn nhãn `removed-from-prd`. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready`. Issue không bao giờ bị xoá; story nêu ở mục Tiền điều kiện trở thành liên kết "is blocked by".
 2. Story đã đẩy trước đó mà bị sửa tay trên Jira thì AI báo; PO chọn giữ bản trên Jira hoặc ghi đè.
 3. PO đồng ý, ví dụ "đồng ý đẩy lên Jira". AI tạo, cập nhật issue qua MCP, sau đó ghi kết quả bằng `jira-sync --record`. Script chỉ ghi khi lời đồng ý có trong 3 lượt gần nhất của PO.
 4. PO commit `stories/jira-map.json` và `decisions.md`.

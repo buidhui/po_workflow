@@ -235,19 +235,9 @@ PO phê duyệt bằng ngôn ngữ tự nhiên. Với câu trả lời như "Ok 
 
 Quyết định chỉ đến từ PO, được bảo đảm bằng ba lớp:
 
-1. Hook của Claude Code ghi mỗi lượt PO nhập hoặc chọn vào `.po/turns.jsonl`. Lệnh `po-tools.py approve` chỉ ghi nhận khi lời duyệt có nguyên văn trong một lượt nhập của PO sau lần sửa artifact cuối cùng.
+1. Hook của Claude Code ghi mỗi lượt PO nhập hoặc chọn vào `.po/turns.jsonl`. Lời duyệt chỉ được ghi nhận khi có nguyên văn trong một lượt nhập của PO sau lần sửa artifact cuối cùng.
 2. Lời chấp nhận chung chỉ áp dụng cho cảnh báo thông thường của bước kiểm tra bằng máy. Ba loại mục sau phải được sửa, hoặc PO quyết định riêng từng mục bằng một câu nêu rõ mã: câu hỏi chặn chưa được trả lời; liên kết truy vết ở trạng thái GAP hoặc ORPHAN; mã có trong bản duyệt trước nhưng không còn trong bản hiện tại. Ví dụ lời PO: "Hoãn Q3 sang đợt sau, FR4 làm ở intent khác."
-3. Các quyết định ngoài gate chỉ được ghi bằng lệnh của `po-tools.py`, kèm lời PO trong ba lượt nhập gần nhất. Mỗi lệnh thêm một dòng vào `decisions.md`; hook ngăn AI sửa thủ công các dòng tương ứng trong `state.md`.
-
-| Quyết định ngoài gate | Lệnh |
-|---|---|
-| Bỏ qua một stage | `po-tools.py skip` |
-| Đổi profile | `po-tools.py profile` |
-| Bật, tắt AI Reviewer, bước tóm tắt câu trả lời, bước hỏi bài học | `po-tools.py switch` |
-| Nhận, hoãn, bác, đóng change request | `po-tools.py cr` |
-| Mở lại gate đã ghi nhầm Approve | `po-tools.py reopen` |
-
-Khi sử dụng công cụ AI không có hook, PO tự chạy các lệnh này trong terminal; script coi người nhập lệnh trong terminal là PO.
+3. Năm quyết định ngoài gate, gồm bỏ qua stage, đổi profile, bật hoặc tắt AI Reviewer và các bước tuỳ chọn, quyết định change request, mở lại gate đã ghi nhầm, chỉ được ghi bằng lệnh kèm lời PO trong ba lượt nhập gần nhất. Mỗi quyết định thêm một dòng vào `decisions.md`; hook ngăn AI sửa thủ công các dòng tương ứng trong `state.md`. Danh sách lệnh nằm trong USER-GUIDE.md mục 5.4.
 
 Bản nháp mang phiên bản 0.x. Lần duyệt đầu là 1.0; mỗi lần duyệt lại sau change request tăng số phụ, ví dụ 1.0 thành 1.1. Bản trong `archive/` không bao giờ bị sửa.
 
@@ -309,7 +299,7 @@ PRD theo template chuẩn `engine/templates/prd.md`, dùng chung cho mọi sản
 
 Mục 1 đến 5 tóm tắt từ artifact đã duyệt. Mỗi US ở mục 6 có mười mục con: user story kèm mức ưu tiên, tiền điều kiện, luồng chính, business rule, tiêu chí chấp nhận, giao diện và validate, dữ liệu, yêu cầu phi chức năng riêng nếu có, trường hợp ngoại lệ lấy từ Impact Matrix, ngoài phạm vi của US. Business rule mã `BR<US>.<n>` ghi rõ loại định nghĩa hoặc hành vi; rule dùng chung cho nhiều US mang mã `BR0.<n>`. Tiêu chí chấp nhận mã `AC<US>.<n>` viết theo Given/When/Then, xem mục 6.5. Một dữ kiện chỉ được ghi ở một nơi: nội dung thông báo ghi tại bảng giao diện, quy tắc nghiệp vụ ghi tại business rule, tiêu chí chấp nhận dẫn chiếu tới hai nơi trên bằng mã.
 
-Sơ đồ viết bằng Mermaid ngay trong file, theo `engine/standards/diagrams.md`; bảng là nguồn chính, sơ đồ là bản vẽ từ bảng. Tính năng có đối tượng thay đổi trạng thái thì PRD bắt buộc có vòng đời trạng thái: bảng chuyển trạng thái và sơ đồ `stateDiagram-v2`. Lệnh `po-tools.py check` đối chiếu từng chuyển trạng thái giữa bảng và sơ đồ, báo trạng thái không tới được hoặc không có đường ra, và kiểm tra cú pháp của mọi sơ đồ.
+Sơ đồ viết bằng Mermaid ngay trong file, theo `engine/standards/diagrams.md`; bảng là nguồn chính, sơ đồ là bản vẽ từ bảng. Tính năng có đối tượng thay đổi trạng thái thì PRD bắt buộc có vòng đời trạng thái: bảng chuyển trạng thái và sơ đồ `stateDiagram-v2`. Script kiểm tra đối chiếu từng chuyển trạng thái giữa bảng và sơ đồ, báo trạng thái không tới được hoặc không có đường ra, và kiểm tra cú pháp của mọi sơ đồ.
 
 PRD được viết trước khi các team thiết kế. Với điểm phụ thuộc thiết kế hoặc kỹ thuật mà artifact đã duyệt chưa đề cập, AI ghi đề xuất có đánh dấu kèm câu hỏi gắn tên PIC; các team trả lời tại 2.43. PRD không có mục Database và API, không thiết kế bảng hoặc thuật toán; hằng số ghi rõ là giá trị cố định hoặc cấu hình; field đã có không được mô tả như field mới.
 
@@ -327,7 +317,7 @@ Mỗi file có mục Ý kiến về PRD với lập trường Đồng ý, Đề 
 
 Script đối chiếu ba file với PRD: US có giao diện đã có màn hình chưa, tiêu chí chấp nhận đã có trong kế hoạch kiểm thử chưa, US đã có trong thiết kế kỹ thuật chưa, mỗi màn hình đã có ở phần Frontend chưa, file có được lập từ bản PRD hiện tại chưa. AI xét thêm mâu thuẫn giữa các thiết kế, độ lớn so với mốc thời gian và ý kiến của các team. Kết quả là Decision Brief: phần tổng hợp tối đa 1.500 từ, chỉ ghi các điểm cần quyết định, kèm bảng Ký.
 
-Trước khi gửi Decision Brief cho các PIC, AI chạy `po-tools.py sign-start` để ghi lại bản được gửi. Chữ ký chỉ được tính khi tên người ký trùng tên PIC tại `intent.md`, cột Bản trùng bản đã gửi, và Decision Brief không bị sửa sau lần gửi đó. Buổi họp diễn ra trên Decision Brief; quyết định làm thay đổi yêu cầu được thực hiện qua change request trên PRD. Gate là Alignment gate: Approve khi cả ba PIC ghi Đồng ý hoặc Có ý kiến; khi PIC quá hạn chưa ký, PO được chọn Accept as-is kèm lý do. Story List chỉ được tạo sau gate này. Lý do lựa chọn cách làm này ghi tại `engine/standards/adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
+Bản Decision Brief gửi cho các PIC được ghi dấu. Chữ ký chỉ được tính khi tên người ký trùng tên PIC tại `intent.md`, cột Bản trùng bản đã gửi, và Decision Brief không bị sửa sau lần gửi đó. Buổi họp diễn ra trên Decision Brief; quyết định làm thay đổi yêu cầu được thực hiện qua change request trên PRD. Gate là Alignment gate: Approve khi cả ba PIC ghi Đồng ý hoặc Có ý kiến; khi PIC quá hạn chưa ký, PO được chọn Accept as-is kèm lý do. Story List chỉ được tạo sau gate này. Lý do lựa chọn cách làm này ghi tại `engine/standards/adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
 
 ## 5. Kiểm tra chất lượng
 
@@ -347,7 +337,7 @@ Mỗi gate có hai lớp kiểm tra: lớp do máy thực hiện và lớp cần
 | Major | Tài liệu triển khai được nhưng sẽ phải làm lại hoặc gây hiểu lầm | Có, khi có quá hai Major |
 | Minor | Nội dung nên sửa | Không |
 
-AI Reviewer chỉ nhận đường dẫn file và kết quả kiểm tra bằng máy. Trước khi gọi reviewer, `po-tools.py review-start` ghi dấu phiên bản artifact; nếu artifact thay đổi sau mốc đó, lệnh approve yêu cầu review lại hoặc lời chấp nhận của PO. Kết luận READY khi không có lỗi Critical và có tối đa hai lỗi Major đã có phương án xử lý. Finding dựa trên sở thích chủ quan chỉ được xếp tối đa ở mức Minor. Từ lần review thứ hai, reviewer nhận sổ finding của stage; finding đã được PO chấp nhận rủi ro hoặc bác bỏ không bị đánh giá lại. AI không tự sửa theo finding; PO quyết định chỉnh sửa hoặc ghi nhận Accepted risk.
+AI Reviewer chỉ nhận đường dẫn file và kết quả kiểm tra bằng máy. Trước khi review, phiên bản artifact được ghi dấu; nếu artifact thay đổi sau mốc đó, việc phê duyệt yêu cầu review lại hoặc lời chấp nhận của PO. Kết luận READY khi không có lỗi Critical và có tối đa hai lỗi Major đã có phương án xử lý. Finding dựa trên sở thích chủ quan chỉ được xếp tối đa ở mức Minor. Từ lần review thứ hai, reviewer nhận sổ finding của stage; finding đã được PO chấp nhận rủi ro hoặc bác bỏ không bị đánh giá lại. AI không tự sửa theo finding; PO quyết định chỉnh sửa hoặc ghi nhận Accepted risk.
 
 Phase check thực hiện ở ranh giới phase: Ideation tại 1.7, hoặc tại gate chung của 1.1 và 1.4 với profile M; Inception tại 2.43 với profile M, L và tại 2.42 với profile S. Lệnh `po-tools.py status` phát hiện thêm artifact đã duyệt bị sửa ngoài change request, artifact được lập trên bản cũ của đầu vào, và nguồn knowledge base quá hạn đối chiếu.
 
@@ -433,7 +423,7 @@ Tiêu chí chấp nhận là thoả thuận giữa PO và QA về điều kiện
 
 ### 6.6 Story List
 
-Mỗi US trong PRD tương ứng một story trên Jira. Lệnh `/po-stories` đưa story lên Jira theo một trong hai cách với cùng nội dung: đẩy trực tiếp qua Jira MCP, hoặc sinh file `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv` theo mẫu import CSV của Jira. Story List được tạo sau khi PRD được duyệt, và với profile M, L thì sau gate 2.43. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
+Mỗi US trong PRD tương ứng một story trên Jira. Lệnh `/po-stories` đưa story lên Jira theo một trong hai cách với cùng nội dung: đẩy trực tiếp qua Jira MCP, hoặc nhập file CSV theo mẫu import của Jira. Story List được tạo sau khi PRD được duyệt, và với profile M, L thì sau gate 2.43. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
 
 | Cột | Nội dung |
 |---|---|
@@ -446,7 +436,7 @@ Mỗi US trong PRD tương ứng một story trên Jira. Lệnh `/po-stories` đ
 | Labels, ba cột | Mã tính năng, mã story, mã tính năng kèm Unit |
 | Comment | Nguồn PRD và tag, kết quả điều kiện sẵn sàng, câu hỏi còn mở, nhắc Dev điền story point và thứ tự |
 
-Cách đẩy qua Jira MCP sử dụng lệnh `po-tools.py jira-sync`. Script lập kế hoạch và ghi kết quả; AI gọi Jira qua MCP. Mỗi lần chạy, script đối chiếu PRD với `stories/jira-map.json` và xếp mỗi story vào một việc: tạo, cập nhật, giữ nguyên, hoặc gắn nhãn `removed-from-prd` khi story không còn trong PRD; issue không bao giờ bị xoá. Story chưa đạt điều kiện sẵn sàng vẫn được đưa lên Jira, gắn nhãn `not-ready` và comment ghi lý do. Trước khi cập nhật, script đối chiếu bản trên Jira với bản đã đẩy lần trước; issue đã bị sửa thủ công thì PO quyết định giữ nguyên hoặc ghi đè. PO xác nhận bằng lời trước khi AI đẩy story; kết quả ghi vào `jira-map.json` và một DEC. Story nêu ở Tiền điều kiện trở thành liên kết "is blocked by".
+Story chưa đạt điều kiện sẵn sàng vẫn được đưa lên Jira, gắn nhãn `not-ready` kèm lý do. Story không còn trong PRD được gắn nhãn `removed-from-prd`; issue không bị xoá. PO xác nhận trước mỗi lần đưa story lên Jira. Thao tác của hai cách nằm trong USER-GUIDE.md mục 7.1.
 
 Trên Jira, Design gắn mã màn hình và link thiết kế, Tech gom story vào Unit of work, chia sub-task và ước lượng story point, QA viết test case gắn mã AC. Câu hỏi nghiệp vụ được ghi bằng comment trên story; câu trả lời làm thay đổi PRD được xử lý qua change request. Quy tắc đầy đủ nằm trong `engine/standards/handoff-rules.md` và `engine/standards/adr/0002-story-tren-jira.md`.
 
@@ -462,15 +452,15 @@ Một story được bàn giao cho Dev khi đạt đủ bảy điều kiện:
 6. US có bảng giao diện thì có màn hình tương ứng trong `ux-design.md`; Story List lấy mã màn hình `SCR` từ đó.
 7. Các US mà mục Tiền điều kiện yêu cầu phải hoàn thành trước cũng đạt các điều kiện trên.
 
-Hai điều kiện còn lại của Definition of Ready, thiết kế đã được xem và story đã được ước lượng, do Design và Dev thực hiện trên Jira. Lệnh `po-tools.py dor intents/<intent>` liệt kê story đạt, story chưa đạt kèm lý do; kết quả cũng ghi ở cột Comment của Story List.
+Hai điều kiện còn lại của Definition of Ready, thiết kế đã được xem và story đã được ước lượng, do Design và Dev thực hiện trên Jira. Script kiểm tra bảy điều kiện cho từng story và ghi kết quả vào cột Comment của Story List; cách chạy nằm trong USER-GUIDE.md mục 7.3.
 
 ### 6.8 Phiên bản, tag và chỉ mục
 
-Mỗi lần duyệt PRD hoặc Decision Brief, script in tên tag dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. PO commit artifact vừa duyệt, gắn tag và đẩy tag lên. Story List được commit cùng PRD với profile S, cùng Decision Brief với profile M, L. Lệnh `po-tools.py index --write` sinh `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị tác động, tag, nơi đăng bản đọc nếu có, số story đạt điều kiện sẵn sàng và số story đã đẩy lên Jira. Agent AI của Dev đọc PRD theo tag, nên luôn lấy đúng phiên bản đã duyệt.
+Mỗi PRD và Decision Brief đã duyệt được gắn tag git dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. Chỉ mục `intents/INDEX.md` gồm mã tính năng, bản PRD đã duyệt, ngày duyệt, service bị tác động, tag, nơi đăng bản đọc nếu có, số story đạt điều kiện sẵn sàng và số story đã đẩy lên Jira. Agent AI của Dev đọc PRD theo tag, nên luôn lấy đúng phiên bản đã duyệt. Thao tác gắn tag và cập nhật chỉ mục nằm trong USER-GUIDE.md mục 7.2.
 
 ### 6.9 Thay đổi yêu cầu sau bàn giao
 
-Thay đổi liên quan tới stage đã duyệt được xử lý qua `/change-request`; PRD được duyệt lại thành bản mới, ví dụ 1.1. Với cách Jira MCP, PO chạy lại `/po-stories`: `jira-sync` cập nhật đúng các story thay đổi, tạo story mới, gắn nhãn `removed-from-prd` cho story bị loại bỏ, và comment trên từng story ghi bản PRD mới cùng các mã thêm, bỏ. Với cách CSV, `/po-stories` sinh file CSV mới và đối chiếu với bản trước; PO sửa story trên Jira theo danh sách thay đổi và nhập riêng các story mới. Với cả hai cách, PO thông báo cho các PIC cần xem xét lại. Kết quả kiểm thử ghi kèm bản PRD được sử dụng, để xác định kết quả còn hiệu lực với bản PRD hiện tại.
+Thay đổi liên quan tới stage đã duyệt được xử lý qua change request, xem mục 7; PRD được duyệt lại thành bản mới, ví dụ 1.1. Story List được tạo lại từ bản PRD mới: story thay đổi được cập nhật, story mới được tạo, story bị loại bỏ được gắn nhãn `removed-from-prd`. PO thông báo cho các PIC cần xem xét lại. Kết quả kiểm thử ghi kèm bản PRD được sử dụng, để xác định kết quả còn hiệu lực với bản PRD hiện tại.
 
 ### 6.10 Nơi lưu và quyền truy cập
 
@@ -478,7 +468,7 @@ Story List và `jira-map.json` lưu trong `intents/<intent>/stories/` của repo
 
 ## 7. Sau PRD
 
-`/change-request` phân loại thay đổi trước. Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate. Với thay đổi liên quan tới stage đã duyệt, AI ghi `CR<n>` ở trạng thái chờ PO quyết định, đánh giá các mã bị tác động, mục tiêu bị ảnh hưởng, công sức và độ khẩn; PO quyết định nhận, hoãn hoặc bác. Khi PO nhận, lệnh `po-tools.py cr` mở lại stage thấp nhất bị sai lệch; AI lưu bản chụp artifact bị tác động với nhãn pre-CR, sửa phần bị tác động và trình lại gate.
+`/change-request` phân loại thay đổi trước. Thay đổi nhỏ trong stage đang mở chỉ cần sửa và trình lại gate. Với thay đổi liên quan tới stage đã duyệt, AI ghi `CR<n>` ở trạng thái chờ PO quyết định, đánh giá các mã bị tác động, mục tiêu bị ảnh hưởng, công sức và độ khẩn; PO quyết định nhận, hoãn hoặc bác. Khi PO nhận, stage thấp nhất bị sai lệch được mở lại; AI lưu bản chụp artifact bị tác động với nhãn pre-CR, sửa phần bị tác động và trình lại gate. Thao tác chi tiết nằm trong USER-GUIDE.md mục 6.
 
 | Loại thay đổi | Quay lại stage |
 |---|---|
@@ -530,7 +520,7 @@ intents/<YYMMDD-slug>/
 └── archive/         bản đã duyệt và bản trước change request, không chỉnh sửa
 ```
 
-Khi quy trình có bản mới, người phụ trách quy trình cập nhật repo của sản phẩm theo DOMAIN-SETUP.md mục 2: `po-tools.py engine-check` báo file của quy trình đã bị sửa thủ công, bài học trong `memory/team.md` được gộp theo dòng, và `po-tools.py selftest` xác nhận script vẫn chạy đúng sau khi cập nhật. Dòng Tương thích của mỗi bản trong CHANGELOG cho biết các intent đang thực hiện có cần chuyển đổi. Intent tạo từ bản cũ được chuyển đổi bằng `po-tools.py migrate`: lệnh đổi đường dẫn và thuật ngữ trong file đang dùng, cấp mã tính năng còn thiếu, chuyển file câu hỏi theo định dạng cũ, lưu lại bản chụp bản duyệt kèm một dòng quyết định, và không chỉnh sửa `archive/` hoặc `reviews/`.
+Khi quy trình có bản mới, người phụ trách quy trình cập nhật repo của sản phẩm theo DOMAIN-SETUP.md mục 2. Script phát hiện file của quy trình bị sửa thủ công, bài học dùng chung được gộp theo dòng, bộ kiểm thử xác nhận script vẫn chạy đúng, và intent tạo từ bản cũ được chuyển đổi mà không chỉnh sửa `archive/` hoặc `reviews/`. Dòng Tương thích của mỗi bản trong CHANGELOG cho biết các intent đang thực hiện có cần chuyển đổi.
 
 ## 9. Cơ sở phương pháp
 
