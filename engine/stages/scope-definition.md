@@ -23,7 +23,7 @@
 Chạy theo `engine/protocol/stage-protocol.md`.
 
 ## Mục đích
-Vạch biên: làm gì, không làm gì, để sau. Chia nhu cầu thành Unit, là hạng mục của intent backlog, nhóm theo giá trị và ưu tiên; AWS gọi là proto-Unit. Dev tham khảo khi chia Unit of work ở 2.7 nhưng không bắt buộc chia theo đó. AWS: stage 1.4.
+Vạch biên: làm gì, không làm gì, để sau. Chia nhu cầu thành Unit, là hạng mục của intent backlog, nhóm theo giá trị và ưu tiên; AWS gọi là proto-Unit. Unit ở đây là bản nháp: 2.4 gắn US vào Unit, 2.43 xác nhận cỡ, và mỗi Unit sau khi được xác nhận là một story trên Jira, theo `engine/standards/story-splitting.md` mục 8. AWS: stage 1.4.
 
 ## Load
 intent-statement; vùng KB chưa phủ theo `domain.md` mục 3; `decisions.md`.

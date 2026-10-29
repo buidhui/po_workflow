@@ -9,7 +9,8 @@
 - [ ] Mỗi màn của ux-design có ở phần Frontend của tech-design; hợp đồng API giữa Frontend và Backend có cho mọi thao tác của màn; phía nào ghi Không đổi thì có lý do
 - [ ] PRD có vòng đời trạng thái thì test-design phủ từng chuyển trạng thái và chuyển trạng thái không hợp lệ; màn trong ux-design hiển thị đúng các trạng thái của sơ đồ
 - [ ] Mâu thuẫn giữa thiết kế với business rule hoặc tiêu chí chấp nhận đã nêu ở mục 2 hoặc 3
-- [ ] Độ lớn theo Unit of work so với mốc cứng đã nêu ở mục 7
+- [ ] Độ lớn theo Unit so với mốc cứng đã nêu ở mục 7
+- [ ] **[BLOCK]** Mỗi Unit ở PRD mục 5 có dòng ở `tech-design.md` mục 7; Unit được ghi không vừa một sprint đã được tách hoặc điều chỉnh qua change request trên PRD mục 5, hoặc PO chấp nhận kèm lý do
 - [ ] Mọi Đề xuất sửa PRD có ở mục 3. Mọi ý kiến Phản đối chép nguyên văn ở mục 9
 
 ## Decision Brief

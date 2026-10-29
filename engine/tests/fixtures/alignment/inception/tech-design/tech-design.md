@@ -21,3 +21,8 @@ inputs: prd@1.0
 | SCR | Route | Component chính | Dùng lại hay mới | US |
 |---|---|---|---|---|
 | | /settings/reminder | ReminderForm | Mới | US1 |
+
+## 7. Cỡ Unit và kế hoạch thực hiện
+| Unit | Gồm US | Phần việc Backend | Phần việc Frontend | Độ lớn ước lượng | Vừa một sprint? | Đề xuất |
+|---|---|---|---|---|---|---|
+| U1 | US1 | Lưu thời điểm nhắc | Màn cài đặt nhắc | Lớn | Không | Tách phần nhắc lặp lại thành Unit mới |

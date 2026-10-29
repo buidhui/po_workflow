@@ -7,7 +7,7 @@
 - [ ] Đã xét dấu hiệu quá lớn ở mục 4 của nguyên tắc: hơn một vai hưởng giá trị, luồng hơn 7 bước, gồm cả cấu hình và sử dụng, chạm hơn 2 module. Story giữ dấu hiệu thì thẻ ghi lý do
 - [ ] Không có story quá nhỏ: mỗi story có giá trị riêng và kiểm được độc lập
 - [ ] **[BLOCK]** Mọi FR có US, hoặc Deferred, N/A kèm lý do. Không GAP khi mở gate
-- [ ] Mọi US gắn một Unit. Unit đổi so với 1.4 có lý do
+- [ ] Mọi US gắn một Unit. Unit đổi so với 1.4 có lý do. Mỗi Unit độc lập, theo ước tính sơ bộ vừa một sprint, vì mỗi Unit sẽ là một story trên Jira
 - [ ] Từ ba Unit có sơ đồ phụ thuộc Unit, phụ thuộc một chiều, khớp cột Phụ thuộc của bảng
 - [ ] US chưa làm vẫn định nghĩa, ghi rõ
 - [ ] Đánh số `US1`, `US2` liên tục. Mã không đánh lại

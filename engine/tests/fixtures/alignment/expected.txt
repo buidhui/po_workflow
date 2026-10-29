@@ -1,4 +1,4 @@
-# Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt. ux-design có màn cho US1. tech-design thiếu US2 và chưa ghi SCR1 ở phần Frontend, test-design thiếu AC2.2
+# Profile M, PRD v1.0 đã duyệt, 2.43 chờ duyệt, bảng Units U1 gồm US1, U2 gồm US2. Tech PIC ghi U1 không vừa một sprint, chưa xác nhận U2. ux-design có màn cho US1. tech-design thiếu US2 và chưa ghi SCR1 ở phần Frontend, test-design thiếu AC2.2
 # và dựng từ prd@0.9. Decision Brief: QA PIC chưa ký. Story List chỉ ghi được sau khi 2.43 được duyệt.
 [sign-start]
 mã thoát: 0
@@ -9,6 +9,8 @@ tệp reviews/sign-decision-brief-v0.2.digest có: version: 0.2
 mã thoát: 0
 có: US2 chưa có trong tech-design
 có: SCR1 có trong ux-design nhưng phần Frontend của tech-design chưa có màn này
+có: U1 được Tech PIC ghi không vừa một sprint: tách Unit qua change request trên PRD mục 5
+có: U2 chưa có ở mục 7 của tech-design
 có: AC2.2 chưa có trong kế hoạch test
 có: Dựng từ prd@0.9, PRD hiện là 1.0: QA PIC xem lại theo bản mới
 có: QA PIC chưa ký, đang ghi 'Chưa xem'
@@ -20,8 +22,8 @@ không có: intent.md chưa ghi tên
 
 [stories]
 mã thoát: 0
-có: | US-LMS-F910-01 | Cài đặt nhắc lịch | Must | - | - | chưa đạt | 2.43 Design Alignment chưa duyệt |
-có: | US-LMS-F910-02 | Tắt nhắc cho một lớp | Should | - | - | chưa đạt | 2.43 Design Alignment chưa duyệt |
+có: | LMS-F910-U1 | Cài đặt nhắc lịch | Must | US1 | - | chưa đạt | 2.43 Design Alignment chưa duyệt |
+có: | LMS-F910-U2 | Tắt nhắc theo lớp | Should | US2 | - | chưa đạt | 2.43 Design Alignment chưa duyệt |
 
 [stories --write]
 mã thoát: 2
@@ -29,7 +31,7 @@ có: Chỉ ghi Story List sau khi 2.43 Design Alignment được duyệt
 
 [approve design-alignment --words "Chốt theo Decision Brief"]
 mã thoát: 2
-có: kiểm máy còn 5 cảnh báo
+có: kiểm máy còn 7 cảnh báo
 có: --accept-warnings
 
 [approve design-alignment --words "Chốt theo Decision Brief" --accept-warnings "Chấp nhận thiếu chữ ký QA" --who "Người thử"]
@@ -37,7 +39,7 @@ mã thoát: 0
 có: Đã duyệt 2.43 Design Alignment: decision-brief.md v1.0.
 có: Gợi ý tag git cho bản bàn giao: alignment/decision-brief-v1.0
 tệp state.md có: - [x] 2.43 design-alignment
-tệp decisions.md có: chấp nhận 5 cảnh báo kiểm máy
+tệp decisions.md có: chấp nhận 7 cảnh báo kiểm máy
 
 [dor]
 mã thoát: 0
@@ -47,4 +49,5 @@ có: Kết luận: 2/2 story đạt điều kiện sẵn sàng.
 mã thoát: 0
 có: Đã ghi stories/story-list-prd-v1.0.csv, 2 story.
 tệp stories/story-list-prd-v1.0.csv có: · US1 trong PRD · Màn: SCR-LMS-F910-01 Trang cài đặt nhắc
+tệp stories/story-list-prd-v1.0.csv có: LMS-F910-U2
 tệp stories/story-list-prd-v1.0.csv có: ,Story,Cài đặt nhắc lịch,Highest,

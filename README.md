@@ -52,7 +52,7 @@ Quy trình dành cho sản phẩm đã có người dùng và dữ liệu. Trọ
 | PO | Cung cấp yêu cầu gốc và bối cảnh trong `inputs/`; trả lời câu hỏi; quyết định phạm vi, nghiệp vụ và mức ưu tiên; phê duyệt hoặc yêu cầu chỉnh sửa tại mỗi gate; quyết định bỏ qua stage, đổi profile, chấp nhận change request; đưa story lên Jira; chọn bài học cần lưu giữ |
 | AI Reviewer | Agent độc lập, chỉ đọc artifact, không tiếp cận hội thoại giữa PO và AI; kết luận READY hoặc NOT-READY trước gate |
 | Design PIC | Viết `ux-design.md` dựa trên PRD, đặt mã màn hình, ký Decision Brief |
-| Tech PIC | Viết `tech-design.md` cho Backend và Frontend, gom story thành Unit of work, ký Decision Brief |
+| Tech PIC | Viết `tech-design.md` cho Backend và Frontend, xác nhận cỡ của từng Unit, ký Decision Brief |
 | QA PIC | Viết `test-design.md` bao phủ từng tiêu chí chấp nhận, ký Decision Brief, viết test case gắn mã tiêu chí chấp nhận |
 | Người phê duyệt | Người có thẩm quyền quyết định cuối cùng về việc tiếp tục hoặc dừng intent, ghi tại `intent.md` |
 | Người phụ trách quy trình | Duy trì quy trình và knowledge base của sản phẩm, tổng hợp bài học, hỗ trợ PO |
@@ -66,7 +66,7 @@ Quy trình có năm đầu ra bàn giao. Các artifact còn lại là tài liệ
 | Initiative Brief | Người phê duyệt | Cuối Ideation, profile L |
 | PRD | Design, Tech, QA | Khi stage 2.42 được duyệt |
 | Decision Brief | Design PIC, Tech PIC, QA PIC, PO | Sau khi các team viết thiết kế, profile M và L |
-| Story List, mỗi user story một story trên Jira | Design, Tech, QA | Sau gate 2.43; với profile S, sau khi PRD được duyệt |
+| Story List trên Jira, mỗi Unit một story | Design, Tech, QA | Sau gate 2.43; với profile S, sau khi PRD được duyệt |
 | User Guide | Người dùng cuối | Sau khi Dev hoàn thành |
 
 ### 1.4 Đặc điểm chính
@@ -185,7 +185,7 @@ flowchart LR
         S23 --> S24["2.4 Thẻ US<br/>gắn Unit, chưa có AC"]
         S24 --> S242["2.42 PRD<br/>AC, BR, truy vết"]
         S242 --> DB["2.43 Decision Brief<br/>3 PIC ký"]
-        DB --> ST["Story trên Jira<br/>mã đầy đủ, mã màn"]
+        DB --> ST["Story trên Jira<br/>mỗi Unit một story"]
     end
     subgraph TEAMS["Các team, tại 2.43"]
         direction LR
@@ -201,7 +201,7 @@ flowchart LR
     Q ==> DB
 ```
 
-Unit là nhóm user story theo giá trị và mức ưu tiên. Dev có thể chia việc theo kiến trúc, khác với cách nhóm này.
+Unit là nhóm user story độc lập, có giá trị và mức ưu tiên riêng. Unit lập ở 1.4 là bản nháp; 2.4 gắn mỗi US vào một Unit; 2.43 xác nhận cỡ của từng Unit. Sau khi được xác nhận, mỗi Unit là một story trên Jira, gồm các US của Unit, xem mục 6.3.
 
 ### 3.5 Bảy bước của một stage
 
@@ -257,7 +257,7 @@ Stage có điều kiện, thực hiện khi PO cần so sánh với sản phẩm
 
 ### 1.4 Scope Definition
 
-AI phân loại In, Out, Potential và chia nhu cầu thành Unit mã `U1`, `U2`, sắp xếp theo MoSCoW. Bốn quy tắc chia: theo cơ chế thay vì theo màn hình; xác định hạng mục nền; tách riêng hạng mục tác động toàn hệ thống như phân quyền, bật tắt, lịch sử; phụ thuộc chỉ đi một chiều. Hạng mục Won't vẫn được định nghĩa để bước phân tích ảnh hưởng rà soát đúng phạm vi. Profile M duyệt 1.1 và 1.4 chung một gate.
+AI phân loại In, Out, Potential và chia nhu cầu thành Unit mã `U1`, `U2`, sắp xếp theo MoSCoW. Bốn quy tắc chia: theo cơ chế thay vì theo màn hình; xác định hạng mục nền; tách riêng hạng mục tác động toàn hệ thống như phân quyền, bật tắt, lịch sử; phụ thuộc chỉ đi một chiều. Hạng mục Won't vẫn được định nghĩa để bước phân tích ảnh hưởng rà soát đúng phạm vi. Unit ở stage này là bản nháp, được điều chỉnh ở 2.4 và được xác nhận cỡ ở 2.43. Profile M duyệt 1.1 và 1.4 chung một gate.
 
 ### 1.7 Approval & Handoff
 
@@ -277,7 +277,7 @@ Stage có điều kiện, thực hiện khi có từ hai hướng giải quyết
 
 ### 2.4 User Stories
 
-AI chia yêu cầu thành user story theo `engine/standards/story-splitting.md`. Mỗi US gắn một Unit, và mỗi yêu cầu chức năng có ít nhất một US bao phủ. Mỗi US có một thẻ chín mục: vai và mục tiêu, bối cảnh, luồng chính, nhánh đáng kể, rule đã biết, dữ liệu và vùng bị tác động, ngoài phạm vi, phụ thuộc, điểm chưa rõ. Thẻ đủ để viết PRD mà không phải mở lại requirements, và chưa có tiêu chí chấp nhận. Các PIC không xem thẻ ở bước này; họ đọc PRD chi tiết một lần tại 2.43. Script truy vết báo yêu cầu chưa có US và US không truy về yêu cầu nào.
+AI chia yêu cầu thành user story theo `engine/standards/story-splitting.md`. Mỗi US gắn một Unit, và mỗi yêu cầu chức năng có ít nhất một US bao phủ. PO tách, gộp hoặc thêm Unit khi cần; mỗi Unit sẽ là một story trên Jira, nên Unit phải độc lập và theo ước tính sơ bộ vừa một sprint. Mỗi US có một thẻ chín mục: vai và mục tiêu, bối cảnh, luồng chính, nhánh đáng kể, rule đã biết, dữ liệu và vùng bị tác động, ngoài phạm vi, phụ thuộc, điểm chưa rõ. Thẻ đủ để viết PRD mà không phải mở lại requirements, và chưa có tiêu chí chấp nhận. Các PIC không xem thẻ ở bước này; họ đọc PRD chi tiết một lần tại 2.43. Script truy vết báo yêu cầu chưa có US và US không truy về yêu cầu nào.
 
 ### 2.42 PRD Generation
 
@@ -310,14 +310,14 @@ Stage thực hiện ở profile M và L, sau khi PRD được duyệt. Design PI
 | File | Người viết | Nội dung |
 |---|---|---|
 | `inception/ux-design/ux-design.md` | Design PIC | Danh sách màn hình có mã `SCR`, luồng màn hình, accessibility |
-| `inception/tech-design/tech-design.md` | Tech PIC, cùng người phụ trách Backend và Frontend | Thành phần bị tác động ở hai phía, quyết định kỹ thuật, hợp đồng API giữa hai phía, dữ liệu và xử lý ở Backend, màn hình và component ở Frontend, cách đáp ứng BR, NFR, TR, Unit of work và độ lớn |
+| `inception/tech-design/tech-design.md` | Tech PIC, cùng người phụ trách Backend và Frontend | Thành phần bị tác động ở hai phía, quyết định kỹ thuật, hợp đồng API giữa hai phía, dữ liệu và xử lý ở Backend, màn hình và component ở Frontend, cách đáp ứng BR, NFR, TR, cỡ của từng Unit kèm phần việc Backend và Frontend |
 | `inception/test-design/test-design.md` | QA PIC | Chiến lược kiểm thử, kế hoạch bao phủ từng tiêu chí chấp nhận, vùng hồi quy |
 
 Mỗi file có mục Ý kiến về PRD với lập trường Đồng ý, Đề xuất sửa hoặc Phản đối. AI của PO chỉ tạo khung file, không viết và không sửa nội dung.
 
-Script đối chiếu ba file với PRD theo năm điểm: mỗi US có giao diện có màn hình tương ứng; mỗi tiêu chí chấp nhận có trong kế hoạch kiểm thử; mỗi US có trong thiết kế kỹ thuật; mỗi màn hình có ở phần Frontend; file được lập từ bản PRD hiện tại. AI xét thêm mâu thuẫn giữa các thiết kế, độ lớn so với mốc thời gian và ý kiến của các team. Kết quả là Decision Brief: phần tổng hợp tối đa 1.500 từ, chỉ ghi các điểm cần quyết định, kèm bảng Ký.
+Script đối chiếu ba file với PRD theo sáu điểm: mỗi US có giao diện có màn hình tương ứng; mỗi tiêu chí chấp nhận có trong kế hoạch kiểm thử; mỗi US có trong thiết kế kỹ thuật; mỗi màn hình có ở phần Frontend; mỗi Unit được Tech PIC xác nhận cỡ và vừa một sprint; file được lập từ bản PRD hiện tại. AI xét thêm mâu thuẫn giữa các thiết kế, độ lớn so với mốc thời gian và ý kiến của các team. Kết quả là Decision Brief: phần tổng hợp tối đa 1.500 từ, chỉ ghi các điểm cần quyết định, kèm bảng Ký.
 
-Bản Decision Brief gửi cho các PIC được ghi dấu. Chữ ký chỉ được tính khi tên người ký trùng tên PIC tại `intent.md`, cột Bản trùng bản đã gửi, và Decision Brief không bị sửa sau lần gửi đó. Buổi họp diễn ra trên Decision Brief; quyết định làm thay đổi yêu cầu được thực hiện qua change request trên PRD. Gate là Alignment gate: Approve khi cả ba PIC ghi Đồng ý hoặc Có ý kiến; khi PIC quá hạn chưa ký, PO có thể chọn Accept as-is kèm lý do. Story List chỉ được tạo sau gate này. Lý do lựa chọn cách làm này ghi tại `engine/standards/adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
+Bản Decision Brief gửi cho các PIC được ghi dấu. Chữ ký chỉ được tính khi tên người ký trùng tên PIC tại `intent.md`, cột Bản trùng bản đã gửi, và Decision Brief không bị sửa sau lần gửi đó. Buổi họp diễn ra trên Decision Brief; quyết định làm thay đổi yêu cầu được thực hiện qua change request trên PRD. Quyết định tách, gộp Unit hoặc chuyển US giữa các Unit cũng sửa PRD mục 5 qua change request trước Alignment gate. Gate là Alignment gate: Approve khi cả ba PIC ghi Đồng ý hoặc Có ý kiến; khi PIC quá hạn chưa ký, PO có thể chọn Accept as-is kèm lý do. Story List chỉ được tạo sau gate này. Lý do lựa chọn cách làm này ghi tại `engine/standards/adr/0003-thiet-ke-cua-team-va-decision-brief.md`.
 
 ## 5. Kiểm tra chất lượng
 
@@ -325,7 +325,7 @@ Mỗi gate có hai lớp kiểm tra: lớp do máy thực hiện và lớp cần
 
 | Lớp | Công cụ | Nội dung kiểm tra |
 |---|---|---|
-| Máy | `po-tools.py check` | Heading bắt buộc theo template; thẻ nguồn; `[Qn]` và `[DECn]` tồn tại; thẻ US đủ chín mục; nội dung mẫu chưa được thay thế; mục không được có trong PRD; mã AC không trùng; tiêu chí chấp nhận theo Given/When/Then; vòng đời trạng thái khớp sơ đồ; cú pháp mọi sơ đồ Mermaid; US thiếu dòng Ưu tiên hoặc thiếu AC cho trường hợp lỗi; mã có trong bản duyệt trước nhưng không còn trong bản hiện tại; US giữ mã nhưng đổi tên hoàn toàn. Tại 2.43, kiểm tra thêm độ phủ của ba file thiết kế, giới hạn số từ và chữ ký của Decision Brief |
+| Máy | `po-tools.py check` | Heading bắt buộc theo template; thẻ nguồn; `[Qn]` và `[DECn]` tồn tại; thẻ US đủ chín mục; nội dung mẫu chưa được thay thế; mục không được có trong PRD; mã AC không trùng; tiêu chí chấp nhận theo Given/When/Then; vòng đời trạng thái khớp sơ đồ; cú pháp mọi sơ đồ Mermaid; US thiếu dòng Ưu tiên hoặc thiếu AC cho trường hợp lỗi; bảng Units không khớp các khối US; mã có trong bản duyệt trước nhưng không còn trong bản hiện tại; US giữ mã nhưng đổi tên hoàn toàn. Tại 2.43, kiểm tra thêm độ phủ của ba file thiết kế, giới hạn số từ và chữ ký của Decision Brief |
 | Máy | `po-tools.py trace` | Yêu cầu sang US, US sang yêu cầu, BR sang AC, US trong PRD; báo GAP và ORPHAN; dừng với lỗi khi không đọc được mã nào |
 | Đánh giá chuyên môn | Checklist trong `engine/verification/` | Các nội dung cần đọc hiểu; gate chỉ mở khi mọi mục có nhãn BLOCK đã đạt |
 | Đánh giá chuyên môn | AI Reviewer, định nghĩa trong `engine/agents/ai-reviewer.md` | Mức độ rõ ràng để Dev thực hiện, khả năng QA viết test từ tiêu chí chấp nhận, giả định ngầm chưa được PO xác nhận, nội dung vượt phạm vi, ranh giới trong và ngoài phạm vi; kết luận READY hoặc NOT-READY |
@@ -352,7 +352,7 @@ Bản thân các script cũng được kiểm tra. Lệnh `po-tools.py selftest`
 | Team | Đầu vào | Nơi nhận | Thời điểm |
 |---|---|---|---|
 | Design | PRD kèm bảng giao diện để viết `ux-design.md`; Decision Brief; story trên Jira có mã màn hình | `inception/`, Jira | PRD khi được duyệt; story sau gate 2.43 |
-| Tech, gồm Backend và Frontend | PRD, Impact Matrix, danh sách màn hình của ux-design để viết `tech-design.md`; Decision Brief; story trên Jira để gom thành Unit of work và chia sub-task | `inception/`, Jira | PRD khi được duyệt; story sau gate 2.43 |
+| Tech, gồm Backend và Frontend | PRD, Impact Matrix, danh sách màn hình của ux-design để viết `tech-design.md`; Decision Brief; story trên Jira để chia sub-task Backend, Frontend | `inception/`, Jira | PRD khi được duyệt; story sau gate 2.43 |
 | QA | PRD kèm tiêu chí chấp nhận có mã để viết `test-design.md`; Decision Brief; story trên Jira để gắn test case | `inception/`, Jira | PRD khi được duyệt; story sau gate 2.43 |
 | Agent AI của Dev | PRD theo tag của bản đã duyệt; ba file thiết kế; bảng chỉ mục; story trên Jira | Repo, `intents/INDEX.md`, Jira | Sau gate 2.43; profile S sau gate 2.42 |
 
@@ -360,26 +360,34 @@ Bản thân các script cũng được kiểm tra. Lệnh `po-tools.py selftest`
 
 | Mốc | Thời điểm | Đầu vào | Kết quả |
 |---|---|---|---|
-| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba file thiết kế; Decision Brief | Họp trên Decision Brief, ba PIC ký; cỡ story và thay đổi PRD được thống nhất |
+| Checkpoint | Stage 2.43, sau khi PRD được duyệt | PRD đã duyệt; ba file thiết kế; Decision Brief | Họp trên Decision Brief, ba PIC ký; cỡ của từng Unit và thay đổi PRD được thống nhất |
 | Bàn giao cho Dev | Sau gate 2.43; profile S sau gate 2.42 | Story List trên Jira | Story đạt điều kiện sẵn sàng, xem mục 6.7 |
 
 ### 6.3 Nguyên tắc chia story
 
-Story là đơn vị nghiệm thu: một việc người dùng thực hiện trọn vẹn được và kiểm tra được bằng tiêu chí chấp nhận. PO chia story một lần tại 2.4; Story List giữ nguyên cách chia này, mỗi US tương ứng một story, và các team không chia lại story. Nguyên tắc đầy đủ nằm trong `engine/standards/story-splitting.md`:
+User story (US) là đơn vị nghiệm thu: một việc người dùng thực hiện trọn vẹn được và kiểm tra được bằng tiêu chí chấp nhận. Story trên Jira là đơn vị Dev nhận vào sprint: mỗi Unit là một story, gồm các US của Unit. PO chia US một lần tại 2.4, và các team không chia lại US. Nguyên tắc đầy đủ nằm trong `engine/standards/story-splitting.md`:
 
 1. Mỗi story là một mục tiêu hoàn chỉnh của một vai, đi trọn từ giao diện tới rule và dữ liệu, và đạt bộ tiêu chí INVEST.
 2. Story được xác định từ bản đồ story theo vai và bước trong hành trình người dùng; mỗi ô "vai và mục tiêu" là một story ứng viên.
 3. Dấu hiệu story quá lớn: tên có chữ "và" nối hai việc, nhiều hơn một vai cùng hưởng giá trị, luồng chính hơn bảy bước, gồm cả cấu hình và sử dụng, tác động tới hơn hai module, hơn sáu tiêu chí chấp nhận. Script cảnh báo hai dấu hiệu: chữ "và" trong tên tại 2.4 và hơn sáu AC tại 2.42.
 4. Tám cách tách, áp dụng theo thứ tự: theo bước trong luồng; theo vai; theo biến thể nghiệp vụ; theo biến thể dữ liệu; theo thao tác xem, tạo, sửa, xoá; luồng đơn giản trước; đảm bảo đúng trước và tối ưu sau; theo kênh.
 5. Không chia theo màn hình, tầng kỹ thuật, từng business rule, việc thuần kỹ thuật hoặc người thực hiện.
-6. Mỗi story thuộc đúng một Unit.
+6. Mỗi US thuộc đúng một Unit. Unit độc lập, có giá trị và mức ưu tiên riêng, và vừa một sprint.
 
-Cỡ story được xác nhận tại checkpoint. Tech PIC ghi trong `tech-design.md` story nào quá lớn để hoàn thành trong một sprint; story cần tách được xử lý qua change request trên PRD trước khi tạo Story List, và phần tách ra nhận mã mới.
+Unit được xác định qua ba mốc:
 
-| Team | Chia việc theo | Quan hệ với story |
+| Mốc | Unit | Người quyết định |
 |---|---|---|
-| Design | Màn hình, mã `SCR` | Một màn hình có thể phục vụ nhiều story |
-| Dev | Unit of work, sau đó là sub-task trên Jira | Một Unit of work gồm một hoặc nhiều story |
+| 1.4 Scope Definition | Bản nháp, chia theo giá trị và cơ chế để xác định phạm vi và thứ tự ưu tiên | PO |
+| 2.4 User Stories | Gắn mỗi US vào một Unit; tách, gộp hoặc thêm Unit khi cần | PO |
+| 2.43 Design Alignment | Tech PIC xác nhận từng Unit độc lập và vừa một sprint trong `tech-design.md`, đề xuất tách, gộp hoặc chuyển US giữa các Unit | PO và Tech PIC, thống nhất trên Decision Brief |
+
+Thay đổi Unit quyết định trong buổi họp được thực hiện qua change request trên PRD mục 5 trước Alignment gate. Sau gate, bảng Units ở PRD mục 5 là bản chốt. Unit quá một sprint được tách thành hai Unit; một Unit không tương ứng nhiều story. Unit tách ra nhận số mới; Unit bị gộp giữ dòng trong bảng và ghi Unit nhận. US quá lớn để hoàn thành trong một sprint được tách qua change request, và phần tách ra nhận mã mới.
+
+| Team | Chia việc theo | Quan hệ với US |
+|---|---|---|
+| Design | Màn hình, mã `SCR` | Một màn hình có thể phục vụ nhiều US |
+| Dev | Story trên Jira, sau đó là sub-task Backend, Frontend | Một story gồm các US của một Unit |
 | QA | Tiêu chí chấp nhận | Mỗi tiêu chí chấp nhận có ít nhất một test case |
 
 ### 6.4 Mã chung
@@ -389,6 +397,7 @@ PRD và artifact của PO sử dụng mã ngắn để dễ đọc. Khi tạo St
 | Đối tượng | Mã đầy đủ | Ví dụ | Người cấp |
 |---|---|---|---|
 | Tính năng | `<SP>-F<NNN>` | `APP-F012` | PO, khi tạo intent |
+| Unit, cũng là story trên Jira | `<tính năng>-U<n>` | `APP-F012-U1` | PO, tại 1.4; xác nhận tại 2.43 |
 | User story | `US-<tính năng>-<NN>` | `US-APP-F012-01` | PO, tại 2.4 |
 | Tiêu chí chấp nhận | `AC-<tính năng>-<NN>.<n>` | `AC-APP-F012-01.1` | PO, tại 2.42 |
 | Business rule | `BR-<tính năng>-<NN>.<n>` | `BR-APP-F012-01.2` | PO, tại 2.42 |
@@ -423,26 +432,28 @@ Tiêu chí chấp nhận là thoả thuận giữa PO và QA về điều kiện
 
 ### 6.6 Story List
 
-Mỗi US trong PRD tương ứng một story trên Jira. Lệnh `/po-stories` đưa story lên Jira theo một trong hai cách với cùng nội dung: đẩy trực tiếp qua Jira MCP, hoặc nhập file CSV theo mẫu import của Jira. Story List được tạo sau khi PRD được duyệt; với profile M, L, sau gate 2.43. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
+Mỗi Unit ở PRD mục 5 là một story trên Jira, mã `<tính năng>-U<n>`. Story mang tên và mức ưu tiên của Unit, có nhãn mã của từng US, và Description gồm khối của từng US trong Unit. US, tiêu chí chấp nhận và business rule giữ nguyên mã, nên test case và commit dẫn chiếu tới từng US. Khi PRD không có mục Units, như với profile S, cả PRD là một story. Ví dụ: U1 "Khoá tài khoản" gồm US1 và US2 trở thành story `APP-F012-U1` với hai khối US1, US2 trong Description.
+
+Lệnh `/po-stories` đưa story lên Jira theo một trong hai cách với cùng nội dung: đẩy trực tiếp qua Jira MCP, hoặc nhập file CSV theo mẫu import của Jira. Story List được tạo sau khi PRD được duyệt; với profile M, L, sau gate 2.43. Nội dung nghiệp vụ chỉ có một nguồn là PRD.
 
 | Cột | Nội dung |
 |---|---|
 | Project key, Project name, Project type | Dự án Jira, lấy từ frontmatter `domain/domain.md` |
 | Issue Type | `Story`, thay đổi được bằng khoá `jira_story_type` của `domain.md` |
-| Summary | Tên user story |
-| Priority | Từ dòng Ưu tiên của US: Must chuyển thành Highest, Should thành High, Could thành Medium |
+| Summary | Tên Unit, cột Tên của bảng Units |
+| Priority | Cột Ưu tiên của bảng Units, hoặc mức cao nhất trong dòng Ưu tiên của các US: Must chuyển thành Highest, Should thành High, Could thành Medium |
 | Description | Mô tả, tiền điều kiện, kịch bản, tiêu chí chấp nhận, giao diện và validate, business rule, dữ liệu, yêu cầu phi chức năng, ngoài phạm vi, tham chiếu tới PRD, tag và mã màn hình lấy từ `ux-design.md`; cú pháp Jira, mã đầy đủ |
 | Epic Link | Mã Epic ở dòng Jira Epic của `intent.md`; khi có nhiều Epic, ghi `U2: <mã Epic>` để gán theo Unit |
-| Labels, ba cột | Mã tính năng, mã story, mã tính năng kèm Unit |
-| Comment | Nguồn PRD và tag, kết quả điều kiện sẵn sàng, câu hỏi còn mở, nhắc Dev điền story point và thứ tự |
+| Labels, ba cột trở lên | Mã tính năng, mã story, mã đầy đủ của từng US trong Unit |
+| Comment | Nguồn PRD và tag, kết quả điều kiện sẵn sàng theo từng US, câu hỏi còn mở, danh sách US, nhắc Dev điền story point và thứ tự |
 
-Story chưa đạt điều kiện sẵn sàng vẫn được đưa lên Jira, gắn nhãn `not-ready` kèm lý do. Story không còn trong PRD được gắn nhãn `removed-from-prd`; issue không bị xoá. PO xác nhận trước mỗi lần đưa story lên Jira. Thao tác của hai cách nằm trong USER-GUIDE.md mục 7.1.
+Story chưa đạt điều kiện sẵn sàng vẫn được đưa lên Jira, gắn nhãn `not-ready` kèm lý do. Story không còn trong PRD được gắn nhãn `removed-from-prd`; story của Unit đã gộp vào Unit khác được gắn nhãn `merged-into-story`; issue không bị xoá. PO xác nhận trước mỗi lần đưa story lên Jira. Thao tác của hai cách nằm trong USER-GUIDE.md mục 7.1.
 
-Trên Jira, Design gắn mã màn hình và link thiết kế, Tech gom story vào Unit of work, chia sub-task và ước lượng story point, QA viết test case gắn mã AC. Câu hỏi nghiệp vụ được ghi bằng comment trên story; câu trả lời làm thay đổi PRD được xử lý qua change request. Quy tắc đầy đủ nằm trong `engine/standards/handoff-rules.md` và `engine/standards/adr/0002-story-tren-jira.md`.
+Trên Jira, Design gắn mã màn hình và link thiết kế, Tech chia story thành sub-task Backend, Frontend và ước lượng story point, QA viết test case gắn mã AC. Câu hỏi nghiệp vụ được ghi bằng comment trên story; câu trả lời làm thay đổi PRD được xử lý qua change request. Quy tắc đầy đủ nằm trong `engine/standards/handoff-rules.md` và `engine/standards/adr/0002-story-tren-jira.md`.
 
 ### 6.7 Điều kiện sẵn sàng
 
-Một story được bàn giao cho Dev khi đạt đủ bảy điều kiện:
+Một story trên Jira được bàn giao cho Dev khi mọi US của Unit đạt đủ bảy điều kiện:
 
 1. PRD đã duyệt.
 2. Với profile M, L: 2.43 Design Alignment đã duyệt, tức các team đã thiết kế và đã thống nhất trên Decision Brief.
@@ -450,9 +461,9 @@ Một story được bàn giao cho Dev khi đạt đủ bảy điều kiện:
 4. Mọi business rule của US đều có ít nhất một tiêu chí chấp nhận dẫn chiếu tới.
 5. US không còn `❓PO`, và mục Câu hỏi mở của PRD không còn câu chặn gắn với US đó.
 6. Khi US có bảng giao diện, `ux-design.md` có màn hình tương ứng; Story List lấy mã màn hình `SCR` từ đó.
-7. Các US mà mục Tiền điều kiện yêu cầu phải hoàn thành trước cũng đạt các điều kiện trên.
+7. Các US mà mục Tiền điều kiện yêu cầu phải hoàn thành trước cũng đạt các điều kiện trên; US nằm cùng Unit không xét. Unit ở cột Phụ thuộc của bảng Units cũng phải đạt.
 
-Hai điều kiện còn lại của Definition of Ready, thiết kế đã được xem và story đã được ước lượng, do Design và Dev thực hiện trên Jira. Script kiểm tra bảy điều kiện cho từng story và ghi kết quả vào cột Comment của Story List; cách chạy nằm trong USER-GUIDE.md mục 7.3.
+Hai điều kiện còn lại của Definition of Ready, thiết kế đã được xem và story đã được ước lượng, do Design và Dev thực hiện trên Jira. Script kiểm tra bảy điều kiện cho từng story, ghi lý do chưa đạt kèm mã US vào cột Comment của Story List; cách chạy nằm trong USER-GUIDE.md mục 7.3.
 
 ### 6.8 Phiên bản, tag và chỉ mục
 
@@ -460,7 +471,7 @@ Mỗi PRD và Decision Brief đã duyệt được gắn tag git dạng `<intent
 
 ### 6.9 Thay đổi yêu cầu sau bàn giao
 
-Thay đổi liên quan tới stage đã duyệt được xử lý qua change request, xem mục 7; PRD được duyệt lại thành bản mới, ví dụ 1.1. Story List được tạo lại từ bản PRD mới: story thay đổi được cập nhật, story mới được tạo, story bị loại bỏ được gắn nhãn `removed-from-prd`. PO thông báo cho các PIC cần xem xét lại. Kết quả kiểm thử ghi kèm bản PRD được sử dụng, để xác định kết quả còn hiệu lực với bản PRD hiện tại.
+Thay đổi liên quan tới stage đã duyệt được xử lý qua change request, xem mục 7; PRD được duyệt lại thành bản mới, ví dụ 1.1. Story List được tạo lại từ bản PRD mới: story thay đổi được cập nhật, story mới được tạo, story bị loại bỏ được gắn nhãn `removed-from-prd`, story của Unit đã gộp được gắn nhãn `merged-into-story`. PO thông báo cho các PIC cần xem xét lại. Kết quả kiểm thử ghi kèm bản PRD được sử dụng, để xác định kết quả còn hiệu lực với bản PRD hiện tại.
 
 ### 6.10 Nơi lưu và quyền truy cập
 
@@ -479,6 +490,7 @@ Story List và `jira-map.json` lưu trong `intents/<intent>/stories/` của repo
 | Hướng giải quyết | 2.32 |
 | Danh sách user story | 2.4 |
 | Chi tiết user story | 2.42 |
+| Tách, gộp Unit hoặc chuyển US giữa các Unit tại 2.43 | 2.42, mục 5 Units; PIC ký lại |
 | Thiết kế của các team, quyết định trong buổi họp | 2.43, PIC ký lại |
 
 `/generate-user-guide` soạn hướng dẫn cho người dùng cuối từ PRD đã duyệt, sau khi Dev hoàn thành, theo `engine/templates/user-guide.md`, lưu tại nơi ghi trong `domain/domain.md`. Sau đó AI cập nhật knowledge base với rule mới và field đã thay đổi, để lần phân tích ảnh hưởng tiếp theo không dựa trên dữ liệu cũ.
@@ -530,7 +542,7 @@ Quy trình được xây dựng trên các phương pháp và chuẩn sau.
 |---|---|
 | [AWS AI-DLC Workflows](https://github.com/awslabs/aidlc-workflows) 2.11, commit `0488aff`, giấy phép MIT-0 | Cấu trúc phase, stage và gate; bảy bước của một stage; vai review độc lập; cách tách phần quy trình dùng chung khỏi công cụ AI; vòng bài học dùng chung và bài học của sản phẩm; gói kiến thức vai Product trong `engine/knowledge/` |
 | BABOK v3, IIBA | Sáu nhóm nghiệp vụ phân tích: lập kế hoạch và giám sát (profile, gate, nhật ký quyết định); khơi gợi và cộng tác (questions file, Decision Brief); phân tích chiến lược (phase Ideation); phân tích yêu cầu và định nghĩa thiết kế (2.3 đến 2.42); quản lý vòng đời yêu cầu (mã ổn định, truy vết, change request); đánh giá giải pháp (`/po-evaluate`). Kỹ thuật business rule (10.9) và tiêu chí chấp nhận (10.1) |
-| Scrum Guide 2020 | Bốn trách nhiệm của PO với backlog: mục tiêu sản phẩm (1.1, Initiative Brief); hạng mục backlog (PRD, Story List); thứ tự backlog (MoSCoW cho Unit, Priority trên Jira); backlog minh bạch (repo, tag, `intents/INDEX.md`) |
+| Scrum Guide 2020 | Bốn trách nhiệm của PO với backlog: mục tiêu sản phẩm (1.1, Initiative Brief); hạng mục backlog (PRD; Story List, mỗi Unit một story vừa một sprint); thứ tự backlog (MoSCoW cho Unit, Priority trên Jira); backlog minh bạch (repo, tag, `intents/INDEX.md`) |
 | ISO/IEC/IEEE 29148:2018; EARS, Mavin và cộng sự, RE'09; GitHub Spec Kit | Chất lượng và định danh yêu cầu; mẫu câu yêu cầu chức năng; cấu trúc template PRD, chi tiết tại ADR 0004 |
 | Stage-Gate, Robert G. Cooper, 1986 | Gate giữa các stage |
 | Bohner và Arnold, 1996 | Phân tích ảnh hưởng trước khi thay đổi, Impact Matrix |

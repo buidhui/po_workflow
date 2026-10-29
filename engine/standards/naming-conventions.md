@@ -34,7 +34,7 @@ Mọi mã đầy đủ chỉ dùng chữ hoa, chữ số, dấu chấm và gạc
 \b(US|AC|BR|SCR|TC|NFR|TR|SC|Q)-([A-Z][A-Z0-9]*-F\d{3,})-(\d{2,3})(?:\.(\d+))?\b
 ```
 
-Nhóm 1 là loại mã, nhóm 2 là mã tính năng, nhóm 3 là số thứ tự, nhóm 4 là số con nếu có. Mã trong KB của domain, như `BR-EDIT-07`, theo `domain-kb.md` và không khớp biểu thức này. Mã tính năng `<SP>-F<NNN>` có chữ F đứng trước số, nên khác dạng key issue của Jira là key dự án, gạch nối, số, như `APP-123`.
+Nhóm 1 là loại mã, nhóm 2 là mã tính năng, nhóm 3 là số thứ tự, nhóm 4 là số con nếu có. Mã story trên Jira là mã Unit đầy đủ `<tính năng>-U<n>`, như `APP-F012-U1`, đọc bằng biểu thức `\b([A-Z][A-Z0-9]*-F\d{3,})-U(\d+)\b`. Mã trong KB của domain, như `BR-EDIT-07`, theo `domain-kb.md` và không khớp biểu thức này. Mã tính năng `<SP>-F<NNN>` có chữ F đứng trước số, nên khác dạng key issue của Jira là key dự án, gạch nối, số, như `APP-123`.
 
 ## 4. Thư mục và tên file trong repo PO
 
@@ -97,7 +97,7 @@ Implements: AC-APP-F012-01.1, AC-APP-F012-01.2, BR-APP-F012-01.2
 |---|---|---|
 | `Refs` | Key Jira của story | Có |
 | `Feature` | Mã tính năng | Có |
-| `Story` | Mã US đầy đủ, khi commit thuộc một story | Có khi có story |
+| `Story` | Mã US đầy đủ mà commit thực hiện | Có khi commit thực hiện một US |
 | `Implements` | Mã AC, BR, NFR đầy đủ mà commit làm hoặc sửa | Khuyến nghị |
 
 Đọc lại bằng git: `git log --format='%h %(trailers:key=Implements,valueonly)'`. Pull request có key Jira trong tiêu đề và chép các trailer vào phần mô tả.
@@ -167,6 +167,6 @@ Tài liệu của PO tương ứng với tài liệu của các công cụ:
 |---|---|---|---|---|
 | PRD: US, BR, AC | `requirements.md`, `stories.md` | `spec.md` | `requirements.md` | `specs/<capability>/spec.md` |
 | `tech-design.md` | `domain-design/`, `contract-design/`, `construction/<unit>/functional-design/` | `plan.md`, `data-model.md`, `contracts/` | `design.md` | `design.md` |
-| Unit of work ở `tech-design.md` mục 7 | `units-generation/unit-of-work.md` | `tasks.md` | `tasks.md` | `tasks.md` |
+| Cỡ Unit ở `tech-design.md` mục 7 | `units-generation/unit-of-work.md` | `tasks.md` | `tasks.md` | `tasks.md` |
 | `test-design.md` | `build-and-test/` | Kịch bản Given/When/Then trong `spec.md` | Tiêu chí chấp nhận trong `requirements.md` | `#### Scenario:` |
 | Change request | Intent mới hoặc stage mở lại | Spec mới | Sửa spec | `changes/<change-id>/` |

@@ -1,0 +1,7 @@
+{
+ "project": "APP",
+ "stories": {
+  "LMS-F903-U3": {"key": "APP-13", "prd": "0.9", "summary": "Chia sẻ", "description": "# US-LMS-F903-03 Chia sẻ đường dẫn chứng chỉ\n\nChia sẻ.\n", "labels": ["LMS-F903", "LMS-F903-U3", "US-LMS-F903-03"], "blocked_by": [], "reasons": [], "hash": "cu", "removed": false, "pushed_at": "2026-10-12 09:00"},
+  "US-LMS-F903-02": {"key": "APP-15", "prd": "0.8", "summary": "Xem lại chứng chỉ đã cấp", "description": "## MÔ TẢ\n\nXem lại.\n", "labels": ["LMS-F903", "US-LMS-F903-02"], "blocked_by": [], "reasons": [], "hash": "cu", "removed": false, "pushed_at": "2026-10-10 09:00"}
+ }
+}

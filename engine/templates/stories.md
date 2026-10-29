@@ -35,11 +35,12 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 |---|---|---|---|
 
 ## Units
-| Unit | Gồm US | Phụ thuộc | Release độc lập? | Ghi chú |
-|---|---|---|---|---|
+| Unit | Tên | Gồm US | Ưu tiên | Phụ thuộc | Release độc lập? | Ghi chú |
+|---|---|---|---|---|---|---|
 Thứ tự gợi ý: <...>. Dev quyết thứ tự thật.
 <Từ ba Unit trở lên: sơ đồ phụ thuộc Unit, `flowchart LR`, mũi tên từ Unit phải có trước tới Unit phụ thuộc, theo `engine/standards/diagrams.md` mục 4. PRD mục 5 chép lại sơ đồ này.>
 Thay đổi so với 1.4: <tách, gộp, thêm, vì sao>
+<Mỗi Unit sẽ là một story trên Jira: giữ Unit độc lập và, theo ước tính sơ bộ, vừa một sprint. Tech PIC xác nhận cỡ ở 2.43.>
 
 ## Assumptions & Open Questions
 | # | Nội dung | Loại | Chặn | Owner |

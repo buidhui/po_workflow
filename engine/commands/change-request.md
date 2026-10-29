@@ -19,6 +19,7 @@ Hỏi: *thay đổi này làm sai lệch kết luận của stage nào?* Lấy s
 | Đổi hướng giải | 2.32 | 2.4 trở đi |
 | Danh sách US, Unit | 2.4 | 2.42, 2.43 |
 | Chi tiết US, field, rule, màn | 2.42 | chỉ US bị chạm; profile M, L sang 2.43: team xem lại phần bị chạm, ký lại |
+| Tách, gộp Unit hoặc chuyển US giữa các Unit, quyết định ở buổi họp 2.43 | 2.42, chỉ mục 5 Units | Không đổi US, AC, BR; 2.43: cập nhật Decision Brief, lấy lại chữ ký |
 | Thiết kế của các team, quyết định ở buổi họp trên Decision Brief | 2.43 | Team sửa file của mình. Phải lấy lại chữ ký |
 | Chỉ đổi User Guide | user-guide | — |
 

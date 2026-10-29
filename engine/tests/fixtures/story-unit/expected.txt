@@ -1,0 +1,32 @@
+# Cùng các khối US với fixture story-list. Bảng Units có cột Tên và Ưu tiên: U1 gồm US1, ưu tiên Should theo bảng dù US1 ghi Must;
+# U2 gồm US2, US3, phụ thuộc U3; U3 ghi "gộp vào U2", không có US nên không thành story và phụ thuộc quy về U2.
+# jira-map.json: U3 đã đẩy thành APP-13, gắn nhãn merged-into-story. US2 từng đẩy riêng thành APP-15, issue này trở thành story của U2.
+[stories]
+mã thoát: 0
+có: | LMS-F903-U1 | Tải chứng chỉ | Should | US1 | APP-8 | đạt | - |
+có: | LMS-F903-U2 | Xem và chia sẻ chứng chỉ | Should | US2, US3 | APP-9 | chưa đạt | US2 chưa có AC; US2 câu chặn còn mở ở Câu hỏi mở: #1; US2 giao diện chưa có màn trong ux-design |
+không có: LMS-F903-U3
+không có: phụ thuộc
+
+[dor --story U2]
+mã thoát: 1
+có: | LMS-F903-U2 | US2, US3 | Chưa đạt |
+không có: LMS-F903-U1
+có: Kết luận: 0/1 story đạt điều kiện sẵn sàng.
+
+[stories --write]
+mã thoát: 0
+có: Đã ghi stories/story-list-prd-v1.0.csv, 2 story.
+tệp stories/story-list-prd-v1.0.csv có: ,Story,Tải chứng chỉ,High,
+tệp stories/story-list-prd-v1.0.csv có: ,Story,Xem và chia sẻ chứng chỉ,High,
+
+[jira-sync]
+mã thoát: 0
+có: | LMS-F903-U1 | - | tạo | LMS-F903 LMS-F903-U1 US-LMS-F903-01 | - |
+có: | LMS-F903-U2 | APP-15 | cập nhật | +LMS-F903-U2 +US-LMS-F903-03 +not-ready |
+có: | LMS-F903-U3 | APP-13 | gắn nhãn merged-into-story | +merged-into-story | - |
+không có: removed-from-prd
+có: Tạo 1, cập nhật 1, giữ nguyên 0, gắn nhãn bỏ 1, chờ PO 0.
+tệp stories/jira-plan.json có: Story được gộp vào LMS-F903-U2
+tệp stories/jira-plan.json có: Issue của US-LMS-F903-02 nay là story của U2, gồm US-LMS-F903-02, US-LMS-F903-03.
+tệp stories/jira-plan.json có: "jql": "project = APP AND labels = \"LMS-F903-U1\" AND key not in (APP-13, APP-15)"

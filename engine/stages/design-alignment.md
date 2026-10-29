@@ -18,7 +18,7 @@
 | Summary confirmation | required |
 | Template | `engine/templates/decision-brief.md` · `engine/templates/ux-design.md` · `engine/templates/tech-design.md` · `engine/templates/test-design.md` |
 | Checklist | `engine/verification/design-alignment.md` |
-| Knowledge | `engine/standards/handoff-rules.md` · `engine/standards/story-splitting.md` mục 4 khi Tech PIC báo story quá lớn |
+| Knowledge | `engine/standards/handoff-rules.md` · `engine/standards/story-splitting.md` mục 4 khi Tech PIC báo story quá lớn, mục 8 khi Tech PIC đề xuất đổi Unit |
 
 Chạy theo `engine/protocol/stage-protocol.md`.
 
@@ -33,7 +33,7 @@ Các team cần PRD chi tiết để thiết kế. Stage này nhận ba bản th
 
 Quy ước cho PIC:
 - Mỗi team chỉ sửa file của mình. Pull trước khi sửa, commit với message `design(<intent>): ux`, `tech` hoặc `test`. Sửa trên GitHub web hoặc bằng công cụ AI của team đều được.
-- Mọi phần trỏ về mã trong PRD: `US<n>`, `AC<n>.<m>`, `BR<n>.<m>`. Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US mà nó phục vụ; Story List lấy mã màn từ bảng này.
+- Mọi phần trỏ về mã trong PRD: `U<n>`, `US<n>`, `AC<n>.<m>`, `BR<n>.<m>`. Tech PIC ghi cỡ của từng Unit ở mục 7 của `tech-design.md`: phần việc Backend, Frontend, độ lớn, kết luận Unit có vừa một sprint, đề xuất tách, gộp hoặc chuyển US; mỗi Unit là một story trên Jira. Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US mà nó phục vụ; Story List lấy mã màn từ bảng này.
 - Ý kiến về PRD ghi ở mục Ý kiến về PRD của file mình, mỗi dòng một lập trường: Đồng ý, Đề xuất sửa, Phản đối, kèm mã và lý do. Không sửa PRD.
 - PIC không mở được repo: gửi nội dung cho PO; PO dán nguyên văn, mở đầu bằng "(ghi theo <tên>, <ngày>)".
 
@@ -49,7 +49,7 @@ Chỉ hỏi PO khi cần:
 3. Với mỗi Đề xuất sửa PRD của các team: PO nhận, không nhận, hay đưa ra họp.
 
 ## Generate
-1. Chạy `python3 engine/scripts/po-tools.py check intents/<intent> design-alignment` để lấy phần máy đối chiếu được: US có giao diện chưa có màn, AC chưa có trong kế hoạch test, US chưa có trong thiết kế kỹ thuật, màn của ux-design chưa có ở phần Frontend của tech-design, file thiết kế dựng từ bản PRD cũ.
+1. Chạy `python3 engine/scripts/po-tools.py check intents/<intent> design-alignment` để lấy phần máy đối chiếu được: US có giao diện chưa có màn, AC chưa có trong kế hoạch test, US chưa có trong thiết kế kỹ thuật, màn của ux-design chưa có ở phần Frontend của tech-design, Unit chưa được Tech PIC xác nhận cỡ hoặc được ghi không vừa một sprint, file thiết kế dựng từ bản PRD cũ.
 2. Đọc ba file và đối chiếu: mâu thuẫn giữa các thiết kế; hợp đồng API của tech-design đủ cho các màn của ux-design, mã lỗi khớp câu thông báo của PRD; phía Backend hoặc Frontend ghi Không đổi mà PRD có thay đổi chạm tới phía đó; thiết kế trái business rule hoặc tiêu chí chấp nhận; phụ thuộc giữa các team; độ lớn Tech PIC ước lượng so với mốc cứng; Đề xuất sửa và Phản đối của từng team.
 3. Viết `decision-brief.md` theo template. Chỉ ghi điểm cần người quyết hoặc cần cả nhóm biết; mỗi điểm có lựa chọn, hệ quả và đề xuất. Ý kiến Phản đối chép nguyên văn kèm tên người nêu. Không chép lại nội dung thiết kế. Phần AI viết, mục 1 đến 9, không quá 1.500 từ, kiểm bằng đếm từ. Văn phong bàn giao: không thẻ nguồn, không từ quy trình, mã kèm nội dung.
 4. Frontmatter `inputs:` ghi version của PRD và ba file thiết kế đã dùng. File thiết kế đổi sau đó thì `po-tools.py status` báo.
@@ -62,7 +62,7 @@ Chỉ hỏi PO khi cần:
 
 ## Họp và sau họp
 - Họp trên Decision Brief. Mỗi quyết định ghi một DEC, người quyết là người quyết trong họp, nguyên văn nếu có.
-- Quyết định làm đổi PRD: đi `/change-request`, mở lại 2.42, sửa và duyệt lại PRD; sau đó cập nhật `inputs:` và mục liên quan của Decision Brief. Quyết định làm đổi thiết kế: team sửa file của mình.
+- Quyết định làm đổi PRD: đi `/change-request`, mở lại 2.42, sửa và duyệt lại PRD; sau đó cập nhật `inputs:` và mục liên quan của Decision Brief. Quyết định tách, gộp Unit hoặc chuyển US giữa các Unit cũng đi đường này, sửa PRD mục 5, vì bảng Units ở PRD là bản chốt để sinh story trên Jira. Quyết định làm đổi thiết kế: team sửa file của mình.
 - PIC ghi ở bảng Ký: tên như ở `intent.md`, cột Bản là version đã đọc, trạng thái Chưa xem, Có ý kiến, Đồng ý hoặc Yêu cầu sửa. Ký trên repo, hoặc PO ghi theo tin nhắn xác nhận và lưu nguyên văn vào `decisions.md`. `po-tools.py check` báo chữ ký sai người, sai bản, hoặc ký trên bản đã đổi.
 
 ## Gate, Alignment

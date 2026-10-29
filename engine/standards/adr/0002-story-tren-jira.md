@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Trạng thái | Đã quyết định, thay ADR 0001. Phần checkpoint trên HLD Brief và thời điểm sinh Story List với profile M, L đã thay bằng ADR 0003. Bổ sung ngày 2026-10-23: đẩy story qua Jira MCP, xem mục cuối |
+| Trạng thái | Đã quyết định, thay ADR 0001. Phần checkpoint trên HLD Brief và thời điểm sinh Story List với profile M, L đã thay bằng ADR 0003. Bổ sung ngày 2026-10-23: đẩy story qua Jira MCP. Bổ sung ngày 2026-10-29: mỗi Unit là một story trên Jira. Xem hai mục cuối |
 | Ngày | 2026-10-19 |
 | Người quyết định | PO phụ trách PO-Workflow |
 
@@ -43,7 +43,7 @@ Phiên Claude Code của PO nay nối được Jira qua MCP và tạo issue tr�
 
 - AWS AI-DLC 2.11 không có tích hợp Jira; story nằm trong `stories.md` của repo.
 - Spec Kit có lệnh `taskstoissues`, nay chuyển sang extension `github`: dùng GitHub MCP để tạo issue từ task, chống trùng bằng mã task trong tiêu đề, tìm cả issue đã đóng, kiểm remote trước khi tạo, không hỏi xác nhận.
-- BABOK v3 mục 5.2 Trace Requirements và 4.4 Communicate Business Analysis Information: yêu cầu cần liên kết được hai chiều với nơi triển khai, và thông tin gửi đi phải được người nhận xác nhận.
+- BABOK v3 mục 5.1 Trace Requirements và 4.4 Communicate Business Analysis Information: yêu cầu cần liên kết được hai chiều với nơi triển khai, và thông tin gửi đi phải được người nhận xác nhận.
 
 ### Các lựa chọn đã xét
 
@@ -71,3 +71,43 @@ Giữ CSV làm đầu ra trung lập với công cụ và thêm đường đẩy
 - `stories/` chứa thêm `jira-map.json` và `jira-plan.json`. Hook chặn sửa tay hai file này.
 - PRD đổi qua change request thì lần đẩy sau tự cập nhật đúng các story đổi; PO không phải sửa tay trên Jira.
 - Kết quả mỗi lần đẩy có một DEC trong `decisions.md`.
+
+## Bổ sung ngày 2026-10-29: mỗi Unit là một story trên Jira
+
+### Bối cảnh
+
+Quyết định gốc đặt mỗi US là một story trên Jira. Trên thực tế, story trên Jira là đơn vị Dev ước lượng, đưa vào sprint và chia sub-task. Nhiều US nhỏ được Dev làm và QA nghiệm thu cùng lúc; theo dõi riêng từng US tạo nhiều issue nhỏ, và team thường gộp tay trên Jira, làm mất liên kết giữa issue và mã US. Đồng thời, bảng Unit of work trong `tech-design.md` có cột Phía: một Unit of work có thể chỉ gồm phần Backend, nên không làm story được, và trùng vai với sub-task.
+
+Unit đã có hai tính chất của một story trên Jira: độc lập, theo quy tắc phụ thuộc một chiều ở 1.4, và có giá trị cùng mức ưu tiên riêng. Unit chỉ thiếu điều kiện về cỡ, và cỡ chỉ xác định được sau khi Tech PIC viết thiết kế ở 2.43.
+
+Đã đối chiếu ba nguồn:
+
+- AWS AI-DLC 2.11: proto-Unit ở 1.4 là bản nháp trong intent backlog; Unit of work ở 2.7 được xác định lại khi đã có story, mỗi Unit gồm nhiều story. AWS không quy định story trên công cụ quản lý việc tương ứng với cấp nào.
+- Scrum Guide 2020: hạng mục Product Backlog được tinh chỉnh tới khi đủ nhỏ để hoàn thành trong một sprint.
+- BABOK v3 mục 5.1 Trace Requirements: yêu cầu truy được tới nơi triển khai. Truy vết dựa trên mã của từng yêu cầu, không phụ thuộc số issue.
+
+### Các lựa chọn đã xét
+
+| Lựa chọn | Được | Mất |
+|---|---|---|
+| Giữ mỗi US một story | Truy vết đơn giản, điều kiện sẵn sàng theo từng US | Nhiều issue nhỏ; team gộp tay trên Jira và mất liên kết với mã US |
+| Mỗi US một story, cho phép gộp các US cùng Unit bằng một dòng khai báo riêng | Giữ mặc định cũ | Thêm một cách nhóm thứ hai bên cạnh Unit; mặc định vẫn sinh nhiều issue nhỏ |
+| Mỗi Unit là một story; Unit được xác nhận cỡ tại 2.43 | Một quy tắc duy nhất; story trên Jira giữ giá trị và thứ tự ưu tiên của PO; US vẫn là đơn vị nghiệm thu | Thay đổi Unit sau khi PRD được duyệt cần change request; một US chưa sẵn sàng giữ lại cả story |
+
+### Quyết định
+
+Chọn lựa chọn thứ ba.
+
+- Unit lập ở 1.4 là bản nháp; ở 2.4 PO gắn mỗi US vào một Unit; ở 2.43 Tech PIC xác nhận mỗi Unit độc lập và vừa một sprint trong `tech-design.md` mục 7, đề xuất tách, gộp hoặc chuyển US.
+- Thay đổi Unit quyết định trong buổi họp đi change request trên PRD mục 5 trước Alignment gate, như mọi quyết định làm đổi PRD.
+- Bảng Units ở PRD mục 5 là bản chốt. Mỗi Unit là một story trên Jira, mã `<tính năng>-U<n>`; mỗi US thuộc đúng một Unit. Unit quá một sprint được tách thành hai Unit, không chia một Unit thành nhiều story.
+- Story mang nhãn mã tính năng, mã story và mã của từng US; Description gồm khối của từng US. PRD giữ nguyên mã US, AC, BR, nên test case và commit vẫn dẫn chiếu tới từng US.
+- Story đạt điều kiện sẵn sàng khi mọi US của Unit đạt; Unit ở cột Phụ thuộc thành liên kết "is blocked by".
+- Khi PRD không có mục Units, như với profile S, cả PRD là một story `<tính năng>-U1`.
+- `tech-design.md` bỏ bảng Unit of work, thay bằng bảng cỡ Unit và kế hoạch thực hiện; Dev chia sub-task trên Jira.
+
+### Hệ quả
+
+- `stories`, `dor`, `jira-sync`, `index` tính theo Unit. `check` của 2.42 báo khi bảng Units không khớp các khối US; `check` của 2.43 báo Unit chưa được Tech PIC xác nhận cỡ hoặc được ghi không vừa một sprint.
+- Intent đã đẩy story theo từng US: lần đẩy sau, issue của US đầu tiên trong Unit trở thành story của Unit; issue riêng của các US còn lại mang nhãn `merged-into-story`, không bị xoá. Unit ghi "gộp vào U<n>" cũng mang nhãn này.
+- Câu JQL chống trùng loại các issue đã có trong `jira-map.json`.

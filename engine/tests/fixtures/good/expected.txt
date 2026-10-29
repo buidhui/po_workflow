@@ -51,13 +51,13 @@ có: Chỉ duyệt được stage đang [?]
 
 [dor]
 mã thoát: 1
-có: | US-LMS-F901-01 | Chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
-có: Kết luận: 0/2 story đạt điều kiện sẵn sàng.
+có: | LMS-F901-U1 | US1, US2 | Chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
+có: Kết luận: 0/1 story đạt điều kiện sẵn sàng.
 không có: chưa có AC
 
 [stories]
 mã thoát: 0
-có: | US-LMS-F901-01 | Nhắc qua email | Must |
+có: | LMS-F901-U1 | Nhắc lịch học | Must | US1, US2 |
 có: | chưa đạt | PRD chưa duyệt (status draft); 2.43 Design Alignment chưa duyệt |
 có: Chạy thử, chưa ghi gì. Thêm --write để ghi stories/story-list-prd-v0.1.csv.
 tệp stories/story-list-prd-v0.1.csv không có: Project key
@@ -69,7 +69,7 @@ tệp stories/story-list-prd-v0.1.csv không có: Project key
 
 [replay]
 mã thoát: 0
-có: 2 story trong PRD v0.1, 0 đạt điều kiện sẵn sàng. Story List: chưa sinh.
+có: 1 story trên Jira từ PRD v0.1, 0 đạt điều kiện sẵn sàng. Story List: chưa sinh.
 
 [review-start user-stories]
 mã thoát: 0

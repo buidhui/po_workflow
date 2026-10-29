@@ -1,6 +1,6 @@
 # Nguyên tắc chia story
 
-Áp cho stage 2.4, khi PO chia yêu cầu thành user story. Cỡ story được Tech PIC xác nhận ở 2.43, trong `tech-design.md` mục Unit of work, thứ tự và độ lớn. Sau khi 2.43 được duyệt, Story List giữ nguyên cách chia này: mỗi US một story trên Jira. Phần so sánh với AWS AI-DLC ở mục 10.
+Áp cho stage 2.4, khi PO chia yêu cầu thành user story và gắn mỗi user story vào một Unit. Trong tài liệu này, "story" là user story (US) trong PRD. Story trên Jira là một Unit, gồm một hoặc nhiều US; cỡ của từng Unit được Tech PIC xác nhận ở 2.43, trong `tech-design.md` mục 7, xem mục 8. Phần so sánh với AWS AI-DLC ở mục 10.
 
 ## 1. Story là gì
 
@@ -9,14 +9,14 @@ Story là đơn vị nghiệm thu.
 - Mỗi story là một mục tiêu hoàn chỉnh của một vai: người dùng làm trọn được và thấy kết quả.
 - Story đi trọn từ giao diện tới rule và dữ liệu. Kiểu chia này gọi là lát dọc.
 - Story kiểm được bằng tiêu chí chấp nhận: có đạt hoặc không đạt.
-- Mỗi story thuộc đúng một Unit. Unit là nhóm story theo giá trị và ưu tiên, dùng để xác định phạm vi và thứ tự.
+- Mỗi story thuộc đúng một Unit. Unit là nhóm story độc lập, có giá trị và mức ưu tiên riêng; mỗi Unit là một story trên Jira, đơn vị Dev nhận vào sprint.
 
-Mỗi team tự chia việc của mình từ story:
+Mỗi team tự chia việc của mình:
 
 | Team | Chia việc theo | Quan hệ với story |
 |---|---|---|
 | Design | Màn hình, mã `SCR` | Một màn có thể phục vụ nhiều story |
-| Dev | Unit of work, sau đó là sub-task trên Jira | Một Unit of work gồm một hoặc nhiều story; thiết kế kỹ thuật làm theo Unit |
+| Dev | Story trên Jira, tức Unit, sau đó là sub-task Backend, Frontend | Một story trên Jira gồm các US của một Unit |
 | QA | Tiêu chí chấp nhận | Mỗi tiêu chí chấp nhận có ít nhất một test case |
 
 ## 2. Tiêu chí một story đạt
@@ -25,11 +25,11 @@ Dùng bộ tiêu chí INVEST. Bảng dưới ghi nơi kiểm từng tiêu chí t
 
 | Tiêu chí | Nghĩa | Kiểm ở đâu |
 |---|---|---|
-| Độc lập | Làm và giao được mà không chờ story khác, hoặc chỉ phụ thuộc một chiều | Mục Phụ thuộc của thẻ US; bảng Unit trong `stories.md` |
+| Độc lập | Làm và giao được mà không chờ story khác, hoặc chỉ phụ thuộc một chiều | Mục Phụ thuộc của thẻ US; cột Phụ thuộc của bảng Unit trong `stories.md` và PRD mục 5 |
 | Còn thương lượng được | Chi tiết còn mở tới khi PO viết PRD và các team thống nhất ở 2.43 | Thẻ US chưa có tiêu chí chấp nhận; chi tiết viết ở 2.42 |
 | Có giá trị | Vai thấy được lợi ích của mình | Mục Vai và mục tiêu của thẻ US có vế "để ..." |
-| Ước lượng được | Tech PIC ước được cỡ | 2.43, `tech-design.md` mục 7 |
-| Nhỏ | Làm xong trong một sprint | 2.42 có từ 3 tới 6 tiêu chí chấp nhận; 2.43 Tech PIC xác nhận |
+| Ước lượng được | Tech PIC ước được cỡ | 2.43, `tech-design.md` mục 7, theo Unit |
+| Nhỏ | Story có từ 3 tới 6 tiêu chí chấp nhận; Unit chứa story làm xong trong một sprint | 2.42 đếm tiêu chí chấp nhận; 2.43 Tech PIC xác nhận cỡ từng Unit |
 | Kiểm được | Có tiêu chí chấp nhận đạt hoặc không đạt | 2.42; script kiểm US có AC và mọi BR có AC |
 
 ## 3. Các bước chia ở 2.4
@@ -38,7 +38,7 @@ Dùng bộ tiêu chí INVEST. Bảng dưới ghi nơi kiểm từng tiêu chí t
 2. Mỗi ô "vai và mục tiêu hoàn chỉnh" trên bản đồ là một story ứng viên. Đặt tên theo hành vi người dùng, không theo màn hình.
 3. Kiểm từng ứng viên theo dấu hiệu quá lớn ở mục 4 và dấu hiệu quá nhỏ ở mục 6.
 4. Ứng viên quá lớn thì tách theo các cách ở mục 5. Thử theo thứ tự trong bảng; dừng ở cách đầu tiên cho ra các story đều có giá trị riêng.
-5. Gắn mỗi story vào một Unit, sắp thứ tự theo phụ thuộc và giá trị.
+5. Gắn mỗi story vào một Unit, sắp thứ tự theo phụ thuộc và giá trị. Unit là bản nháp lập ở 1.4; tại bước này PO tách, gộp hoặc thêm Unit khi cần và ghi lý do. Mỗi Unit sẽ là một story trên Jira, nên Unit phải độc lập và nên vừa một sprint theo ước tính sơ bộ của PO.
 6. Kiểm truy vết: mọi FR có story phủ; story không truy về FR nào thì bỏ, hoặc bổ sung FR qua câu hỏi với PO.
 
 ## 4. Dấu hiệu story quá lớn
@@ -53,7 +53,7 @@ Các dấu hiệu dưới đây dùng để xem lại. Gặp một dấu hiệu 
 | Gồm cả phần cấu hình của quản trị và phần sử dụng của người dùng cuối | "Cấu hình và dùng mã giảm giá" | Không |
 | Chạm hơn 2 module | | Không |
 | Có hơn 6 tiêu chí chấp nhận | | `po-tools.py check` ở 2.42, cảnh báo |
-| Tech PIC ước hơn một sprint | | 2.43 |
+| Tech PIC ước riêng story này hơn một sprint | | 2.43 |
 
 ## 5. Cách tách
 
@@ -84,15 +84,28 @@ Gặp các dấu hiệu này thì gộp vào story có cùng vai và cùng mục
 | Màn hình | Một mục tiêu đi qua nhiều màn; một màn phục vụ nhiều story. Màn là cách chia của Design | Chia theo mục tiêu của vai |
 | Tầng kỹ thuật như frontend, backend | Không phần nào tự giao được giá trị cho người dùng | Dev chia sub-task trên Jira |
 | Từng business rule | Story chỉ còn một câu, số story phình theo số rule | Rule nằm trong story, ở PRD |
-| Việc kỹ thuật thuần như migration, dựng bảng, cấu hình hạ tầng | Không có vai người dùng; đây là việc của Dev | Dev tạo task kỹ thuật trên Jira, gắn vào Unit of work |
+| Việc kỹ thuật thuần như migration, tạo bảng, cấu hình hạ tầng | Không có vai người dùng; đây là việc của Dev | Dev tạo task kỹ thuật trên Jira, gắn vào story của Unit liên quan |
 | Người làm hoặc team | Story dùng để nghiệm thu; phân công do từng team tự chia | Mỗi team chia việc từ story |
 | Giải pháp giao diện, ví dụ "danh sách thả xuống có ô chọn" | Story mô tả nhu cầu; cách hiển thị do Design quyết | Ghi nhu cầu: "chọn nhiều danh mục để lọc" |
 
-## 8. Xác nhận và thay đổi
+## 8. Unit và story trên Jira
 
-- Ở 2.43, Tech PIC ghi trong `tech-design.md` story nào quá lớn để làm trong một sprint; Design PIC báo story nào trải qua nhiều luồng màn tách được. Decision Brief đưa ra họp; tách thì đi change request trên PRD trước khi sinh Story List, và ghi quyết định vào `decisions.md`.
+Unit đi qua ba mốc:
+
+| Mốc | Unit | Ai quyết |
+|---|---|---|
+| 1.4 Scope Definition | Bản nháp, chia theo giá trị và cơ chế để xác định phạm vi và thứ tự ưu tiên | PO |
+| 2.4 User Stories | Gắn mỗi US vào một Unit; tách, gộp hoặc thêm Unit khi cần | PO |
+| 2.43 Design Alignment | Tech PIC xác nhận mỗi Unit độc lập và vừa một sprint, đề xuất tách, gộp hoặc chuyển US giữa các Unit | PO, Tech PIC, thống nhất trên Decision Brief |
+
+Sau Alignment gate, bảng Units ở PRD mục 5 là bản chốt: mỗi Unit là một story trên Jira, mã `<tính năng>-U<n>`, Description gồm khối của từng US trong Unit. Quy tắc:
+
+- Một Unit gồm một hoặc nhiều US; mỗi US thuộc đúng một Unit. Unit không vừa một sprint được tách thành hai Unit, không chia một Unit thành nhiều story.
+- Thay đổi Unit quyết định trong buổi họp là thay đổi PRD: đi change request mở lại 2.42, sửa mục 5 và duyệt lại PRD trước Alignment gate, theo `engine/stages/design-alignment.md`.
+- Mã Unit không đánh lại. Unit tách ra nhận số mới; Unit bị gộp giữ dòng trong bảng, ghi "gộp vào U<n>"; US chuyển giữa các Unit giữ mã US.
+- Tech PIC ghi trong `tech-design.md` mục 7 cỡ của từng Unit, phần việc Backend và Frontend, kèm đề xuất; Design PIC báo story nào trải qua nhiều luồng màn tách được. Decision Brief đưa các đề xuất ra họp.
 - Sau khi PRD đã duyệt, tách story qua change request. Story cũ giữ mã; phần tách ra nhận số mới; tiêu chí chấp nhận chuyển đi nhận mã mới, theo `id-conventions.md`. Story List được sinh lại.
-- Trên Jira, Dev có thể gom nhiều story vào một Unit of work hoặc chia một story thành nhiều sub-task. Việc đó không đổi story và không đổi mã.
+- Trên Jira, Dev chia story của Unit thành sub-task Backend, Frontend. Việc đó không đổi Unit và không đổi mã.
 
 ## 9. Ví dụ
 
@@ -114,6 +127,8 @@ Cách chia đúng:
 | US3 | Quản trị viên đổi số lần sai và thời gian khoá, để hợp với chính sách của tổ chức | Tách phần cấu hình khỏi phần sử dụng | U2 |
 | US4 | Người dùng nhận email khi tài khoản bị khoá. PO còn phải quyết có làm không | Theo bước trong luồng | U2 |
 
+Khi Tech PIC xác nhận mỗi Unit vừa một sprint, Jira có hai story: `APP-F012-U1` gồm US1, US2 và `APP-F012-U2` gồm US3, US4. Khi U2 vượt một sprint, U2 giữ US3 và US4 chuyển sang Unit mới U3.
+
 ## 10. So với AWS AI-DLC
 
 Đối chiếu với AWS AI-DLC Workflows 2.11, `engine/knowledge/user-story-patterns.md` và `product-guide.md`.
@@ -126,6 +141,6 @@ Cách chia đúng:
 | Cách tách | 6 cách: bước trong luồng, biến thể rule, biến thể dữ liệu, giao diện, xem tạo sửa xoá, hiệu năng | 8 cách: giữ 6 cách của AWS, thêm theo vai và luồng đơn giản trước; giao diện hiểu là kênh dùng được riêng | Sản phẩm có nhiều vai và nhiều cổng, 2 cách thêm gặp thường xuyên |
 | Lỗi thường gặp | Quá lớn, quá kỹ thuật, không có giá trị, tên ghép nhiều việc, mô tả giải pháp | Giữ cả 5; thêm chia theo màn hình, theo tầng kỹ thuật, theo từng rule | 3 lỗi thêm là lỗi thường gặp khi PO viết PRD theo màn hình |
 | Bản đồ story | Có, để thấy khoảng trống trong hành trình người dùng | Bước 1 của quy trình chia | Không khác |
-| Chia việc kỹ thuật | Unit of work ở 2.7, theo kiến trúc, có bảng ghép Unit với story | Tech PIC chia Unit of work ở `tech-design.md` tại 2.43 với profile M, L; Dev chia việc chi tiết trên Jira | Ngoài phạm vi PO |
+| Unit | Proto-Unit ở 1.4 trong intent backlog; Unit of work ở 2.7 do Dev chia theo kiến trúc, mỗi Unit gồm nhiều story | Unit lập ở 1.4, gắn US ở 2.4, xác nhận cỡ ở 2.43; mỗi Unit là một story trên Jira, vừa một sprint; Dev chia sub-task trên Jira | Team lập kế hoạch sprint theo story trên Jira; story theo Unit giữ được giá trị và thứ tự ưu tiên của PO, còn US giữ vai trò đơn vị nghiệm thu |
 
 Nguồn: AWS AI-DLC Workflows 2.11; INVEST của Bill Wake, 2003; Patterns for Splitting User Stories của Richard Lawrence, 2009, cho cách 6 và cách 7.

@@ -30,7 +30,7 @@ Công cụ AI khác: đọc file này, sau đó chạy lệnh bằng cách đọ
 Một luồng duy nhất theo AWS AI-DLC Workflows, phiên bản ghi trong `engine/knowledge/README.md`. Mỗi yêu cầu là một intent trong `intents/`.
 
 - Lệnh: `/new-intent` tạo intent, `/po` chạy stage kế tiếp, `/po-status` xem trạng thái, `/po-review` review độc lập, `/po-replay` tóm lược diễn biến của intent khi bàn giao cho người khác, `/po-stories` đẩy story lên Jira qua MCP hoặc sinh Story List để import, sau gate 2.43, profile S thì sau gate 2.42.
-- Đầu ra của PO là đầu vào của Design, Tech và QA, nên theo chuẩn trong `engine/standards/`: mã tính năng cấp khi tạo intent, tiêu chí chấp nhận có mã trong PRD, mỗi user story một story trên Jira. Ngoài repo PO chỉ dùng mã đầy đủ; cách mã xuất hiện ở frontmatter, Figma, git, test, API theo `engine/standards/naming-conventions.md`.
+- Đầu ra của PO là đầu vào của Design, Tech và QA, nên theo chuẩn trong `engine/standards/`: mã tính năng cấp khi tạo intent, tiêu chí chấp nhận có mã trong PRD, mỗi Unit ở PRD mục 5 là một story trên Jira gồm các US của Unit, theo `engine/standards/handoff-rules.md`. Ngoài repo PO chỉ dùng mã đầy đủ; cách mã xuất hiện ở frontmatter, Figma, git, test, API theo `engine/standards/naming-conventions.md`.
 - Script: `python3 engine/scripts/po-tools.py` với `next`, `check`, `review-start`, `approve`, `trace`, `status`, `doctor`, `index`, `replay`, `feature-id`, `stories`, `dor`, `migrate`. Số liệu, tiến độ và stage kế lấy từ script, không tự đếm.
 - Nghi thức ở `engine/protocol/*.md`, thuật ngữ ở `GLOSSARY.md`, bài học ở `memory/team.md` và `memory/project.md`.
 - Tên file artifact ổn định, phiên bản ở frontmatter, bản duyệt chụp vào `archive/` của intent theo `gate-protocol.md`. Không tạo file `v0.x`.

@@ -22,8 +22,7 @@ không có: sơ đồ chưa có [*]
 
 [stories]
 mã thoát: 0
-có: | US-LMS-F904-01 | Đổi mật khẩu khi đã đăng nhập | Must | U1 | APP-20 | đạt | - |
-có: | US-LMS-F904-02 | Đặt lại mật khẩu qua email | Should | U1 | APP-20 | chưa đạt | US còn ❓PO; câu chặn còn mở ở Câu hỏi mở: #1 |
+có: | LMS-F904-U1 | Tự phục vụ | Must | US1, US2 | APP-20 | chưa đạt | US2 còn ❓PO; US2 câu chặn còn mở ở Câu hỏi mở: #1 |
 
 [stories --write]
 mã thoát: 0

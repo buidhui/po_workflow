@@ -177,7 +177,7 @@ Stage 1.7 chỉ có ở profile L. AI tóm tắt phase thành Initiative Brief m
 
 Stage 2.32 Solution Options chỉ chạy khi có nhiều hướng giải. PO đã có định hướng thì AI nhận xét và đề xuất thêm; chưa có thì AI dựng hai tới ba phương án cùng phương án giữ nguyên, chấm theo bảy tiêu chí có trọng số và đưa khuyến nghị. Duyệt gate nghĩa là chọn phương án.
 
-Ở 2.4 User Stories, AI chia story theo `engine/standards/story-splitting.md`: dựng bản đồ story theo vai và bước trong hành trình, xét dấu hiệu story quá lớn, đề xuất cách tách. Mỗi US gắn một Unit, mỗi yêu cầu chức năng có US phủ. Mỗi US có một thẻ chín mục: vai và mục tiêu, bối cảnh, luồng chính, nhánh đáng kể, rule đã biết, dữ liệu và vùng chạm, ngoài phạm vi, phụ thuộc, điểm chưa rõ. Thẻ chưa có tiêu chí chấp nhận. PO duyệt cả danh sách lẫn từng thẻ.
+Ở 2.4 User Stories, AI chia story theo `engine/standards/story-splitting.md`: xây dựng bản đồ story theo vai và bước trong hành trình, xét dấu hiệu story quá lớn, đề xuất cách tách. Mỗi US gắn một Unit, mỗi yêu cầu chức năng có US phủ. Mỗi Unit sẽ là một story trên Jira, nên AI đề xuất tách hoặc gộp Unit khi một Unit không độc lập hoặc rõ ràng lớn hơn một sprint. Mỗi US có một thẻ chín mục: vai và mục tiêu, bối cảnh, luồng chính, nhánh đáng kể, rule đã biết, dữ liệu và vùng bị tác động, ngoài phạm vi, phụ thuộc, điểm chưa rõ. Thẻ chưa có tiêu chí chấp nhận. PO duyệt cả danh sách lẫn từng thẻ.
 
 Ở 2.42 PRD Generation, AI tra Impact Matrix, data model, đặc tả API, knowledge base, sau đó lập bảng Field Intake về field, rule, validate cho từng màn để PO điền và duyệt. Tiếp theo, AI viết PRD theo template chuẩn `engine/templates/prd.md`:
 
@@ -191,7 +191,7 @@ Stage 2.43 Design Alignment chạy với profile M và L, theo bốn bước:
 
 1. Sau khi PRD được duyệt, AI tạo ba file thiết kế từ template và chỉ điền phần đầu file. PO gửi ba PIC đường dẫn PRD và file của họ, kèm hạn; cách viết của PIC ở mục 8.
 2. Khi các team viết xong, PO gọi lại `/po`. AI đối chiếu ba file với PRD, báo phần còn thiếu, viết Decision Brief chỉ gồm điểm cần quyết định, sau đó chạy `po-tools.py sign-start` để ghi lại bản gửi ký.
-3. Các bên họp trên Decision Brief. Quyết định làm đổi yêu cầu được xử lý qua change request.
+3. Các bên họp trên Decision Brief. Quyết định làm đổi yêu cầu được xử lý qua change request. Tech PIC đã ghi cỡ của từng Unit ở `tech-design.md` mục 7; quyết định tách, gộp Unit hoặc chuyển US giữa các Unit cũng sửa PRD mục 5 qua change request trước khi ký.
 4. Gate duyệt khi cả ba PIC ghi Đồng ý hoặc Có ý kiến ở bảng Ký, đúng tên ở `intent.md` và đúng bản đã gửi. PIC quá hạn chưa ký thì PO được chọn Accept as-is kèm lý do. Story List chỉ sinh sau khi gate này được duyệt.
 
 ## 5. Trả lời AI và duyệt
@@ -286,11 +286,11 @@ Khi duyệt lại, script so mã với bản đã duyệt trước. Mã nào b�
 /po-stories <intent>
 ```
 
-AI trình bản xem trước: mỗi US trong PRD một story, kèm ưu tiên, Unit, Epic và kết quả điều kiện sẵn sàng. Khi PO đồng ý, AI ghi `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`. AI chỉ ghi file khi PRD đã duyệt; với profile M, L, chỉ ghi sau gate 2.43. Mã màn của từng story lấy từ `ux-design.md`. File có 12 cột theo mẫu import CSV của Jira, gồm cột Priority đổi từ dòng Ưu tiên của US: Must thành Highest, Should thành High, Could thành Medium. PO import lên Jira bằng chức năng import CSV.
+AI trình bản xem trước: mỗi Unit ở PRD mục 5 một story, mã như `APP-F012-U1`, kèm tên Unit, ưu tiên, các US, Epic và kết quả điều kiện sẵn sàng. Description của story gồm khối của từng US trong Unit. Bảng Units không khớp các khối US, như US chưa thuộc Unit nào hoặc US nằm trong hai Unit, làm lệnh dừng và báo lý do. Khi PO đồng ý, AI ghi `intents/<intent>/stories/story-list-prd-v<phiên bản>.csv`. AI chỉ ghi file khi PRD đã duyệt; với profile M, L, chỉ ghi sau gate 2.43. Mã màn của từng story lấy từ `ux-design.md`. File có 12 cột theo mẫu import CSV của Jira, thêm cột Labels khi Unit có từ hai US. Cột Priority lấy từ cột Ưu tiên của bảng Units, hoặc mức cao nhất trong dòng Ưu tiên của các US: Must thành Highest, Should thành High, Could thành Medium. PO import lên Jira bằng chức năng import CSV.
 
 Phiên Claude Code đã nối Jira MCP thì AI đẩy story thẳng lên Jira, không cần import:
 
-1. AI chạy `po-tools.py jira-sync intents/<intent>` và trình bảng kế hoạch: story nào tạo, cập nhật, giữ nguyên, gắn nhãn `removed-from-prd`. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready`. Issue không bao giờ bị xoá; story nêu ở mục Tiền điều kiện trở thành liên kết "is blocked by".
+1. AI chạy `po-tools.py jira-sync intents/<intent>` và trình bảng kế hoạch: story nào tạo, cập nhật, giữ nguyên, gắn nhãn `removed-from-prd` hoặc `merged-into-story`. Story chưa đạt điều kiện sẵn sàng vẫn được đẩy, mang nhãn `not-ready`. Issue không bao giờ bị xoá; Unit được phụ thuộc, theo cột Phụ thuộc của bảng Units hoặc mục Tiền điều kiện của US, trở thành liên kết "is blocked by". Intent từng đẩy story theo từng US: issue của US đầu tiên trong Unit được chuyển thành story của Unit, issue của các US còn lại mang nhãn `merged-into-story`.
 2. Story đã đẩy trước đó mà bị sửa tay trên Jira thì AI báo; PO chọn giữ bản trên Jira hoặc ghi đè.
 3. PO đồng ý, ví dụ "đồng ý đẩy lên Jira". AI tạo, cập nhật issue qua MCP, sau đó ghi kết quả bằng `jira-sync --record`. Script chỉ ghi khi lời đồng ý có trong 3 lượt gần nhất của PO.
 4. PO commit `stories/jira-map.json` và `decisions.md`.
@@ -320,7 +320,7 @@ Lệnh cuối cập nhật `intents/INDEX.md` với mã tính năng, bản PRD �
 python3 engine/scripts/po-tools.py dor intents/<intent>
 ```
 
-Script in story nào đạt, story nào chưa và lý do, theo bảy điều kiện ở README mục 6.7. Kết quả cũng ghi ở cột Comment của file CSV. Chỉ bàn giao cho Dev các story đạt. Độ phủ test case do QA theo dõi trên Jira.
+Script in story nào đạt, story nào chưa và lý do kèm mã US, theo bảy điều kiện ở README mục 6.7; story đạt khi mọi US của Unit đạt. Kết quả cũng ghi ở cột Comment của file CSV. Chỉ bàn giao cho Dev các story đạt. Độ phủ test case do QA theo dõi trên Jira.
 
 ### 7.4 Trước khi mở quyền repo cho các team
 
@@ -338,7 +338,7 @@ PIC đọc PRD đã duyệt một lần, viết thiết kế của mình vào fi
 2. Chỉ sửa file của mình. Mọi phần trỏ về mã trong PRD: `US<n>`, `AC<n>.<m>`, `BR<n>.<m>`. Ghi `inputs: prd@<version>` đúng bản PRD đã đọc.
 3. Viết phần việc của mình:
    - Design PIC đặt mã màn `SCR<n>` ở bảng Danh sách màn, mỗi màn ghi US mà nó phục vụ; Story List lấy mã màn từ bảng này.
-   - Tech PIC viết cùng người phụ trách Backend và Frontend: service, ứng dụng hoặc repo bị chạm ghi đúng tên Dev dùng; hợp đồng API giữa hai phía; mỗi màn `SCR` của ux-design có route và component ở phần Frontend; story nào quá lớn để làm trong một sprint.
+   - Tech PIC viết cùng người phụ trách Backend và Frontend: service, ứng dụng hoặc repo bị tác động ghi đúng tên Dev sử dụng; hợp đồng API giữa hai phía; mỗi màn `SCR` của ux-design có route và component ở phần Frontend. Mục 7 có một dòng cho mỗi Unit ở PRD mục 5: phần việc Backend, Frontend, độ lớn, kết luận Unit có vừa một sprint, và đề xuất tách, gộp hoặc chuyển US khi Unit không vừa. Mỗi Unit là một story trên Jira.
    - QA PIC ghi cách kiểm cho từng AC.
 4. Ghi ý kiến ở mục Ý kiến về PRD trong file của mình: Đồng ý, Đề xuất sửa hoặc Phản đối, kèm mã và lý do. Không sửa PRD. Câu hỏi cho PO hoặc team khác ghi ở mục Rủi ro và câu hỏi cần trả lời.
 5. Commit với message `design(<intent>): ux`, `tech` hoặc `test`, sau đó push.
@@ -348,12 +348,12 @@ PIC không mở được repo thì gửi nội dung cho PO. PO dán nguyên văn
 
 ### 8.2 Làm việc trên story Jira
 
-Sau gate 2.43, hoặc sau gate 2.42 với profile S, PO đẩy story lên Jira qua MCP hoặc import Story List. Mỗi US trong PRD là một story; phần Description lấy từ PRD, gồm tiêu chí chấp nhận và business rule có mã đầy đủ.
+Sau gate 2.43, hoặc sau gate 2.42 với profile S, PO đẩy story lên Jira qua MCP hoặc import Story List. Mỗi Unit ở PRD mục 5 là một story; phần Description lấy từ PRD, gồm khối của từng US với tiêu chí chấp nhận và business rule có mã đầy đủ.
 
 | Người | Việc trên story |
 |---|---|
 | Design PIC | Gắn mã màn `SCR` và link thiết kế; frame Figma đặt tên bắt đầu bằng mã màn đầy đủ |
-| Tech PIC | Gom story vào Unit of work, chia sub-task, ước lượng story point, ghi nhánh code |
+| Tech PIC | Chia story thành sub-task Backend, Frontend, ước lượng story point, ghi nhánh code |
 | QA PIC | Viết test case mã `TC`, mỗi test case ghi mã AC mà nó kiểm và bản PRD đã dùng khi chạy; test tự động gắn tag mã AC |
 
 Quy tắc:
@@ -361,7 +361,7 @@ Quy tắc:
 1. Không sửa phần Description. Nội dung nghiệp vụ chỉ đổi khi PRD đổi qua change request; khi đó PO cập nhật story, kèm comment ghi bản PRD mới. Description bị sửa trên Jira sẽ được báo cho PO ở lần đẩy sau.
 2. Câu hỏi nghiệp vụ ghi bằng comment trên story, gắn người phải trả lời. Câu trả lời làm đổi PRD thì PO đi qua change request.
 3. Story chưa đạt điều kiện sẵn sàng mang nhãn `not-ready`, comment ghi lý do. Chờ PO xử lý các lý do đó trước khi nhận việc; nhãn được bỏ khi story đạt.
-4. Story mang nhãn `removed-from-prd` không còn trong PRD. Không làm tiếp; đóng hoặc huỷ theo quy trình của team.
+4. Story mang nhãn `removed-from-prd` không còn trong PRD. Story mang nhãn `merged-into-story` đã được gộp vào story của Unit ghi ở comment. Không làm tiếp hai loại story này; đóng hoặc huỷ theo quy trình của team.
 
 ### 8.3 Mã và cách trỏ
 
@@ -387,7 +387,7 @@ Implements: AC-APP-F012-01.1, BR-APP-F012-01.2
 
 5. Code kiểm một business rule thì ghi mã BR đầy đủ ở chú thích tại chỗ kiểm, để khi rule đổi, `git grep` tìm ra đúng chỗ phải sửa. Chi tiết ở `engine/standards/naming-conventions.md`.
 
-Unit trong PRD là cách PO nhóm user story theo giá trị và ưu tiên. Dev chia việc trong phase Construction theo kiến trúc và có thể chia khác. Thiết kế kỹ thuật nằm ở `tech-design.md` và tài liệu riêng của Dev; PRD không chứa thiết kế kỹ thuật.
+Unit trong PRD là nhóm user story độc lập, có giá trị và mức ưu tiên riêng, được Tech PIC xác nhận vừa một sprint; mỗi Unit là một story trên Jira. Dev chia story thành sub-task theo kiến trúc. Thiết kế kỹ thuật nằm ở `tech-design.md` và tài liệu riêng của Dev; PRD không chứa thiết kế kỹ thuật.
 
 ## 10. Lệnh
 
@@ -418,7 +418,7 @@ Lệnh của script, chạy từ thư mục gốc. Phần lớn lệnh do AI ch�
 | `po-tools.py skip`, `profile`, `switch`, `cr`, `reopen` | Ghi quyết định của PO ngoài gate, theo mục 5.4 |
 | `po-tools.py sign-start <intent>` | Ghi dấu bản Decision Brief gửi PIC ký |
 | `po-tools.py replay <intent>` | Tóm lược diễn biến của intent cho người tiếp nhận |
-| `po-tools.py stories <intent> [--write]` | Xem trước hoặc ghi Story List cho Jira |
+| `po-tools.py stories <intent> [--write]` | Xem trước hoặc ghi Story List cho Jira, mỗi Unit một story |
 | `po-tools.py jira-sync <intent>` | Lập kế hoạch đẩy story lên Jira qua MCP; `--remote` đối chiếu bản trên Jira, `--record` ghi kết quả |
 | `po-tools.py dor <intent>` | Kiểm điều kiện sẵn sàng |
 | `po-tools.py index --write` | Cập nhật `intents/INDEX.md` |

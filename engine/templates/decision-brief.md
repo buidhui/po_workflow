@@ -33,7 +33,7 @@ inputs: <prd@1.0, ux-design@0.1, tech-design@0.1, test-design@0.1>
 |---|---|---|---|
 
 ## 7. Độ lớn so với mốc
-<Ước lượng của Tech PIC theo Unit of work, so với mốc cứng ở scope-document. Vượt mốc thì nêu lựa chọn: cắt phạm vi, dời mốc, tách đợt.>
+<Ước lượng của Tech PIC theo Unit, so với mốc cứng ở scope-document. Vượt mốc thì nêu lựa chọn: cắt phạm vi, dời mốc, tách đợt. Unit được Tech PIC ghi không vừa một sprint thì nêu đề xuất tách, gộp hoặc chuyển US; quyết định đi change request trên PRD mục 5 trước khi ký.>
 
 ## 8. Rủi ro
 <Mã `RK<n>` của sổ rủi ro trong `decisions.md`; rủi ro mới nêu ở buổi họp thì thêm vào sổ.>

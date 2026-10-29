@@ -148,10 +148,10 @@ stateDiagram-v2
 
 # 5. Units
 
-*Lấy từ `stories.md`. Nhóm US làm và phát hành độc lập được, để Dev biết bắt đầu từ đâu. Thứ tự là đề xuất, Dev quyết thứ tự thật. Từ ba Unit trở lên thì thêm sơ đồ phụ thuộc Unit lấy từ `stories.md`, theo `engine/standards/diagrams.md` mục 4. Profile S bỏ mục này.*
+*Lấy từ `stories.md`. Mỗi Unit là một story trên Jira, gồm các US làm và phát hành độc lập được; mỗi US thuộc đúng một Unit. Tại 2.43 Tech PIC xác nhận mỗi Unit vừa một sprint; thay đổi Unit sau đó đi change request trên mục này. Unit tách ra nhận số mới; Unit bị gộp giữ dòng, cột Gồm US ghi "gộp vào" kèm mã Unit nhận, ví dụ "gộp vào U2". Thứ tự là đề xuất, Dev quyết định thứ tự thực hiện. Từ ba Unit trở lên thì thêm sơ đồ phụ thuộc Unit lấy từ `stories.md`, theo `engine/standards/diagrams.md` mục 4. Profile S bỏ mục này; khi đó cả PRD là một story.*
 
-| Unit | Gồm US | Phụ thuộc | Phát hành độc lập được? |
-| --- | --- | --- | --- |
+| Unit | Tên | Gồm US | Ưu tiên | Phụ thuộc | Phát hành độc lập được? |
+| --- | --- | --- | --- | --- | --- |
 
 ---
 

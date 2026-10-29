@@ -11,7 +11,8 @@ Mã dùng chung cho mọi team nhận việc từ PO: Design, Tech, QA. Mã đi 
 | Đối tượng | Mẫu | Ví dụ | Ai cấp | Ở đâu |
 |---|---|---|---|---|
 | Tính năng | `<SP>-F<NNN>` | `APP-F012` | PO, khi tạo intent, bằng `po-tools.py feature-id` | `intent.md`, đầu PRD, nhãn của mọi story trên Jira |
-| User story | `US-<tính năng>-<NN>` | `US-APP-F012-01` | PO, ở 2.4 | Nhãn và tham chiếu của story trên Jira |
+| Unit, cũng là story trên Jira | `<tính năng>-U<n>` | `APP-F012-U1` | PO, ở 1.4; xác nhận ở 2.43 | Mã và nhãn của story trên Jira; PRD mục 5 |
+| User story | `US-<tính năng>-<NN>` | `US-APP-F012-01` | PO, ở 2.4 | Nhãn của story trên Jira chứa US; tiêu đề khối US trong Description |
 | Acceptance criteria | `AC-<tính năng>-<NN>.<n>` | `AC-APP-F012-01.1` | PO, ở 2.42 | Description của story trên Jira |
 | Business rule | `BR-<tính năng>-<NN>.<n>` | `BR-APP-F012-01.2` | PO, ở 2.42 | Description của story trên Jira |
 | Business rule dùng chung | `BR-<tính năng>-00.<n>` | `BR-APP-F012-00.1` | PO, ở 2.42, PRD mục 4 | Description của mọi story trỏ tới nó |
@@ -41,13 +42,14 @@ Artifact nội bộ và PRD dùng mã ngắn cho dễ đọc: `US1`, `AC1.1`, `B
 
 `po-tools.py stories` đổi mã khi sinh Story List. Không đổi tay. Từ story trên Jira trở đi, mọi team chỉ dùng mã đầy đủ.
 
-Mã nội bộ của PO như `FR1`, `OQ3`, `DEC5` không đi ra ngoài. Mã Unit `U1` chỉ dùng trong PRD để nhóm user story, còn trên Jira chỉ xuất hiện trong nhãn `<tính năng>-U<n>`, không dùng ở test case.
+Mã nội bộ của PO như `FR1`, `OQ3`, `DEC5` không đi ra ngoài. Mã Unit `U1` dùng trong PRD để nhóm user story; trên Jira, mã đầy đủ `<tính năng>-U<n>` là mã của story, không dùng ở test case. Test case và commit dẫn chiếu tới mã US, AC, BR.
 
 ## Luật không đánh lại
 
 - Mã đã cấp không đổi, không dùng lại, kể cả khi mục bị xoá. Bỏ một mục thì giữ dòng và ghi 'bỏ', kèm CR. `po-tools.py check` và `approve` so mã với bản duyệt gần nhất trong `archive/`: mã của bản trước không còn trong bản mới thì approve chặn, trừ khi PO quyết riêng từng mã; US giữ mã mà đổi tên hẳn thì check cảnh báo có thể đã dùng lại mã.
 - Tách một story: story cũ giữ mã; phần tách ra nhận số story mới. AC chuyển sang story mới nhận mã mới; AC cũ ghi "chuyển sang `AC-...`", không xoá dòng. Test case trỏ mã cũ vì vậy vẫn tìm được đường đi.
 - Gộp hai story: story còn lại giữ mã; story bị gộp ghi "gộp vào `US-...`" và giữ file.
+- Tách một Unit: Unit cũ giữ mã; phần tách ra nhận số Unit mới. Gộp hai Unit: Unit còn lại giữ mã; Unit bị gộp giữ dòng trong bảng Units, ghi "gộp vào U<n>". Chuyển US sang Unit khác không đổi mã US.
 - Cấp số tính năng: script lấy số lớn nhất đã có cộng một. Hai PO cấp cùng lúc trên hai nhánh có thể trùng số; `po-tools.py status` và `doctor` báo trùng ngay sau khi gộp nhánh, PO đến sau đổi số trước khi bàn giao.
 
 ## Mã trong tài liệu của PO, theo loại yêu cầu của BABOK 2.3

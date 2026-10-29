@@ -8,6 +8,7 @@
 
 ## Mục 1 tới 5
 - [ ] Bối cảnh và mục tiêu, Ngoài phạm vi, Giải pháp tổng thể, Units tóm tắt từ artifact đã duyệt, không viết nội dung mới. Ràng buộc nghiệp vụ cho cách làm chỉ có điều phải đúng
+- [ ] **[BLOCK]** Bảng Units khớp các khối US: mỗi US thuộc đúng một Unit, Unit có tên và ưu tiên; `po-tools.py check` không còn cảnh báo Mục 5 Units
 - [ ] **[BLOCK]** Mỗi mục tiêu có ít nhất một tiêu chí thành công `SC<n>` đủ chỉ số và nguồn dữ liệu, giá trị hiện tại, giá trị mục tiêu, thời điểm đo, người đo. Chưa có số liệu nền thì ghi đề xuất và có giả định ở mục 9. Dữ liệu đo do hệ thống sinh ra có FR hoặc NFR tương ứng. Không còn dòng mẫu
 - [ ] Bảng thông tin có mã tính năng, PO, ba PIC, Figma, tài liệu liên quan. Không có trạng thái tài liệu hay người duyệt trong thân PRD
 - [ ] **[BLOCK]** Không có mục Database và API. Không sequence diagram, cấu trúc bảng, thuật toán, thư viện

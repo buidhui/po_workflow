@@ -65,12 +65,12 @@ inputs: <prd@1.0, ux-design@0.1>
 
 <Mỗi BR, NFR, TR trong PRD một dòng. Rule kiểm ở Frontend thì Backend vẫn kiểm lại.>
 
-## 7. Unit of work, thứ tự và độ lớn
+## 7. Cỡ Unit và kế hoạch thực hiện
 
-| Unit of work | Phía | Gồm US | Phụ thuộc | Độ lớn ước lượng |
-|---|---|---|---|---|
+| Unit | Gồm US | Phần việc Backend | Phần việc Frontend | Độ lớn ước lượng | Vừa một sprint? | Đề xuất |
+|---|---|---|---|---|---|---|
 
-<Backend và Frontend tách Unit of work khi làm song song, nối qua hợp đồng ở mục 3. Story nào quá lớn để làm trong một sprint thì ghi ở đây, theo `engine/standards/story-splitting.md` mục 4.>
+<Mỗi Unit ở PRD mục 5 một dòng; mỗi Unit là một story trên Jira. Vừa một sprint ghi Có hoặc Không. Unit không vừa một sprint hoặc chưa độc lập thì đề xuất tách, gộp hoặc chuyển US sang Unit khác, theo `engine/standards/story-splitting.md` mục 8; US quá lớn để làm trong một sprint thì ghi theo mục 4. Backend và Frontend làm song song thì nối qua hợp đồng ở mục 3; phần việc của từng phía thành sub-task trên Jira.>
 
 ## 8. Ý kiến về PRD
 

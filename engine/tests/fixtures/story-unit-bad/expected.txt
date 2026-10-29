@@ -1,0 +1,21 @@
+# Bảng Units không khớp các khối US: US2 nằm trong cả U1 và U2, U2 ghi US9 không có trong PRD, US3 chưa thuộc Unit nào.
+# stories, dor dừng với mã thoát 2, không ghi gì; check của 2.42 báo từng lỗi.
+[stories]
+mã thoát: 2
+có: Bảng Units ở PRD mục 5 chưa khớp với các khối US
+có: US2 nằm trong cả U1 và U2
+có: U2 ghi US9 nhưng PRD không có khối US9
+có: US3 chưa thuộc Unit nào
+
+[stories --write]
+mã thoát: 2
+tệp stories/story-list-prd-v1.0.csv không có: Project key
+
+[dor]
+mã thoát: 2
+có: chưa khớp với các khối US
+
+[check prd-generation]
+mã thoát: 0
+có: Mục 5 Units: US2 nằm trong cả U1 và U2
+có: Mục 5 Units: US3 chưa thuộc Unit nào

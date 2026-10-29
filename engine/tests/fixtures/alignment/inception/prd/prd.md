@@ -8,6 +8,13 @@ approved_at: 2026-10-10T09:00
 ---
 # [PRD] Nhắc lịch học trong ứng dụng
 
+# 5. Units
+
+| Unit | Tên | Gồm US | Ưu tiên | Phụ thuộc | Phát hành độc lập được? |
+| --- | --- | --- | --- | --- | --- |
+| U1 | Cài đặt nhắc lịch | US1 | Must | - | Có |
+| U2 | Tắt nhắc theo lớp | US2 | Should | U1 | Có |
+
 # Specific Requirement
 
 ## US1: Cài đặt nhắc lịch
