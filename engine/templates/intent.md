@@ -16,7 +16,7 @@ created: <YYYY-MM-DD>
 | Vai | Tên |
 |---|---|
 | PO | |
-| Người tài trợ, người quyết cuối | |
+| Người phê duyệt | |
 | Design PIC | |
 | Tech PIC | |
 | Phụ trách Backend, Frontend | <nếu khác Tech PIC; Tech PIC vẫn là người ký> |

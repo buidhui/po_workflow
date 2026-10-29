@@ -114,6 +114,7 @@ Theo cách AWS giữ chất lượng repo, ở quy mô một người giữ engi
 - README mục 2 thêm phần Nghiệp vụ và năng lực của PO theo BABOK v3 và Scrum Guide 2020: 6 nhóm nghiệp vụ đối chiếu với stage, kể cả nhóm chưa đáp ứng; 6 năng lực nền; 4 trách nhiệm của PO với backlog; kỹ thuật ngành AI dùng từ `engine/knowledge/`. Câu tóm tắt quy trình ở README và USER-GUIDE thêm bước đề xuất và chọn phương án giải pháp.
 - README mục 1 thêm phần Giá trị của quy trình: mỗi giá trị gắn với cơ chế tạo ra nó và bằng chứng hiện có; thêm bảng so sánh với việc dùng trực tiếp AI hội thoại để soạn PRD.
 - README.md viết lại thành tài liệu giới thiệu quy trình hiện có, văn phong trang trọng, trung lập sản phẩm. Bỏ lịch sử hình thành, số liệu áp dụng, quy tắc rút từ sự cố, bảng đối chiếu AWS và phần mức độ sẵn sàng; các nguồn phương pháp (AWS AI-DLC, BABOK v3, Scrum Guide và các chuẩn khác) gom vào một mục Cơ sở phương pháp. Thêm bảng vai trò, bảng phạm vi áp dụng, ba mức finding. GLOSSARY bỏ dẫn chiếu tới phần đánh giá đã bỏ.
+- Vai "Người tài trợ" đổi tên thành "Người phê duyệt" trong README, stage 1.1, template `intent.md` và `intent-statement.md`. Intent đã tạo giữ nguyên dòng cũ.
 
 ### Đổi tên
 - Proto-Unit thành Unit, mã `PU1` thành `U1`, mục PRD Proto-Units thành Units, theo quyết định ngày 19/10/2026. GLOSSARY ghi khác biệt với Unit of work của AWS ở 2.7.

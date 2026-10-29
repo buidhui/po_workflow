@@ -26,7 +26,7 @@ inputs: <artifact đầu vào@version, ví dụ requirements@1.0; stage đầu t
 | Vai trò | Quan tâm điều gì | Quyết hay ảnh hưởng | Mức ảnh hưởng | Thái độ với thay đổi | Cần báo gì | Nguồn |
 |---|---|---|---|---|---|---|
 | | | | Cao, Trung bình, Thấp | Ủng hộ, Trung lập, Lo ngại | | [Q5] |
-<Theo BABOK 3.2 và 10.43 Stakeholder List, Map, or Personas. Ghi rõ ai là người tài trợ, người quyết cuối việc làm hay dừng.>
+<Theo BABOK 3.2 và 10.43 Stakeholder List, Map, or Personas. Ghi rõ ai là người phê duyệt, người quyết định cuối cùng việc tiếp tục hoặc dừng intent.>
 
 ## Product boundary and constraints
 - Portal: <theo danh sách portal trong domain.md> [Q7]

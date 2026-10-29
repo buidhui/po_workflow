@@ -44,7 +44,7 @@ Mỗi mục trên là một chủ đề của bảng Độ phủ trong questions
 
 ## Generate
 `intent-statement.md` theo template. Thẻ nguồn ở mọi khối: `[desc]`, `[Q3]`, `[KB-<file> §<mục>]`, `[assumption]`. Stakeholder map có cột Nguồn. Mục Assumptions & Open Questions bắt buộc.
-Success metrics: mỗi objective theo SMART của BABOK 6.2, có chỉ số, giá trị hiện tại hoặc "chưa đo", giá trị mục tiêu, thời điểm đo; tự đề xuất ít nhất một cách đo, chỉ giữ cái đo được từ dữ liệu hệ thống sẽ có. Không có số thì mô tả cách làm hiện tại đủ rõ, không bỏ trống. Stakeholder map theo BABOK 3.2: mức ảnh hưởng, thái độ với thay đổi, và ai là người tài trợ, người quyết cuối việc làm hay dừng; người này ghi cả vào `intent.md`.
+Success metrics: mỗi objective theo SMART của BABOK 6.2, có chỉ số, giá trị hiện tại hoặc "chưa đo", giá trị mục tiêu, thời điểm đo; tự đề xuất ít nhất một cách đo, chỉ giữ cái đo được từ dữ liệu hệ thống sẽ có. Không có số thì mô tả cách làm hiện tại đủ rõ, không bỏ trống. Stakeholder map theo BABOK 3.2: mức ảnh hưởng, thái độ với thay đổi, và ai là người phê duyệt, người quyết định cuối cùng việc tiếp tục hoặc dừng intent; người này ghi cả vào `intent.md`.
 
 ## Xác nhận giả định
 Theo `stage-protocol.md` bước 4b: liệt kê giả định trong intent-statement, PO chọn chấp nhận hay chuyển thành câu hỏi, trước khi gọi reviewer.
