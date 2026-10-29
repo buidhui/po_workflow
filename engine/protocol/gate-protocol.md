@@ -96,7 +96,7 @@ Sau script, AI tự làm hai việc: finding Accepted risk ghi vào bảng Accep
 - Intent cũ đã duyệt ở 0.x trước quy tắc này giữ nhánh 0.x và tăng số phụ.
 
 ### Gắn tag cho bản bàn giao
-Duyệt `prd` hoặc `decision-brief`: script in tên tag gợi ý dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. Sau khi commit, gắn tag và push tag. Agent của Dev đọc PRD theo tag nên luôn lấy đúng bản đã duyệt, xem README mục 3. Profile S: duyệt `prd` xong thì chạy `/po-stories`. Profile M, L: duyệt `prd` xong thì giao ba team viết file thiết kế theo 2.43; chỉ chạy `/po-stories` sau khi 2.43 được duyệt.
+Duyệt `prd` hoặc `decision-brief`: script in tên tag gợi ý dạng `<intent>/prd-v1.0` hoặc `<intent>/decision-brief-v1.0`. Sau khi commit, gắn tag và push tag. Agent của Dev đọc PRD theo tag nên luôn lấy đúng bản đã duyệt, xem README mục 6. Profile S: duyệt `prd` xong thì chạy `/po-stories`. Profile M, L: duyệt `prd` xong thì giao ba team viết file thiết kế theo 2.43; chỉ chạy `/po-stories` sau khi 2.43 được duyệt.
 
 ## Sửa lựa chọn bị ghi nhầm
 PO nói vừa rồi chọn nhầm:

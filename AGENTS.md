@@ -88,7 +88,7 @@ Gặp điều đáng chú ý nhưng ngoài phạm vi thì ghi một dòng vào m
 
 ## Bàn giao
 
-Đích publish tài liệu và đích User Guide ghi trong `domain.md` mục 4. Bản publish dành cho người đọc. Story List để import lên Jira nằm trong `intents/<intent>/stories/`, theo `engine/standards/handoff-rules.md`. Agent của Dev đọc PRD trong repo theo tag đã gắn, qua chỉ mục `intents/INDEX.md` do `po-tools.py index` sinh. Chi tiết ở README mục 3.
+Đích publish tài liệu và đích User Guide ghi trong `domain.md` mục 4. Bản publish dành cho người đọc. Story List để import lên Jira nằm trong `intents/<intent>/stories/`, theo `engine/standards/handoff-rules.md`. Agent của Dev đọc PRD trong repo theo tag đã gắn, qua chỉ mục `intents/INDEX.md` do `po-tools.py index` sinh. Chi tiết ở README mục 6.
 
 ## Sửa engine
 
@@ -106,7 +106,7 @@ Selftest bắt được và không bắt được:
 | Việc | Selftest bắt | Phải tự kiểm |
 |---|---|---|
 | Thêm lệnh cho `po-tools.py` | Lệnh chưa có ca kiểm; tài liệu nhắc lệnh không có | Câu chữ hướng dẫn trong USER-GUIDE |
-| Thêm stage | Bảng metadata thiếu dòng; đường dẫn Template, Checklist không có; README mục 2.5 thiếu dòng stage; reviewer lệch `profiles.md` | Nội dung stage so với AWS; dòng Lệch so với AWS |
+| Thêm stage | Bảng metadata thiếu dòng; đường dẫn Template, Checklist không có; README mục 3.2 thiếu dòng stage; reviewer lệch `profiles.md` | Nội dung stage so với AWS; dòng Lệch so với AWS |
 | Sửa template | Không bắt, trừ heading bắt buộc khi có fixture dùng template đó; sơ đồ mẫu sai cú pháp theo `engine/standards/diagrams.md` mục 6 | Các stage và checklist nhắc tới mục đã đổi; sơ đồ hiển thị đúng ý trên GitHub |
 | Đổi tên file trong `engine/` | Đường dẫn `engine/...` gãy trong mọi tài liệu | Liên kết ngoài repo, deck |
 | Phát hành | VERSION khác mục mới nhất của CHANGELOG hoặc đầu MANIFEST; thiếu mục Nâng cấp hoặc dòng Tương thích | Hướng dẫn nâng cấp đúng với intent đang chạy |

@@ -53,7 +53,7 @@ Profile quyết định số stage. Khi tạo intent, AI đề xuất profile k�
 
 Gate là điểm dừng bắt buộc. AI không chuyển sang stage tiếp theo khi chưa có lời duyệt rõ ràng, vì mỗi artifact là nền cho artifact sau: lỗi ở requirements không được phát hiện sẽ đi thẳng vào Impact Matrix và PRD.
 
-Đầu ra cho các team gồm PRD, Decision Brief và Story List. Chuẩn chung về cách chia story, mã, tiêu chí chấp nhận và điều kiện sẵn sàng ở README mục 3 và trong `engine/standards/`.
+Đầu ra cho các team gồm PRD, Decision Brief và Story List. Chuẩn chung về cách chia story, mã, tiêu chí chấp nhận và điều kiện sẵn sàng ở README mục 6 và trong `engine/standards/`.
 
 ## 2. Cài đặt
 
@@ -320,7 +320,7 @@ Lệnh cuối cập nhật `intents/INDEX.md` với mã tính năng, bản PRD �
 python3 engine/scripts/po-tools.py dor intents/<intent>
 ```
 
-Script in story nào đạt, story nào chưa và lý do, theo bảy điều kiện ở README mục 3.10. Kết quả cũng ghi ở cột Comment của file CSV. Chỉ bàn giao cho Dev các story đạt. Độ phủ test case do QA theo dõi trên Jira.
+Script in story nào đạt, story nào chưa và lý do, theo bảy điều kiện ở README mục 6.7. Kết quả cũng ghi ở cột Comment của file CSV. Chỉ bàn giao cho Dev các story đạt. Độ phủ test case do QA theo dõi trên Jira.
 
 ### 7.4 Trước khi mở quyền repo cho các team
 
